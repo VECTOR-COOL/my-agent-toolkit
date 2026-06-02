@@ -1,0 +1,39 @@
+// ============================================================
+// WordPress REST API — Category（分類）Schema
+// 端點：GET /wp/v2/categories
+// 官方文件：https://developer.wordpress.org/rest-api/reference/categories/
+// ============================================================
+{
+  id: 1,                                           // integer, 唯一識別碼
+  count: 15,                                       // integer, 該分類下的文章數量
+  description: "所有新聞相關文章",                    // string, 分類描述
+  link: "https://cms.example.com/category/news/",  // string (uri), WordPress 原始連結
+  name: "新聞",                                     // string, 顯示名稱
+  slug: "news",                                    // string, URL slug
+  taxonomy: "category",                            // string, 固定為 "category"
+  parent: 0,                                       // integer, 父分類 ID（0 = 頂層，支援層級結構）
+  meta: {},                                        // object, 自訂 meta
+
+  // === Yoast SEO（需安裝外掛）===
+  yoast_head: "...",                               // string, SEO HTML blob
+  yoast_head_json: {
+    title: "新聞 Archives | 網站名",                // string, 分類頁 SEO 標題
+    description: "所有新聞相關文章",                  // string
+    canonical: "https://example.com/category/news/",
+    og_locale: "zh_TW",
+    og_type: "website",
+    og_title: "新聞",
+    og_url: "https://example.com/category/news/",
+    robots: { index: "index", follow: "follow" },
+  },
+
+  // === _links ===
+  _links: {
+    self: [{ href: "https://cms.example.com/wp-json/wp/v2/categories/1" }],
+    collection: [{ href: "https://cms.example.com/wp-json/wp/v2/categories" }],
+    about: [{ href: "https://cms.example.com/wp-json/wp/v2/taxonomies/category" }],
+    // 取得該分類下所有文章的連結
+    "wp:post_type": [{ href: "https://cms.example.com/wp-json/wp/v2/posts?categories=1" }],
+    up: [{ embeddable: true, href: "https://cms.example.com/wp-json/wp/v2/categories/0" }], // 父分類（若有）
+  },
+}

@@ -1,0 +1,558 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/schemas/wp-theme-common-data.schema.json",
+  "title": "WordPress Theme Common Data",
+  "description": "Normalized data commonly needed by a headless WordPress theme-style frontend. Core REST endpoint availability and permissions can differ by WordPress version, theme type, plugins, and custom post type registration.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "site": {
+      "$ref": "#/$defs/siteSettings"
+    },
+    "theme": {
+      "$ref": "#/$defs/themeInfo"
+    },
+    "frontPage": {
+      "$ref": "#/$defs/contentReference"
+    },
+    "postsPage": {
+      "$ref": "#/$defs/contentReference"
+    },
+    "menus": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/navMenu"
+      }
+    },
+    "menuLocations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/menuLocation"
+      }
+    },
+    "menuItems": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/menuItem"
+      }
+    },
+    "navigationPosts": {
+      "description": "Block theme wp_navigation posts from /wp/v2/navigation when available.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/navigationPost"
+      }
+    },
+    "postTypes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/postType"
+      }
+    },
+    "taxonomies": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/taxonomy"
+      }
+    },
+    "terms": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/term"
+      }
+    },
+    "sidebars": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/sidebar"
+      }
+    },
+    "widgets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/widget"
+      }
+    },
+    "media": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/media"
+      }
+    },
+    "users": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/publicUser"
+      }
+    },
+    "searchResults": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/searchResult"
+      }
+    },
+    "customOptions": {
+      "description": "Theme/plugin options exposed through a custom endpoint, ACF REST integration, or a backend proxy. Never assume wp_options is public.",
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "renderedText": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "rendered": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "siteSettings": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "home": {
+          "type": "string",
+          "format": "uri"
+        },
+        "language": {
+          "type": "string"
+        },
+        "timezone": {
+          "type": "string"
+        },
+        "date_format": {
+          "type": "string"
+        },
+        "time_format": {
+          "type": "string"
+        },
+        "start_of_week": {
+          "type": "integer"
+        }
+      }
+    },
+    "themeInfo": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "stylesheet": {
+          "type": "string"
+        },
+        "template": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "themeSupport": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "themeJson": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "contentReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "type": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "title": {
+          "$ref": "#/$defs/renderedText"
+        }
+      }
+    },
+    "navMenu": {
+      "description": "Core nav menu term from /wp/v2/menus.",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "locations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "auto_add": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "menuLocation": {
+      "description": "Registered theme menu location from /wp/v2/menu-locations.",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "menu": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "menuItem": {
+      "description": "Core menu item from /wp/v2/menu-items.",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "title": {
+          "$ref": "#/$defs/renderedText"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "taxonomy",
+            "post_type",
+            "post_type_archive",
+            "custom"
+          ]
+        },
+        "type_label": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "parent": {
+          "type": "integer"
+        },
+        "attr_title": {
+          "type": "string"
+        },
+        "classes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "menu_order": {
+          "type": "integer"
+        },
+        "object": {
+          "type": "string"
+        },
+        "object_id": {
+          "type": "integer"
+        },
+        "target": {
+          "type": "string",
+          "enum": [
+            "_blank",
+            ""
+          ]
+        },
+        "url": {
+          "type": "string"
+        },
+        "xfn": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "invalid": {
+          "type": "boolean"
+        },
+        "menus": {
+          "oneOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "url"
+      ]
+    },
+    "navigationPost": {
+      "description": "Block theme navigation entity from /wp/v2/navigation.",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "title": {
+          "$ref": "#/$defs/renderedText"
+        },
+        "content": {
+          "$ref": "#/$defs/renderedText"
+        },
+        "template": {
+          "type": "string"
+        }
+      }
+    },
+    "postType": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "slug": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "rest_base": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "taxonomies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "taxonomy": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "slug": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "rest_base": {
+          "type": "string"
+        },
+        "hierarchical": {
+          "type": "boolean"
+        },
+        "types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "term": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "taxonomy": {
+          "type": "string"
+        },
+        "parent": {
+          "type": "integer"
+        },
+        "count": {
+          "type": "integer"
+        },
+        "link": {
+          "type": "string"
+        }
+      }
+    },
+    "sidebar": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "class": {
+          "type": "string"
+        },
+        "widgets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "widget": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "id_base": {
+          "type": "string"
+        },
+        "sidebar": {
+          "type": "string"
+        },
+        "rendered": {
+          "type": "string"
+        },
+        "instance": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "media": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "alt_text": {
+          "type": "string"
+        },
+        "caption": {
+          "$ref": "#/$defs/renderedText"
+        },
+        "media_type": {
+          "type": "string"
+        },
+        "mime_type": {
+          "type": "string"
+        },
+        "source_url": {
+          "type": "string"
+        },
+        "media_details": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "publicUser": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "avatar_urls": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "searchResult": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "subtype": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

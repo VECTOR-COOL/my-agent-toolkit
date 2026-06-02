@@ -1,0 +1,122 @@
+// ============================================================
+// WordPress REST API — Media（媒體）Schema
+// 端點：GET /wp/v2/media/<id>
+// 官方文件：https://developer.wordpress.org/rest-api/reference/media/
+//
+// Media 也會出現在 Post/Page 的 _embedded["wp:featuredmedia"] 中，
+// 該處回傳的結構與直接查詢 /media/<id> 幾乎相同。
+// ============================================================
+{
+  id: 456,                                         // integer, 唯一識別碼
+  date: "2025-01-10T12:00:00",                     // string, 上傳日期（站台時區）
+  date_gmt: "2025-01-10T04:00:00",                 // string, 上傳日期（GMT）
+  modified: "2025-01-10T12:00:00",                 // string
+  modified_gmt: "2025-01-10T04:00:00",             // string
+  slug: "hero-image",                              // string
+  status: "inherit",                               // string, 媒體通常為 "inherit"
+  type: "attachment",                              // string, 固定為 "attachment"
+  link: "https://cms.example.com/hero-image/",     // string (uri)
+
+  // === 內容欄位 ===
+  title: { rendered: "Hero 圖片" },                 // object, 媒體標題
+  description: { rendered: "<p>圖片描述 HTML</p>" }, // object, 詳細描述
+  caption: { rendered: "<p>圖片說明</p>" },          // object, 圖片說明文字
+  alt_text: "圖片替代文字",                          // string, ⭐ SEO 重要，用於 img alt 屬性
+
+  // === 媒體專屬欄位 ===
+  author: 1,                                       // integer, 上傳者 ID
+  media_type: "image",                             // string: image | video | audio | file
+  mime_type: "image/jpeg",                         // string, MIME type（image/jpeg, image/png, video/mp4 等）
+  post: 123,                                       // integer|null, 附屬的文章 ID（null = 未附屬）
+  source_url: "https://cms.example.com/wp-content/uploads/2025/01/hero.jpg", // string (uri), ⭐ 原始檔案 URL（前端最常用）
+  guid: { rendered: "https://cms.example.com/wp-content/uploads/2025/01/hero.jpg" },
+
+  // === 媒體詳細資訊（圖片專屬）===
+  media_details: {
+    width: 1920,                                   // integer, 原始圖片寬度 (px)
+    height: 1080,                                  // integer, 原始圖片高度 (px)
+    file: "2025/01/hero.jpg",                      // string, 相對於 uploads 目錄的路徑
+    filesize: 245678,                              // integer, 檔案大小 (bytes)
+
+    // WordPress 自動產生的各種尺寸
+    sizes: {
+      // 縮圖（150x150，裁切為正方形）
+      thumbnail: {
+        file: "hero-150x150.jpg",                  // string, 檔名
+        width: 150,                                // integer
+        height: 150,                               // integer
+        filesize: 5432,                            // integer (bytes)
+        mime_type: "image/jpeg",                   // string
+        source_url: "https://cms.example.com/wp-content/uploads/2025/01/hero-150x150.jpg", // string, ⭐ 該尺寸的 URL
+      },
+
+      // 中等（預設最大 300px）
+      medium: {
+        file: "hero-300x169.jpg",
+        width: 300,
+        height: 169,
+        filesize: 12345,
+        mime_type: "image/jpeg",
+        source_url: "https://cms.example.com/wp-content/uploads/2025/01/hero-300x169.jpg",
+      },
+
+      // 中大（預設最大 768px，WordPress 4.4+）
+      medium_large: {
+        file: "hero-768x432.jpg",
+        width: 768,
+        height: 432,
+        filesize: 45678,
+        mime_type: "image/jpeg",
+        source_url: "https://cms.example.com/wp-content/uploads/2025/01/hero-768x432.jpg",
+      },
+
+      // 大（預設最大 1024px）
+      large: {
+        file: "hero-1024x576.jpg",
+        width: 1024,
+        height: 576,
+        filesize: 78901,
+        mime_type: "image/jpeg",
+        source_url: "https://cms.example.com/wp-content/uploads/2025/01/hero-1024x576.jpg",
+      },
+
+      // 原始尺寸
+      full: {
+        file: "hero.jpg",
+        width: 1920,
+        height: 1080,
+        mime_type: "image/jpeg",
+        source_url: "https://cms.example.com/wp-content/uploads/2025/01/hero.jpg",
+      },
+
+      // ⚠️ 佈景主題或外掛可能註冊額外的自訂尺寸
+      // 例如："post-thumbnail", "woocommerce_single" 等
+    },
+
+    // EXIF / IPTC 圖片中繼資料（大部分欄位通常為空）
+    image_meta: {
+      aperture: "0",                               // string, 光圈
+      credit: "",                                  // string, 版權者
+      camera: "",                                  // string, 相機型號
+      caption: "",                                 // string, 圖片說明
+      created_timestamp: "0",                      // string, 拍攝時間
+      copyright: "",                               // string, 版權資訊
+      focal_length: "0",                           // string, 焦距
+      iso: "0",                                    // string, ISO
+      shutter_speed: "0",                          // string, 快門速度
+      title: "",                                   // string, 圖片標題
+      orientation: "0",                            // string, 方向
+      keywords: [],                                // string[], 關鍵字
+    },
+  },
+
+  meta: {},                                        // object, 自訂 meta
+
+  // === _links ===
+  _links: {
+    self: [{ href: "https://cms.example.com/wp-json/wp/v2/media/456" }],
+    collection: [{ href: "https://cms.example.com/wp-json/wp/v2/media" }],
+    about: [{ href: "https://cms.example.com/wp-json/wp/v2/types/attachment" }],
+    author: [{ embeddable: true, href: "https://cms.example.com/wp-json/wp/v2/users/1" }],
+  },
+}

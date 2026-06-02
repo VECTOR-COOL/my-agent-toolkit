@@ -1,0 +1,83 @@
+// ============================================================
+// WordPress REST API — Custom Post Type（自訂文章類型）Schema
+// 端點：GET /wp/v2/{rest_base}?_embed
+//
+// 自訂文章類型由 WordPress register_post_type() 註冊，
+// 需設定 show_in_rest = true 才會出現在 REST API。
+//
+// Schema 基本結構同 Post，差異取決於註冊時的 supports 參數。
+// 常見自訂類型範例：projects、services、portfolios、testimonials
+// ============================================================
+{
+  id: 50,                                          // integer
+  date: "2025-03-01T10:00:00",                     // string
+  date_gmt: "2025-03-01T02:00:00",                 // string
+  modified: "2025-03-05T14:00:00",                 // string
+  modified_gmt: "2025-03-05T06:00:00",             // string
+  slug: "drone-inspection",                        // string
+  status: "publish",                               // string
+  type: "project",                                 // string, ⭐ 自訂類型名稱（非 "post"）
+  link: "https://cms.example.com/project/drone-inspection/", // string
+
+  // === 內容欄位（取決於 supports 設定）===
+  title: { rendered: "無人機巡檢方案" },             // ⭐ 幾乎所有 CPT 都支援
+  content: {                                       // 需 supports: ["editor"]
+    rendered: "<p>方案內容...</p>",
+    protected: false,
+  },
+  excerpt: {                                       // 需 supports: ["excerpt"]
+    rendered: "<p>方案摘要...</p>",
+    protected: false,
+  },
+
+  featured_media: 789,                             // 需 supports: ["thumbnail"]
+  author: 1,                                       // 需 supports: ["author"]
+  template: "",
+  guid: { rendered: "https://cms.example.com/?post_type=project&p=50" },
+
+  // === 自訂 meta 欄位（依 register_post_meta 設定）===
+  meta: {
+    // 這些欄位名稱由 WordPress 後端定義
+    // 需在 PHP 中使用 register_post_meta() 並設定 show_in_rest = true
+    project_client: "台灣電力公司",                  // string（範例）
+    project_year: "2025",                           // string（範例）
+    project_location: "台中市",                      // string（範例）
+    project_budget: 500000,                         // number（範例）
+    project_status: "completed",                    // string（範例）
+  },
+
+  // === 自訂分類法（若有註冊 custom taxonomy）===
+  // 欄位名稱依 register_taxonomy() 的 rest_base 設定
+  project_categories: [10, 12],                    // integer[]（範例，非標準欄位）
+  project_tags: [20],                              // integer[]（範例，非標準欄位）
+
+  // ⚠️ 若 CPT 註冊時有 taxonomies: ["category", "post_tag"]
+  //    則會有標準的 categories、tags 欄位
+
+  // === Yoast SEO（同 Post）===
+  yoast_head: "...",
+  yoast_head_json: {
+    title: "無人機巡檢方案 | 網站名",
+    description: "方案摘要...",
+    // ... 同 Post 的 yoast_head_json 結構
+  },
+
+  // === _embedded ===
+  _embedded: {
+    author: [
+      { id: 1, name: "Admin", slug: "admin", avatar_urls: { "24": "...", "48": "...", "96": "..." } },
+    ],
+    "wp:featuredmedia": [
+      {
+        id: 789,
+        source_url: "https://cms.example.com/wp-content/uploads/project-hero.jpg",
+        alt_text: "無人機巡檢",
+        // ... 同 Post 的 wp:featuredmedia 結構
+      },
+    ],
+    // wp:term 只在 CPT 有註冊 taxonomy 時出現
+    "wp:term": [
+      // 依 CPT 註冊的 taxonomy 排列
+    ],
+  },
+}
