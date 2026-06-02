@@ -117,10 +117,24 @@ export const fetchPosts = createServerFn({ method: "GET" }).handler(
     const response = await fetch(
       `${process.env.WP_API_URL}/posts?_embed`
     );
-    if (!response.ok) throw new Error("API 請求失敗");
+    if (!response.ok) {
+      const body = await readWpErrorBody(response);
+      throw Object.assign(
+        new Error(
+          `WordPress REST API error: ${response.status} ${response.statusText}`
+        ),
+        { status: response.status, statusText: response.statusText, url: response.url, body }
+      );
+    }
     return response.json();
   }
 );
+
+async function readWpErrorBody(response: Response) {
+  const contentType = response.headers.get("content-type") ?? "";
+  if (!contentType.includes("application/json")) return response.text();
+  return response.json().catch(() => null);
+}
 ```
 
 ### 何時使用 Server Functions

@@ -41,7 +41,7 @@ async function testEndpoint(name, path, required) {
     if (!response.ok) {
       const mark = required ? '❌' : '⚠️ ';
       const write = required ? console.error : console.log;
-      write(`${mark} Failed: HTTP ${response.status} ${response.statusText}`);
+      write(`${mark} Failed: ${await formatWpError(response)}`);
       return { ok: false, required };
     }
 
@@ -64,6 +64,42 @@ async function testEndpoint(name, path, required) {
     write(`${mark} Error: ${error.message}`);
     return { ok: false, required };
   }
+}
+
+async function formatWpError(response) {
+  const parts = [`HTTP ${response.status} ${response.statusText}`];
+  const body = await readWpErrorBody(response);
+
+  if (isWpErrorResponse(body)) {
+    parts.push(body.code, body.message);
+    if (body.data?.status) parts.push(`data.status=${body.data.status}`);
+  } else if (typeof body === 'string' && body.trim()) {
+    parts.push(body.trim());
+  }
+
+  return parts.join(' - ');
+}
+
+async function readWpErrorBody(response) {
+  const contentType = response.headers.get('content-type') || '';
+  if (!contentType.includes('application/json')) {
+    return response.text();
+  }
+
+  try {
+    return await response.json();
+  } catch {
+    return null;
+  }
+}
+
+function isWpErrorResponse(value) {
+  return Boolean(
+    value &&
+      typeof value === 'object' &&
+      typeof value.code === 'string' &&
+      typeof value.message === 'string'
+  );
 }
 
 async function runTests() {

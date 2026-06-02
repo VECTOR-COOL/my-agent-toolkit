@@ -17,6 +17,11 @@
 | `schemas/user.json5` | User（使用者） | `GET /wp/v2/users/<id>` | 含 `avatar_urls`，標記 public vs edit-only 欄位 |
 | `schemas/custom-post-type.json5` | Custom Post Type | `GET /wp/v2/{rest_base}?_embed` | 含自訂 `meta`、自訂 taxonomy 範例 |
 | `schemas/search.json5` | Search（搜尋） | `GET /wp/v2/search?search=<keyword>` | ⚠️ `title` 是 string 不是 object |
+| `schemas/nav-menu.json5` | Nav Menu（選單） | `GET /wp/v2/menus` | Classic theme 選單本體與 location 指派資訊 |
+| `schemas/menu-location.json5` | Menu Location（選單位置） | `GET /wp/v2/menu-locations` | `menu` 欄位指向指派的 nav menu ID |
+| `schemas/menu-item.json5` | Menu Item（選單項目） | `GET /wp/v2/menu-items?menus=<id>` | 含 `title.rendered`、`url`、`parent`、`menu_order` |
+| `schemas/navigation.json5` | Navigation（Block Theme） | `GET /wp/v2/navigation` | Block theme/FSE 的 `wp_navigation` posts |
+| `schemas/error-response.json5` | Error Response（錯誤回應） | 任一非 2xx REST response | 含 `code`、`message`、`data.status`，不可靜默轉成空資料 |
 
 ---
 
@@ -39,6 +44,14 @@
 | OG 圖片 | `post.yoast_head_json?.og_image?.[0]?.url` |
 | 分類文章數量 | `category.count` |
 | 媒體特定尺寸 URL | `media.media_details.sizes.{size}.source_url` |
+| 指派選單 ID | `menuLocation.menu` |
+| 選單項目文字 | `menuItem.title.rendered` |
+| 選單項目 URL | `menuItem.url` |
+| 選單項目父層 | `menuItem.parent` |
+| 選單項目排序 | `menuItem.menu_order` |
+| API 錯誤代碼 | `error.code` |
+| API 錯誤訊息 | `error.message` |
+| API HTTP status | `error.data.status` |
 
 ---
 
@@ -71,3 +84,24 @@
 | `link` | ✅ | ❌（改用 `url`） |
 | `content` | ✅ | ❌ 無 |
 | `_embedded` | ✅ | ❌ 無 |
+
+### Error Response 特殊注意
+
+| 欄位 | 說明 |
+| --- | --- |
+| `code` | WordPress REST error code，例如 `rest_no_route`、`rest_invalid_param`、`rest_forbidden` |
+| `message` | 可供記錄或顯示在受控 error state 的錯誤訊息 |
+| `data.status` | HTTP status number，service layer 必須保留 |
+| `data.params` / `data.details` | 驗證錯誤時可能出現，用來標示哪個 request parameter 錯誤 |
+| `additional_errors` | 多重錯誤時可能出現，shape 與主要 error 相同 |
+
+Service layer 遇到非 2xx response 時，先解析此 error body，再丟出包含 status、url、body 的錯誤；production 不可把錯誤轉成 `[]`、`null` 或 mock 資料。
+
+### Classic Menu vs Block Navigation
+
+| 用途 | Classic Menu | Block Navigation |
+| --- | --- | --- |
+| 選單位置 | `/wp/v2/menu-locations` | 通常不使用 theme location |
+| 選單項目 | `/wp/v2/menu-items?menus=<id>` | `/wp/v2/navigation` 的 `content.rendered` |
+| 前端建議 | 用 service/mapper 組 `NavItem[]` tree | 若需可控 tree，優先做 custom normalized endpoint |
+| 排序/階層 | `parent` + `menu_order` | 需解析 blocks 或由後端 normalize |

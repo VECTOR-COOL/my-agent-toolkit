@@ -1,0 +1,4 @@
+interface:
+  display_name: "前端開發"
+  short_description: "前端架構、資料層、錯誤頁面、prompts 與審查"
+  default_prompt: "使用 $frontend-development 規劃或審查 React/TypeScript 前端專案，包含 routes、components、資料策略、錯誤處理、HTTP 錯誤頁面、docs、i18n、tests 與分階段 AI-builder prompts。"

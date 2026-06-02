@@ -1,13 +1,13 @@
 ---
 name: wordpress-rest-api-development
-description: Lovable + WordPress Headless CMS REST API 整合開發 Skill。Use when a Lovable/TanStack Start SSR frontend needs WordPress REST API schemas, posts/pages/categories/tags/media/search/custom post type response shapes, Yoast SEO fields, ACF/custom fields exposed through REST, TypeScript WP types, realistic WordPress-shaped mock fixtures, service-layer mappers, mock-to-api switching, route loader/server function data fetching, pagination headers, auth/CORS/server proxy guidance, or validation scripts for WordPress API and fixture shape.
+description: Frontend + WordPress Headless CMS REST API 整合開發 Skill。Use when a Lovable, v0, Replit, Cursor, or React/TypeScript frontend needs WordPress REST API schemas, posts/pages/categories/tags/media/search/custom post type/error response shapes, Yoast SEO fields, ACF/custom fields exposed through REST, TypeScript WP types, realistic WordPress-shaped mock fixtures, service-layer mappers, mock-to-api switching, route loader/server function data fetching, pagination headers, auth/CORS/server proxy guidance, or validation scripts for WordPress API and fixture shape.
 ---
 
 # WordPress REST API Development
 
-本 skill 是 WordPress REST API 資料契約的 canonical reference。使用它來讓 Lovable/TanStack Start 前端在開發期用 mock 穩定 UI，正式串接時只切換資料來源與 service layer，不重寫 routes/components。
+本 skill 是 WordPress REST API 資料契約的 canonical reference。使用它來讓 React/TypeScript 前端在開發期用 mock 穩定 UI，正式串接時只切換資料來源與 service layer，不重寫 routes/components。
 
-若任務同時涉及 Lovable 專案治理、SSR/SEO/custom domain、Cursor/Lovable/WordPress 分工，搭配 `.agents/skills/lovable-wordpress-headless-project`。若任務是通用 Lovable prompt 或非 WordPress 專案規劃，搭配 `.agents/skills/my-lovable`。
+若任務同時涉及前端專案治理、SSR/SEO/custom domain、AI builder/Cursor/WordPress 分工，搭配 `.agents/skills/frontend-wordpress-headless-project`。若任務是通用前端專案規劃、AI builder prompt 或非 WordPress 專案規劃，搭配 `.agents/skills/frontend-development`。
 
 ## 載入順序
 
@@ -17,7 +17,7 @@ description: Lovable + WordPress Headless CMS REST API 整合開發 Skill。Use 
 2. 只讀下表對應檔案。
 3. 若要檢查 bundled schemas，執行 `node scripts/validate-skill-schemas.mjs`。
 4. 若要檢查既有 Lovable + WordPress 專案，執行 `node scripts/audit-lovable-wp-project.mjs --root <project-root>`。
-5. 若 API 細節或 Lovable/TanStack 行為會影響決策，重新查官方文件；本 skill 的研究狀態為 2026-06-02。
+5. 若 API 細節或前端平台/framework 行為會影響決策，重新查官方文件。
 
 ## Reference Index
 
@@ -32,6 +32,8 @@ description: Lovable + WordPress Headless CMS REST API 整合開發 Skill。Use 
 | WordPress-shaped mock fixtures | `examples/mock-data-templates.ts` |
 | Service layer、mock/API switch、route loader usage | `examples/service-layer.ts` |
 | 常用 fetch functions | `examples/fetch-various-data.example.ts` |
+| 導覽列/menu fetch 與 tree mapper | `examples/fetch-navigation.example.ts`、`examples/navigation-service.example.ts` |
+| Headless sitemap.xml 產生 | `examples/generate-sitemap.example.ts` |
 | 依 schemas 抓取主要資料 | `examples/fetch-main-data-by-schemas.ts` |
 
 ## 核心規則
@@ -69,6 +71,8 @@ VITE_SITE_URL=https://example.com
 - Category/Tag: `id`、`count`、`description`、`link`、`name`、`slug`、`taxonomy`；Category 有 `parent`，Tag 通常沒有。
 - Media: `id`、`source_url`、`alt_text`、`caption.rendered`、`media_details.sizes`。
 - Search: `title` 是 string，不是 `{ rendered }`；詳細差異見 `references/schemas/search.json5`。
+- Navigation menu: classic theme 通常用 `/wp/v2/menu-locations` 找 location，再用 `/wp/v2/menu-items?menus=<id>` 取得 items 並用 `parent` + `menu_order` 組 tree；block theme 可參考 `/wp/v2/navigation`。
+- Error response: 非 2xx 通常是 `{ code, message, data: { status } }`，詳細差異見 `references/schemas/error-response.json5`；service layer 必須回傳/丟出此錯誤，不可靜默轉成空資料。
 
 常用 access paths:
 
@@ -80,6 +84,9 @@ post._embedded?.["wp:featuredmedia"]?.[0]?.source_url
 post._embedded?.["wp:term"]?.[0] // categories
 post._embedded?.["wp:term"]?.[1] // tags
 post.yoast_head_json?.title
+error.code
+error.message
+error.data?.status
 ```
 
 ## Service Layer Contract
@@ -146,6 +153,7 @@ WP_PROJECT_ROOT=D:/path/to/project node scripts/run-wordpress-rest-api-tests.mjs
 WP_RESPONSE_TYPE=post WP_RESPONSE_FILE=fixtures/posts.json node scripts/run-wordpress-rest-api-tests.mjs
 WP_LIVE_API_TEST=1 VITE_WP_API_URL=https://cms.example.com/wp-json/wp/v2 node scripts/run-wordpress-rest-api-tests.mjs
 node examples/fetch-main-data-by-schemas.ts --per-page 1
+node --experimental-strip-types examples/fetch-navigation.example.ts
 ```
 
 如果 target project 已有自己的 package scripts，優先用專案既有 scripts。
@@ -156,6 +164,7 @@ node examples/fetch-main-data-by-schemas.ts --per-page 1
 - Components/routes 是否直接 import mock、直接 fetch WordPress、直接讀 env。
 - Mock/API shape 是否分裂。
 - Production API error 是否顯示 mock 假內容。
+- Production API error 是否被轉成 `[]`、`null` 或空頁；必須丟出/回傳包含 WordPress error body 的錯誤。
 - Pagination headers `X-WP-Total`、`X-WP-TotalPages` 是否處理。
 - Dynamic slug route 是否正確 404。
 - Yoast/SEO fallback 是否可在 SSR metadata 中產生。

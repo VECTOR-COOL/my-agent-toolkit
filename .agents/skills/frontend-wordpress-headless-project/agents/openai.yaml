@@ -1,0 +1,4 @@
+interface:
+  display_name: "前端 WordPress Headless"
+  short_description: "搭配 WordPress REST CMS 的前端協作"
+  default_prompt: "使用此 skill 處理由 WordPress REST API 驅動的 Lovable、v0、Replit、Cursor 或 React/TypeScript 前端專案，包含 CMS mapping、service-layer 邊界、錯誤處理、SEO、部署與 AI-builder 協作。"

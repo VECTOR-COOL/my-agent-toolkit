@@ -1,0 +1,55 @@
+// ============================================================
+// WordPress REST API — Menu Item（選單項目）
+// 端點：GET /wp/v2/menu-items?menus=<menuId>&per_page=100&orderby=menu_order&order=asc
+//
+// 前端導覽列常用欄位：
+//   - title.rendered -> label
+//   - url -> href
+//   - parent + menu_order -> tree order
+//   - target + xfn -> link attributes
+// ============================================================
+{
+  id: 101,                                        // integer, menu item post ID
+  date: "2025-01-01T00:00:00",                    // string|null, 建立日期（站台時區）
+  date_gmt: "2024-12-31T16:00:00",                // string|null, 建立日期（GMT）
+  modified: "2025-01-10T12:00:00",                // string, 修改日期（站台時區）
+  modified_gmt: "2025-01-10T04:00:00",            // string, 修改日期（GMT）
+  slug: "101",                                    // string, menu item slug
+  status: "publish",                              // string: publish | draft | pending | private
+  type: "nav_menu_item",                          // string, 固定為 "nav_menu_item"
+  link: "https://cms.example.com/?p=101",          // string, WordPress menu item post link
+  title: {
+    rendered: "關於我們",                          // string, HTML rendered label
+    // raw: "關於我們",                            // ⚠️ 僅 edit context
+  },
+
+  // === Menu item 專屬欄位 ===
+  type_label: "Page",                              // string, 後台顯示類型
+  menu_order: 1,                                   // integer, 同層排序
+  parent: 0,                                       // integer, 父 menu item ID；0 = 頂層
+  attr_title: "",                                  // string, title attribute
+  classes: ["menu-item", "menu-item-about"],       // string[], CSS classes
+  description: "",                                // string, 選單描述
+  object: "page",                                  // string, page | category | custom 等
+  object_id: 10,                                   // integer, 對應 post/term ID；custom 通常為 0
+  target: "",                                      // string: "" | "_blank"
+  url: "https://cms.example.com/about-us/",        // string, 實際連結 URL
+  xfn: [],                                         // string[], rel/XFN values
+  invalid: false,                                  // boolean, 目標是否失效
+  menus: 2,                                        // integer | integer[], 所屬 nav menu ID
+  meta: {},                                        // object, 自訂 meta
+
+  // === _links（HATEOAS 風格，前端通常不需要）===
+  _links: {
+    self: [{ href: "https://cms.example.com/wp-json/wp/v2/menu-items/101" }],
+    collection: [{ href: "https://cms.example.com/wp-json/wp/v2/menu-items" }],
+    about: [{ href: "https://cms.example.com/wp-json/wp/v2/types/nav_menu_item" }],
+    "wp:term": [
+      {
+        taxonomy: "nav_menu",
+        embeddable: true,
+        href: "https://cms.example.com/wp-json/wp/v2/menus?post=101",
+      },
+    ],
+  },
+}

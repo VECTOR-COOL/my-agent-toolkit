@@ -1,0 +1,31 @@
+// ============================================================
+// WordPress REST API — Nav Menu（選單）
+// 端點：GET /wp/v2/menus
+//
+// ⚠️ 可用性：
+//   - WordPress core navigation menu REST endpoints depend on site version,
+//     theme support, and permissions.
+//   - Classic theme menus usually pair this with /wp/v2/menu-locations and
+//     /wp/v2/menu-items.
+// ============================================================
+{
+  id: 2,                                          // integer, menu term ID（read only）
+  count: 5,                                       // integer, 關聯 menu item 數量
+  description: "",                               // string, 選單描述
+  name: "Primary Menu",                          // string, 選單名稱
+  slug: "primary-menu",                          // string, 選單 slug
+  taxonomy: "nav_menu",                          // string, 固定為 "nav_menu"
+  locations: ["primary"],                         // string[], 指派到的 theme menu locations
+  auto_add: false,                                // boolean, 是否自動加入新頂層頁面
+  meta: {},                                       // object, 自訂 meta
+
+  // === _links（HATEOAS 風格，前端通常不需要）===
+  _links: {
+    self: [{ href: "https://cms.example.com/wp-json/wp/v2/menus/2" }],
+    collection: [{ href: "https://cms.example.com/wp-json/wp/v2/menus" }],
+    about: [{ href: "https://cms.example.com/wp-json/wp/v2/taxonomies/nav_menu" }],
+    "wp:post_type": [
+      { href: "https://cms.example.com/wp-json/wp/v2/menu-items?menus=2" },
+    ],
+  },
+}

@@ -1,4 +1,0 @@
-interface:
-  display_name: "My Lovable"
-  short_description: "Lovable architecture, data layer, prompts, and audits"
-  default_prompt: "Use $my-lovable to plan or audit a Lovable/TanStack Start project, including routes, components, data strategy, docs, i18n, tests, and staged Lovable prompts."

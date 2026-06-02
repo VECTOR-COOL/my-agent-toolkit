@@ -35,6 +35,43 @@ export const use_mock_data = data_source === "mock";
 // import { mock_posts } from "@/data/mock_posts";
 // import type { WPPost, WPPaginationInfo } from "@/types/wordpress";
 
+interface WPErrorResponse {
+  code: string;
+  message: string;
+  data?: {
+    status?: number;
+    params?: Record<string, string>;
+    details?: Record<string, unknown>;
+    [key: string]: unknown;
+  };
+  additional_errors?: WPErrorResponse[];
+}
+
+class WordPressRestApiError extends Error {
+  status: number;
+  statusText: string;
+  url: string;
+  body: WPErrorResponse | unknown;
+
+  constructor(response: Response, body: WPErrorResponse | unknown) {
+    const errorBody = is_wp_error_response(body) ? body : null;
+    super(
+      [
+        `WordPress REST API error: ${response.status} ${response.statusText}`,
+        errorBody?.code,
+        errorBody?.message,
+      ]
+        .filter(Boolean)
+        .join(" - ")
+    );
+    this.name = "WordPressRestApiError";
+    this.status = response.status;
+    this.statusText = response.statusText;
+    this.url = response.url;
+    this.body = body;
+  }
+}
+
 interface GetPostsOptions {
   page?: number;
   per_page?: number;
@@ -109,9 +146,7 @@ export async function get_posts(
 
     const response = await fetch(`${api_base_url}/posts?${params.toString()}`);
 
-    if (!response.ok) {
-      throw new Error(`API 回應錯誤: ${response.status}`);
-    }
+    await assert_wp_response_ok(response);
 
     const posts = await response.json();
     const total = parseInt(response.headers.get("X-WP-Total") || "0");
@@ -133,7 +168,7 @@ export async function get_posts(
       };
     }
 
-    return { posts: [], pagination: { total: 0, totalPages: 0 } };
+    throw error;
   }
 }
 
@@ -158,9 +193,7 @@ export async function get_post_by_slug(slug: string): Promise<WPPost | null> {
       `${api_base_url}/posts?slug=${encodeURIComponent(slug)}&_embed`
     );
 
-    if (!response.ok) {
-      throw new Error(`API 回應錯誤: ${response.status}`);
-    }
+    await assert_wp_response_ok(response);
 
     const posts = await response.json();
     return posts?.[0] || null;
@@ -171,7 +204,7 @@ export async function get_post_by_slug(slug: string): Promise<WPPost | null> {
       return mock_posts.find((post) => post.slug === slug) || null;
     }
 
-    return null;
+    throw error;
   }
 }
 
@@ -193,12 +226,12 @@ export async function get_pages(): Promise<WPPage[]> {
 
   try {
     const response = await fetch(`${api_base_url}/pages?_embed&per_page=100`);
-    if (!response.ok) throw new Error(`API 回應錯誤: ${response.status}`);
+    await assert_wp_response_ok(response);
     return await response.json();
   } catch (error) {
     console.error("取得頁面列表失敗", error);
     if (import.meta.env.DEV) return mock_pages;
-    return [];
+    throw error;
   }
 }
 
@@ -214,7 +247,7 @@ export async function get_page_by_slug(slug: string): Promise<WPPage | null> {
     const response = await fetch(
       `${api_base_url}/pages?slug=${encodeURIComponent(slug)}&_embed`
     );
-    if (!response.ok) throw new Error(`API 回應錯誤: ${response.status}`);
+    await assert_wp_response_ok(response);
     const pages = await response.json();
     return pages?.[0] || null;
   } catch (error) {
@@ -222,7 +255,7 @@ export async function get_page_by_slug(slug: string): Promise<WPPage | null> {
     if (import.meta.env.DEV) {
       return mock_pages.find((page) => page.slug === slug) || null;
     }
-    return null;
+    throw error;
   }
 }
 
@@ -246,12 +279,12 @@ export async function get_categories_list(): Promise<WPCategory[]> {
     const response = await fetch(
       `${api_base_url}/categories?per_page=100&hide_empty=true`
     );
-    if (!response.ok) throw new Error(`API 回應錯誤: ${response.status}`);
+    await assert_wp_response_ok(response);
     return await response.json();
   } catch (error) {
     console.error("取得分類列表失敗", error);
     if (import.meta.env.DEV) return mock_categories;
-    return [];
+    throw error;
   }
 }
 
@@ -269,7 +302,7 @@ export async function get_category_by_slug(
     const response = await fetch(
       `${api_base_url}/categories?slug=${encodeURIComponent(slug)}`
     );
-    if (!response.ok) throw new Error(`API 回應錯誤: ${response.status}`);
+    await assert_wp_response_ok(response);
     const categories = await response.json();
     return categories?.[0] || null;
   } catch (error) {
@@ -277,8 +310,35 @@ export async function get_category_by_slug(
     if (import.meta.env.DEV) {
       return mock_categories.find((cat) => cat.slug === slug) || null;
     }
+    throw error;
+  }
+}
+
+async function assert_wp_response_ok(response: Response) {
+  if (response.ok) return;
+  throw new WordPressRestApiError(response, await read_wp_error_body(response));
+}
+
+async function read_wp_error_body(response: Response) {
+  const content_type = response.headers.get("content-type") ?? "";
+  if (!content_type.includes("application/json")) {
+    return response.text();
+  }
+
+  try {
+    return (await response.json()) as WPErrorResponse | unknown;
+  } catch {
     return null;
   }
+}
+
+function is_wp_error_response(value: unknown): value is WPErrorResponse {
+  if (!value || typeof value !== "object") return false;
+  const candidate = value as Record<string, unknown>;
+  return (
+    typeof candidate.code === "string" &&
+    typeof candidate.message === "string"
+  );
 }
 
 // ============================================================

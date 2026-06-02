@@ -1,0 +1,38 @@
+// ============================================================
+// WordPress REST API — Navigation（Block Theme Navigation）
+// 端點：GET /wp/v2/navigation
+//
+// ⚠️ 用途：
+//   - Block theme / Full Site Editing 的 wp_navigation posts。
+//   - content.rendered 內可能是 Navigation blocks HTML；前端若要產生
+//     controlled nav tree，通常應要求 WordPress 提供 custom normalized
+//     endpoint，而不是在 component 內解析 blocks。
+// ============================================================
+{
+  id: 201,                                        // integer, wp_navigation post ID
+  date: "2025-01-01T00:00:00",                    // string|null, 建立日期（站台時區）
+  date_gmt: "2024-12-31T16:00:00",                // string|null, 建立日期（GMT）
+  modified: "2025-01-10T12:00:00",                // string, 修改日期（站台時區）
+  modified_gmt: "2025-01-10T04:00:00",            // string, 修改日期（GMT）
+  slug: "primary-navigation",                     // string, navigation slug
+  status: "publish",                              // string: publish | draft | pending | private
+  type: "wp_navigation",                          // string, 固定為 "wp_navigation"
+  link: "https://cms.example.com/?post_type=wp_navigation&p=201",
+  title: {
+    rendered: "Primary Navigation",                // string, navigation 名稱
+    // raw: "Primary Navigation",                  // ⚠️ 僅 edit context
+  },
+  content: {
+    rendered: "<!-- wp:navigation-link {\"label\":\"首頁\",\"url\":\"/\"} /-->", // string, blocks/HTML
+    protected: false,                              // boolean
+    // raw: "<!-- wp:navigation-link ... -->",     // ⚠️ 僅 edit context
+  },
+  template: "",                                    // string, template slug
+
+  // === _links（HATEOAS 風格，前端通常不需要）===
+  _links: {
+    self: [{ href: "https://cms.example.com/wp-json/wp/v2/navigation/201" }],
+    collection: [{ href: "https://cms.example.com/wp-json/wp/v2/navigation" }],
+    about: [{ href: "https://cms.example.com/wp-json/wp/v2/types/wp_navigation" }],
+  },
+}

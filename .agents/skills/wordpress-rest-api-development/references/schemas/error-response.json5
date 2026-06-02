@@ -1,0 +1,30 @@
+{
+  // WordPress REST API error response shape.
+  // Returned for non-2xx REST responses such as 400, 401, 403, 404, 500.
+  code: "rest_invalid_param",
+  message: "Invalid parameter(s): per_page",
+  data: {
+    status: 400,
+    params: {
+      per_page: "per_page must be between 1 (inclusive) and 100 (inclusive)",
+    },
+    details: {
+      per_page: {
+        code: "rest_out_of_bounds",
+        message: "per_page must be between 1 (inclusive) and 100 (inclusive)",
+        data: {
+          param: "per_page",
+        },
+      },
+    },
+  },
+  additional_errors: [
+    {
+      code: "rest_forbidden",
+      message: "Sorry, you are not allowed to do that.",
+      data: {
+        status: 403,
+      },
+    },
+  ],
+}

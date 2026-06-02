@@ -1,4 +1,0 @@
-interface:
-  display_name: "Lovable WordPress Headless"
-  short_description: "Lovable SSR frontend with WordPress REST CMS"
-  default_prompt: "Use this skill for Lovable/TanStack Start SSR work backed by WordPress REST API, including CMS mapping, service-layer boundaries, SEO, deployment, and Cursor/Lovable/WordPress collaboration."
