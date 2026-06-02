@@ -82,7 +82,7 @@ const apiBaseUrl = stripTrailingSlash(
     args["base-url"] ||
       process.env.VITE_WP_API_URL ||
       process.env.VITE_API_BASE_URL ||
-      "https://cms.uavs.tw/wp-json/wp/v2",
+      "https://example.com/wp-json/wp/v2",
   ),
 );
 

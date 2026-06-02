@@ -20,10 +20,10 @@ export const data_source =
 export const api_base_url =
   import.meta.env.VITE_WP_API_URL ||
   import.meta.env.VITE_API_BASE_URL ||
-  "https://cms.uavs.tw/wp-json/wp/v2";
+  "https://example.com/wp-json/wp/v2";
 
 export const site_url =
-  import.meta.env.VITE_SITE_URL || "https://uavs.tw";
+  import.meta.env.VITE_SITE_URL || "https://example.com";
 
 export const use_mock_data = data_source === "mock";
 

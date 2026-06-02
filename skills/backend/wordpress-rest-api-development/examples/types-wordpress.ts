@@ -413,10 +413,10 @@ export function get_seo_data(
   post: WPPost | WPPage | null,
   defaults?: { title?: string; description?: string; image?: string }
 ) {
-  const site_name = defaults?.title ?? "UAVS";
-  const default_description = defaults?.description ?? "UAVS 官方網站";
+  const site_name = defaults?.title ?? "My Site";
+  const default_description = defaults?.description ?? "Default site description.";
   const default_image =
-    defaults?.image ?? "https://uavs.tw/og-default.jpg";
+    defaults?.image ?? "https://example.com/og-default.jpg";
 
   if (!post) {
     return {
