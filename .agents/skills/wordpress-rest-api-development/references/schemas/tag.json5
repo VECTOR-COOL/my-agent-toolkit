@@ -1,0 +1,39 @@
+// ============================================================
+// WordPress REST API — Tag（標籤）Schema
+// 端點：GET /wp/v2/tags
+// 官方文件：https://developer.wordpress.org/rest-api/reference/tags/
+//
+// ⚠️ 與 Category 的差異：
+//   - taxonomy 為 "post_tag" 而非 "category"
+//   - 無 parent 欄位（標籤是扁平結構，沒有層級）
+// ============================================================
+{
+  id: 5,                                           // integer, 唯一識別碼
+  count: 8,                                        // integer, 使用此標籤的文章數量
+  description: "無人機相關內容",                      // string, 標籤描述
+  link: "https://cms.example.com/tag/drone/",      // string (uri)
+  name: "無人機",                                    // string, 顯示名稱
+  slug: "drone",                                   // string, URL slug
+  taxonomy: "post_tag",                            // string, 固定為 "post_tag"（⚠️ 非 "tag"）
+  meta: {},                                        // object, 自訂 meta
+
+  // ❌ 注意：Tag 沒有 parent 欄位（無層級結構）
+
+  // === Yoast SEO（需安裝外掛）===
+  yoast_head: "...",
+  yoast_head_json: {
+    title: "無人機 Archives | 網站名",
+    description: "無人機相關內容",
+    canonical: "https://example.com/tag/drone/",
+    og_locale: "zh_TW",
+    og_type: "website",
+  },
+
+  // === _links ===
+  _links: {
+    self: [{ href: "https://cms.example.com/wp-json/wp/v2/tags/5" }],
+    collection: [{ href: "https://cms.example.com/wp-json/wp/v2/tags" }],
+    about: [{ href: "https://cms.example.com/wp-json/wp/v2/taxonomies/post_tag" }],
+    "wp:post_type": [{ href: "https://cms.example.com/wp-json/wp/v2/posts?tags=5" }],
+  },
+}

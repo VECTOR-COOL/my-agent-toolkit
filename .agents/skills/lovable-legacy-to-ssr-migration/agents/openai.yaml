@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lovable SSR Migration"
+  short_description: "Rebuild legacy Lovable SPA into TanStack Start"
+  default_prompt: "Use this skill to audit and rebuild an old Lovable React/Vite SPA into a new Lovable TanStack Start SSR project while preserving UI, routes, assets, Tailwind tokens, and first-phase mock-only scope."

@@ -1,0 +1,43 @@
+// ============================================================
+// WordPress REST API — User（使用者）Schema
+// 端點：GET /wp/v2/users/<id>
+// 官方文件：https://developer.wordpress.org/rest-api/reference/users/
+//
+// ⚠️ 注意：
+//   - 公開端點只回傳有發佈文章的使用者
+//   - email 欄位需 edit context（需認證）
+//   - 密碼相關欄位永遠不會在回應中出現
+// ============================================================
+{
+  id: 1,                                           // integer, 唯一識別碼
+  name: "管理員",                                    // string, 顯示名稱
+  url: "https://example.com",                      // string, 個人網站 URL
+  description: "網站管理員",                          // string, 個人簡介
+  link: "https://cms.example.com/author/admin/",   // string (uri), 作者頁面連結
+  slug: "admin",                                   // string, URL slug
+
+  // Gravatar 頭像（依 email hash 自動產生）
+  avatar_urls: {
+    "24": "https://secure.gravatar.com/avatar/abc123?s=24&d=mm&r=g", // string, 24px
+    "48": "https://secure.gravatar.com/avatar/abc123?s=48&d=mm&r=g", // string, 48px
+    "96": "https://secure.gravatar.com/avatar/abc123?s=96&d=mm&r=g", // string, 96px（最常用）
+  },
+
+  meta: {},                                        // object, 自訂 meta
+
+  // === 以下欄位僅 edit context 可見（需認證）===
+  // username: "admin",                            // string, 登入帳號
+  // email: "admin@example.com",                   // string, Email
+  // first_name: "管理",                            // string
+  // last_name: "員",                              // string
+  // nickname: "管理員",                            // string
+  // registered_date: "2020-01-01T00:00:00",       // string
+  // roles: ["administrator"],                     // string[]
+  // capabilities: { ... },                        // object
+
+  // === _links ===
+  _links: {
+    self: [{ href: "https://cms.example.com/wp-json/wp/v2/users/1" }],
+    collection: [{ href: "https://cms.example.com/wp-json/wp/v2/users" }],
+  },
+}

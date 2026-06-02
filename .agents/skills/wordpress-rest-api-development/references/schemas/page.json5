@@ -1,0 +1,100 @@
+// ============================================================
+// WordPress REST API — Page（頁面）Schema
+// 端點：GET /wp/v2/pages?_embed
+// 官方文件：https://developer.wordpress.org/rest-api/reference/pages/
+//
+// ⚠️ 與 Post 的差異：
+//   ✅ 有 parent（父頁面 ID）
+//   ✅ 有 menu_order（選單排序）
+//   ❌ 無 categories、tags
+//   ❌ 無 format、sticky
+//   ❌ _embedded 無 wp:term
+// ============================================================
+{
+  // === 基本欄位（與 Post 相同）===
+  id: 10,                                          // integer, 唯一識別碼
+  date: "2025-01-01T00:00:00",                     // string|null, 站台時區
+  date_gmt: "2024-12-31T16:00:00",                 // string|null, GMT
+  modified: "2025-02-01T12:00:00",                 // string, 站台時區
+  modified_gmt: "2025-02-01T04:00:00",             // string, GMT
+  slug: "about-us",                                // string, URL slug
+  status: "publish",                               // string: publish | future | draft | pending | private
+  type: "page",                                    // string, 固定為 "page"
+  link: "https://cms.example.com/about-us/",       // string (uri)
+
+  // === 內容欄位（與 Post 相同）===
+  title: { rendered: "關於我們" },
+  content: { rendered: "<p>公司簡介...</p>", protected: false },
+  excerpt: { rendered: "<p>簡短描述...</p>", protected: false },
+  guid: { rendered: "https://cms.example.com/?page_id=10" },
+
+  // === Page 專屬欄位 ===
+  author: 1,                                       // integer, 作者 ID
+  featured_media: 789,                             // integer, 特色圖片 Media ID
+  parent: 0,                                       // integer, 父頁面 ID（0 = 頂層頁面，無父頁面）
+  menu_order: 0,                                   // integer, 選單排序（數字越小越前面）
+  comment_status: "closed",                        // string: open | closed
+  ping_status: "closed",                           // string: open | closed
+  template: "",                                    // string, 佈景模板
+  meta: {},                                        // object, 自訂 meta
+
+  // ❌ 注意：Page 沒有以下 Post 欄位：
+  // - categories（分類）
+  // - tags（標籤）
+  // - format（文章格式）
+  // - sticky（置頂）
+
+  // === Yoast SEO（結構同 Post）===
+  yoast_head: "...",                               // string, SEO HTML blob
+  yoast_head_json: {
+    title: "關於我們 | 網站名",
+    description: "頁面描述...",
+    canonical: "https://example.com/about-us/",
+    og_locale: "zh_TW",
+    og_type: "website",                            // ⚠️ Page 通常是 "website" 而非 "article"
+    og_title: "關於我們",
+    og_description: "頁面描述...",
+    og_url: "https://example.com/about-us/",
+    og_site_name: "網站名稱",
+    og_image: [
+      { width: 1200, height: 630, url: "https://cms.example.com/wp-content/uploads/about-og.jpg" },
+    ],
+    twitter_card: "summary_large_image",
+    schema: { "@context": "https://schema.org", "@graph": [] },
+  },
+
+  // === _embedded（使用 ?_embed 時）===
+  _embedded: {
+    author: [
+      {
+        id: 1,
+        name: "Admin",
+        url: "",
+        description: "",
+        link: "https://cms.example.com/author/admin/",
+        slug: "admin",
+        avatar_urls: { "24": "...", "48": "...", "96": "..." },
+      },
+    ],
+    "wp:featuredmedia": [
+      {
+        id: 789,
+        source_url: "https://cms.example.com/wp-content/uploads/about-hero.jpg", // ⭐ 前端最常用
+        alt_text: "關於我們 Hero 圖片",
+        title: { rendered: "About Hero" },
+        caption: { rendered: "" },
+        media_type: "image",
+        mime_type: "image/jpeg",
+        media_details: {
+          width: 1920,
+          height: 1080,
+          sizes: {
+            // ... 同 Post schema 的 sizes 結構
+          },
+        },
+        // ... 其餘欄位同 Post._embedded["wp:featuredmedia"]
+      },
+    ],
+    // ❌ 注意：Page 沒有 wp:term（沒有分類/標籤）
+  },
+}

@@ -1,0 +1,37 @@
+// ============================================================
+// WordPress REST API — Search（搜尋）Schema
+// 端點：GET /wp/v2/search?search=<keyword>
+// 官方文件：https://developer.wordpress.org/rest-api/reference/search-results/
+//
+// ⚠️ 重要差異：
+//   搜尋結果的 title 是 string，不是 { rendered: string }！
+//   這與 Post/Page 不同，使用時需注意。
+// ============================================================
+{
+  id: 123,                                         // integer, 文章/頁面 ID
+  title: "搜尋結果標題",                              // ⚠️ string！（不是 object，注意與 Post.title 不同）
+  url: "https://cms.example.com/my-post/",         // string, WordPress 原始 URL
+  type: "post",                                    // string: post | term | post-format
+  subtype: "post",                                 // string: post | page | {custom-post-type}
+  _links: {
+    self: [
+      {
+        embeddable: true,
+        href: "https://cms.example.com/wp-json/wp/v2/posts/123",
+      },
+    ],
+    about: [
+      { href: "https://cms.example.com/wp-json/wp/v2/types/post" },
+    ],
+  },
+}
+
+// ============================================================
+// 搜尋查詢參數範例
+// ============================================================
+// GET /wp/v2/search?search=無人機                  → 搜尋所有類型
+// GET /wp/v2/search?search=無人機&type=post        → 只搜尋 post 類型
+// GET /wp/v2/search?search=無人機&subtype=page     → 只搜尋 page
+// GET /wp/v2/search?search=無人機&per_page=5       → 限制結果數量
+//
+// ⚠️ 搜尋結果只含基本資訊，通常需要再用 id 去查詢完整 Post/Page 資料
