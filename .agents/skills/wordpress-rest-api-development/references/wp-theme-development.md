@@ -54,6 +54,18 @@ For classic themes, WordPress registers menu locations in PHP with `register_nav
 
 For block themes, also check `/wp/v2/navigation`. Block navigation stores navigation as post content, so the frontend must either parse/render blocks intentionally or ask WordPress for a custom normalized menu endpoint.
 
+Relevant schema references:
+
+- `references/schemas/nav-menu.json5`
+- `references/schemas/menu-location.json5`
+- `references/schemas/menu-item.json5`
+- `references/schemas/navigation.json5`
+
+Frontend examples:
+
+- `examples/fetch-navigation.example.ts`
+- `examples/navigation-service.example.ts`
+
 ## Custom endpoints
 
 Many theme-level values are not cleanly public through core REST endpoints:
@@ -90,9 +102,21 @@ Recommended normalized shape:
 
 The matching schema is `references/schemas/wp-theme-common-data.schema.json`.
 
+## Sitemap
+
+WordPress core sitemap output is XML, usually starting at `/wp-sitemap.xml`; it is not a `/wp/v2/*` JSON REST resource. In a headless frontend, generate `sitemap.xml` on the frontend domain and use WordPress REST API only as the content source.
+
+Recommended flow:
+
+1. Fetch public route sources such as `/wp/v2/pages`, `/wp/v2/posts`, taxonomies, and custom post types.
+2. Map WordPress slugs to frontend route paths.
+3. Emit XML URLs with the frontend canonical domain from `VITE_SITE_URL`.
+4. Do not expose CMS-domain URLs in the public frontend sitemap unless the CMS is intentionally public and canonical.
+
+See `examples/generate-sitemap.example.ts`.
+
 ## Authentication note
 
 Public content can usually be fetched without authentication. Private content, edit contexts, protected settings, users, drafts, templates, widgets, plugin options, and write operations require authentication and the correct WordPress capability.
 
 For headless production frontends, do not expose WordPress Application Passwords, JWT secrets, admin cookies, or nonces in browser code. Use a backend proxy or server-only runtime when authenticated requests are needed.
-

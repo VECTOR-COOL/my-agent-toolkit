@@ -32,6 +32,43 @@ type WpCollectionResponse<T> = {
   totalPages: number;
 };
 
+type WpErrorResponse = {
+  code: string;
+  message: string;
+  data?: {
+    status?: number;
+    params?: Record<string, string>;
+    details?: Record<string, unknown>;
+    [key: string]: unknown;
+  };
+  additional_errors?: WpErrorResponse[];
+};
+
+class WordPressRestApiError extends Error {
+  status: number;
+  statusText: string;
+  url: string;
+  body: WpErrorResponse | unknown;
+
+  constructor(response: Response, body: WpErrorResponse | unknown) {
+    const errorBody = isWpErrorResponse(body) ? body : null;
+    super(
+      [
+        `WordPress REST API error: ${response.status} ${response.statusText}`,
+        errorBody?.code,
+        errorBody?.message,
+      ]
+        .filter(Boolean)
+        .join(" - "),
+    );
+    this.name = "WordPressRestApiError";
+    this.status = response.status;
+    this.statusText = response.statusText;
+    this.url = response.url;
+    this.body = body;
+  }
+}
+
 type WpRendered = {
   rendered: string;
 };
@@ -153,12 +190,32 @@ async function wpFetch<T>(
   });
 
   if (!response.ok) {
-    throw new Error(
-      `WordPress REST API error: ${response.status} ${response.statusText}`,
-    );
+    throw new WordPressRestApiError(response, await readWpErrorBody(response));
   }
 
   return response;
+}
+
+async function readWpErrorBody(response: Response) {
+  const contentType = response.headers.get("content-type") ?? "";
+  if (!contentType.includes("application/json")) {
+    return response.text();
+  }
+
+  try {
+    return (await response.json()) as WpErrorResponse | unknown;
+  } catch {
+    return null;
+  }
+}
+
+function isWpErrorResponse(value: unknown): value is WpErrorResponse {
+  if (!value || typeof value !== "object") return false;
+  const candidate = value as Record<string, unknown>;
+  return (
+    typeof candidate.code === "string" &&
+    typeof candidate.message === "string"
+  );
 }
 
 async function wpCollection<T>(

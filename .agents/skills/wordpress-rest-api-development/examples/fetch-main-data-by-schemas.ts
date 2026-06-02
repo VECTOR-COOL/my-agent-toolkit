@@ -242,7 +242,8 @@ async function fetchResource(resource: ResourceConfig): Promise<FetchResult> {
     const duration = Date.now() - startedAt;
 
     if (!response.ok) {
-      const message = `HTTP ${response.status} ${response.statusText}`;
+      const body = await readWpErrorBody(response);
+      const message = formatWpError(response, body);
       if (resource.required) console.error(message);
       else console.log(`${message} (optional)`);
       return { ok: false };
@@ -348,6 +349,41 @@ function stripHtml(value: string) {
 
 function stripTrailingSlash(value: string) {
   return value.replace(/\/+$/, "");
+}
+
+async function readWpErrorBody(response: Response) {
+  const contentType = response.headers.get("content-type") ?? "";
+  if (!contentType.includes("application/json")) {
+    return response.text();
+  }
+
+  try {
+    return (await response.json()) as unknown;
+  } catch {
+    return null;
+  }
+}
+
+function formatWpError(response: Response, body: unknown) {
+  const parts = [`HTTP ${response.status} ${response.statusText}`];
+  if (isWpErrorResponse(body)) {
+    parts.push(body.code, body.message);
+    if (body.data?.status) parts.push(`data.status=${body.data.status}`);
+  } else if (typeof body === "string" && body.trim()) {
+    parts.push(body.trim());
+  }
+  return parts.join(" - ");
+}
+
+function isWpErrorResponse(
+  value: unknown,
+): value is { code: string; message: string; data?: { status?: number } } {
+  if (!value || typeof value !== "object") return false;
+  const candidate = value as Record<string, unknown>;
+  return (
+    typeof candidate.code === "string" &&
+    typeof candidate.message === "string"
+  );
 }
 
 async function fileExists(filePath: string) {

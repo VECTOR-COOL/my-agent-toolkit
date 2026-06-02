@@ -72,6 +72,11 @@ const validators = {
     ['type', 'string'],
     ['subtype', 'string'],
   ],
+  error: [
+    ['code', 'string'],
+    ['message', 'string'],
+    ['data.status', 'number'],
+  ],
 };
 
 if (!validators[type]) {
@@ -129,9 +134,46 @@ console.log(`OK: ${records.length} ${type} record(s) match the essential WordPre
 async function readUrl(url) {
   const response = await fetch(url);
   if (!response.ok) {
-    fail(`HTTP ${response.status} ${response.statusText}: ${url}`);
+    const body = await readWpErrorBody(response);
+    if (type === 'error') return body;
+    fail(`${formatWpError(response, body)}: ${url}`);
   }
   return response.json();
+}
+
+function formatWpError(response, body) {
+  const parts = [`HTTP ${response.status} ${response.statusText}`];
+
+  if (isWpErrorResponse(body)) {
+    parts.push(body.code, body.message);
+    if (body.data?.status) parts.push(`data.status=${body.data.status}`);
+  } else if (typeof body === 'string' && body.trim()) {
+    parts.push(body.trim());
+  }
+
+  return parts.join(' - ');
+}
+
+async function readWpErrorBody(response) {
+  const contentType = response.headers.get('content-type') || '';
+  if (!contentType.includes('application/json')) {
+    return response.text();
+  }
+
+  try {
+    return await response.json();
+  } catch {
+    return null;
+  }
+}
+
+function isWpErrorResponse(value) {
+  return Boolean(
+    value &&
+      typeof value === 'object' &&
+      typeof value.code === 'string' &&
+      typeof value.message === 'string'
+  );
 }
 
 async function readJsonFile(path) {

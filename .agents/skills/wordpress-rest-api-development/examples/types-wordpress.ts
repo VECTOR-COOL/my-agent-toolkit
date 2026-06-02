@@ -312,6 +312,61 @@ export interface WPListResponse<T> {
   pagination: WPPaginationInfo;
 }
 
+/** WordPress REST API 錯誤回應 */
+export interface WPErrorResponse {
+  code: string;
+  message: string;
+  data?: {
+    status?: number;
+    params?: Record<string, string>;
+    details?: Record<
+      string,
+      {
+        code?: string;
+        message?: string;
+        data?: unknown;
+      }
+    >;
+    [key: string]: unknown;
+  };
+  additional_errors?: WPErrorResponse[];
+}
+
+/** 保留 HTTP 狀態、URL 與 WordPress error body 的 API 錯誤 */
+export class WordPressRestApiError extends Error {
+  status: number;
+  statusText: string;
+  url: string;
+  body: WPErrorResponse | unknown;
+
+  constructor(response: Response, body: WPErrorResponse | unknown) {
+    const errorBody = is_wp_error_response(body) ? body : null;
+    super(
+      [
+        `WordPress REST API error: ${response.status} ${response.statusText}`,
+        errorBody?.code,
+        errorBody?.message,
+      ]
+        .filter(Boolean)
+        .join(" - ")
+    );
+    this.name = "WordPressRestApiError";
+    this.status = response.status;
+    this.statusText = response.statusText;
+    this.url = response.url;
+    this.body = body;
+  }
+}
+
+export function is_wp_error_response(value: unknown): value is WPErrorResponse {
+  if (!value || typeof value !== "object") return false;
+  const candidate = value as Record<string, unknown>;
+  return (
+    typeof candidate.code === "string" &&
+    typeof candidate.message === "string"
+  );
+}
+
 // ============================================================
 // 工具型別
 // ============================================================

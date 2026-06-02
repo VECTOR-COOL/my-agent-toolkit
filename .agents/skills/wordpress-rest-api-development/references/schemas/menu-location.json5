@@ -1,0 +1,33 @@
+// ============================================================
+// WordPress REST API — Menu Location（選單位置）
+// 端點：GET /wp/v2/menu-locations
+//
+// 用途：
+//   - 取得 theme 註冊的位置，例如 primary、header、footer、mobile。
+//   - location.menu 是指派到該位置的 nav menu ID。
+// ============================================================
+{
+  name: "primary",                                // string, location key
+  description: "Primary Navigation",              // string, 後台顯示名稱/描述
+  menu: 2,                                        // integer, 指派的 /wp/v2/menus ID；0 代表未指派
+
+  // === _links（HATEOAS 風格，前端通常不需要）===
+  _links: {
+    self: [
+      {
+        href: "https://cms.example.com/wp-json/wp/v2/menu-locations/primary",
+      },
+    ],
+    collection: [
+      {
+        href: "https://cms.example.com/wp-json/wp/v2/menu-locations",
+      },
+    ],
+    "wp:menu": [
+      {
+        embeddable: true,
+        href: "https://cms.example.com/wp-json/wp/v2/menus/2",
+      },
+    ],
+  },
+}
