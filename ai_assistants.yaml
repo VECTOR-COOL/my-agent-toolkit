@@ -1,0 +1,26 @@
+# AI 助理專案設定檔
+# Schema：D:/PROJECTS/AI-Assistants/ai/schemas/project-ai-config.schema.json
+
+version: "1.0.1"
+
+project:
+  name: "My Agent Toolkit"
+  slug: "my-agent-toolkit"
+  description: "可攜式 Agent Skills 套件庫，供 Cursor / 相容環境引用"
+  type: "library"
+
+linear:
+  team_identifier: "VECTOR"
+  team_id: ""
+  project_name: ""
+  project_id: ""
+  project_url: ""
+
+memory:
+  project_name: "my-agent-toolkit"
+
+related_projects:
+  - name: "AI-Assistants"
+    relationship: "governance"
+    path: "D:/PROJECTS/AI-Assistants"
+    description: "組織治理 SSOT，唯讀引用"
