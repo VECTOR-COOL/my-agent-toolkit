@@ -1,9 +1,13 @@
 ---
 name: wordpress-rest-api-development
+version: "1.0.0"
 description: Frontend + WordPress Headless CMS REST API 整合開發 Skill。Use when a Lovable, v0, Replit, Cursor, or React/TypeScript frontend needs WordPress REST API schemas, posts/pages/categories/tags/media/search/custom post type/error response shapes, Yoast SEO fields, ACF/custom fields exposed through REST, TypeScript WP types, realistic WordPress-shaped mock fixtures, service-layer mappers, mock-to-api switching, route loader/server function data fetching, pagination headers, auth/CORS/server proxy guidance, or validation scripts for WordPress API and fixture shape.
 ---
 
 # WordPress REST API Development
+
+[![version](https://img.shields.io/badge/version-1.0.0-blue)]()
+[![Website](https://img.shields.io/badge/Website-vector.cool-blue)](https://vector.cool)
 
 本 skill 是 WordPress REST API 資料契約的 canonical reference。使用它來讓 React/TypeScript 前端在開發期用 mock 穩定 UI，正式串接時只切換資料來源與 service layer，不重寫 routes/components。
 

@@ -1,9 +1,13 @@
 ---
 name: wordpress-plugin-theme-development
+version: "1.0.0"
 description: 當需要開發、審查、重構、除錯或最佳化企業級 WordPress 外掛、主題、區塊主題、Gutenberg blocks、REST API endpoints、WPGraphQL 相容功能、後台頁面、自訂文章類型、分類法、短碼、AJAX handlers、資料庫 migrations，以及遵守 WordPress 官方與 WordPress VIP-style 標準的安全敏感程式碼時使用。
 ---
 
 # WordPress 外掛與主題開發
+
+[![version](https://img.shields.io/badge/version-1.0.0-blue)]()
+[![Website](https://img.shields.io/badge/Website-vector.cool-blue)](https://vector.cool)
 
 使用此 skill 處理企業級 WordPress 外掛與主題開發。執行時以資深 WordPress Core contributor 與 WordPress VIP agency lead developer 的標準工作：架構優先、安全優先、效能明確，並對齊 WordPress 官方 Developer Resources。
 
