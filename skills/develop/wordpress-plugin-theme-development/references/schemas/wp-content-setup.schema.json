@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WordPress Content Setup Manifest",
+  "type": "object",
+  "required": ["type", "categories", "tags", "posts", "menus"],
+  "properties": {
+    "type": { "type": "string", "enum": ["content-setup"] },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "slug"],
+        "properties": {
+          "name": { "type": "string" },
+          "slug": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "slug"],
+        "properties": {
+          "name": { "type": "string" },
+          "slug": { "type": "string" }
+        }
+      }
+    },
+    "posts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "slug", "status"],
+        "properties": {
+          "title": { "type": "string" },
+          "slug": { "type": "string" },
+          "status": { "type": "string", "enum": ["draft", "publish", "private"] },
+          "categorySlugs": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "tagSlugs": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "menus": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "location", "items"],
+        "properties": {
+          "name": { "type": "string" },
+          "location": { "type": "string" },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["title", "url"],
+              "properties": {
+                "title": { "type": "string" },
+                "url": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

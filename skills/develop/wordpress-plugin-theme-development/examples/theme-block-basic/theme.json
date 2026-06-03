@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schemas.wp.org/wp/6.5/theme.json",
+  "version": 3,
+  "settings": {
+    "appearanceTools": true,
+    "layout": {
+      "contentSize": "720px",
+      "wideSize": "1120px"
+    },
+    "color": {
+      "palette": [
+        {
+          "slug": "ink",
+          "color": "#1f2937",
+          "name": "Ink"
+        },
+        {
+          "slug": "accent",
+          "color": "#0f766e",
+          "name": "Accent"
+        }
+      ]
+    }
+  },
+  "styles": {
+    "color": {
+      "text": "var:preset|color|ink"
+    },
+    "typography": {
+      "fontFamily": "system-ui, sans-serif"
+    }
+  }
+}

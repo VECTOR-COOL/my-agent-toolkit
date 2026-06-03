@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WordPress Theme Architecture Manifest",
+  "type": "object",
+  "required": ["type", "name", "textDomain", "themeType", "requiredFiles", "templates", "boundaries"],
+  "properties": {
+    "type": { "type": "string", "enum": ["theme"] },
+    "name": { "type": "string" },
+    "textDomain": { "type": "string" },
+    "themeType": { "type": "string", "enum": ["block", "classic", "hybrid"] },
+    "requiredFiles": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "templates": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "parts": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "patterns": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "themeJson": {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string" },
+        "version": { "type": "integer" }
+      }
+    },
+    "boundaries": {
+      "type": "object",
+      "required": ["businessLogicInPlugin", "presentationInTheme"],
+      "properties": {
+        "businessLogicInPlugin": { "type": "boolean" },
+        "presentationInTheme": { "type": "boolean" }
+      }
+    }
+  }
+}

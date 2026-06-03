@@ -1,0 +1,37 @@
+{
+  "type": "content-setup",
+  "categories": [
+    {
+      "name": "最新消息",
+      "slug": "news",
+      "description": "站台最新消息分類。"
+    }
+  ],
+  "tags": [
+    {
+      "name": "精選",
+      "slug": "featured"
+    }
+  ],
+  "posts": [
+    {
+      "title": "歡迎使用 WordPress",
+      "slug": "welcome-to-wordpress",
+      "status": "publish",
+      "categorySlugs": ["news"],
+      "tagSlugs": ["featured"]
+    }
+  ],
+  "menus": [
+    {
+      "name": "主選單",
+      "location": "primary",
+      "items": [
+        {
+          "title": "最新消息",
+          "url": "/welcome-to-wordpress/"
+        }
+      ]
+    }
+  ]
+}

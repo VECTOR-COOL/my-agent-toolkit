@@ -18,6 +18,7 @@
 | `frontend-development` | [SKILL.md](./skills/frontend/frontend-development/SKILL.md) | 通用前端 app、網站、dashboard、工具與 AI builder 專案規劃 |
 | `frontend-wordpress-headless-project` | [SKILL.md](./skills/frontend/frontend-wordpress-headless-project/SKILL.md) | WordPress Headless 前端專案、SEO、資料契約與部署協作 |
 | `wordpress-rest-api-development` | [SKILL.md](./skills/backend/wordpress-rest-api-development/SKILL.md) | WordPress REST API schema、mock fixtures、TypeScript 型別與 service layer |
+| `wordpress-rest-api-admin-development` | [SKILL.md](./skills/backend/wordpress-rest-api-admin-development/SKILL.md) | 透過認證 REST API 管理 WordPress 後端配置、權限、custom endpoints 與 dry-run manifest |
 | `lovable-legacy-to-ssr-migration` | [SKILL.md](./skills/lovable/lovable-legacy-to-ssr-migration/SKILL.md) | 舊 Lovable React/Vite SPA 遷移至 TanStack Start SSR |
 
 ## 快速開始

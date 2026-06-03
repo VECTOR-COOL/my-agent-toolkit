@@ -1,0 +1,18 @@
+{
+  "type": "review-report",
+  "summary": "範例審查報告，展示安全、效能與架構驗收格式。",
+  "findings": [
+    {
+      "severity": "low",
+      "category": "testing",
+      "file": "plugin-oop-basic.php",
+      "line": 1,
+      "message": "正式專案應補上 PHPCS 與整合測試。"
+    }
+  ],
+  "acceptance": {
+    "securityPassed": true,
+    "performancePassed": true,
+    "architecturePassed": true
+  }
+}
