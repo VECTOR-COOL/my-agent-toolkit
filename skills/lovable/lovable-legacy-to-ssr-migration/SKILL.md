@@ -1,9 +1,13 @@
 ---
 name: lovable-legacy-to-ssr-migration
+version: "1.0.0"
 description: 舊版 Lovable React/Vite CSR/SPA 遷移到新版 Lovable TanStack Start SSR 的 UI-preserving migration Skill。Use when auditing or rebuilding an older Lovable app that uses React + Vite, react-router-dom, BrowserRouter/Routes, src/pages, Tailwind v3/HSL tokens, or client-only routing into a new SEO-friendly TanStack Start/TanStack Router project. Covers route mapping, src/routes conversion, Tailwind v3-to-v4 token preservation, asset copying, i18n/provider migration, mock-data-only first phase, visual parity checks, and preventing accidental redesign, API integration, sitemap/robots/custom-domain work, or false in-place SSR upgrade claims.
 ---
 
 # Lovable 舊版專案遷移 Skill
+
+[![version](https://img.shields.io/badge/version-1.0.0-blue)]()
+[![Website](https://img.shields.io/badge/Website-vector.cool-blue)](https://vector.cool)
 
 ## 使用時機
 

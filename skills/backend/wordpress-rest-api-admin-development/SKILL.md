@@ -1,9 +1,13 @@
 ---
 name: wordpress-rest-api-admin-development
+version: "1.0.0"
 description: WordPress REST API 管理端與後端配置開發 Skill。當 Codex 需要用自然語言說明 WordPress REST 管理端如何配置連線授權，或透過 Application Passwords 與 authenticated HTTP REST API 配置、稽核或維護 WordPress 後端時使用，包含 settings、posts/pages、taxonomies、media、users、menus/navigation、custom post types、meta exposure、custom endpoints、permission_callback、capability checks、安全檢查、server-only secrets、dry-run configuration manifests，以及 WordPress admin REST operations 的 Node.js validation/probe scripts。
 ---
 
 # WordPress REST API 管理端開發
+
+[![version](https://img.shields.io/badge/version-1.0.0-blue)]()
+[![Website](https://img.shields.io/badge/Website-vector.cool-blue)](https://vector.cool)
 
 本 skill 用於透過 HTTP REST API 管理 WordPress 後端配置資料。它不是 Docker、WAMP 或本機 WordPress 安裝器；「環境」在此指 WordPress 後端設定、內容 seed、權限、custom endpoint 與 API 可用性。
 

@@ -1,9 +1,13 @@
 ---
 name: frontend-wordpress-headless-project
+version: "1.0.0"
 description: Frontend + WordPress Headless REST API 專案協作 Skill，適用 Lovable、v0、Replit、Cursor 與類似 React/TypeScript builder 或 codebase。用於處理由 WordPress CMS 驅動的前端 routes、layout、components、SSR 或 pre-rendered content、SEO metadata、canonical、Open Graph、sitemap、robots、custom domain 準備、CMS 欄位 mapping、ACF/custom post types、WordPress REST mock-to-api 遷移、service-layer 邊界、normalized view models、route loader/server function 資料流、錯誤處理、部署/env 檢查、AI-builder prompt 限制，以及 hydration、API fallback、missing media、404、CORS、auth、production build 問題的 review/debug。
 ---
 
 # Frontend + WordPress Headless 專案 Skill
+
+[![version](https://img.shields.io/badge/version-1.0.0-blue)]()
+[![Website](https://img.shields.io/badge/Website-vector.cool-blue)](https://vector.cool)
 
 這個 skill 用於維護「React/TypeScript 前端或 AI builder 產生的前端」與「WordPress Headless REST API」整合專案。適用平台包含 Lovable、v0、Replit、Cursor 協作專案與一般前端 repo；核心目標是讓 UI 開發、資料串接、SEO、部署與多人/多工具協作都有明確邊界，避免平台生成、人工修改、WordPress 後台與 API 切換互相破壞。
 

@@ -1,9 +1,13 @@
 ---
 name: frontend-development
+version: "1.0.0"
 description: 通用前端應用開發、AI builder 專案架構、資料層與 prompt 組裝 Skill。用於規劃、審查、建置或遷移 Lovable、v0、Replit 或類似 React/TypeScript 前端 app、網站、dashboard 與工具；涵蓋 route map、專案契約、component 拆分、mock/API 資料策略、service layer 邊界、錯誤處理、HTTP 錯誤頁面、SSR/CSR 決策、theme 規劃、docs/prompts/i18n/tests/scripts 結構與分階段實作 prompts。若涉及 WordPress Headless CMS 資料契約，搭配 frontend-wordpress-headless-project 或 wordpress-rest-api-development。
 ---
 
 # Frontend Development Skill
+
+[![version](https://img.shields.io/badge/version-1.0.0-blue)]()
+[![Website](https://img.shields.io/badge/Website-vector.cool-blue)](https://vector.cool)
 
 Use this skill for frontend product work that may be implemented in Lovable, v0, Replit, or a local React/TypeScript codebase. Lovable remains supported, but do not assume it is the only target platform unless the user explicitly says so.
 
