@@ -1,0 +1,43 @@
+{
+  "type": "plugin",
+  "name": "WP Skill REST AJAX Secure",
+  "textDomain": "wp-skill-rest-ajax-secure",
+  "mainFile": "plugin-rest-ajax-secure.php",
+  "namespace": "WpSkill\\RestAjaxSecure",
+  "php": {
+    "minimumVersion": "8.1",
+    "strictTypes": true,
+    "composerOptional": true
+  },
+  "services": [
+    {
+      "class": "WpSkill\\RestAjaxSecure\\Rest_Controller",
+      "responsibility": "註冊 REST routes 與權限檢查。"
+    },
+    {
+      "class": "WpSkill\\RestAjaxSecure\\Ajax_Controller",
+      "responsibility": "註冊 AJAX action 與 nonce/capability 檢查。"
+    }
+  ],
+  "hooks": [
+    {
+      "name": "rest_api_init",
+      "type": "action",
+      "callback": "Rest_Controller::register_routes",
+      "priority": 10
+    },
+    {
+      "name": "wp_ajax_wp_skill_save_message",
+      "type": "action",
+      "callback": "Ajax_Controller::save_message",
+      "priority": 10
+    }
+  ],
+  "assets": [],
+  "security": {
+    "nonce": true,
+    "capability": true,
+    "sanitize": true,
+    "escape": true
+  }
+}

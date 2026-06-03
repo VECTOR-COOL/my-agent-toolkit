@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wp-skill/latest-posts",
+  "title": "WP Skill Latest Posts",
+  "category": "widgets",
+  "icon": "list-view",
+  "description": "安全 dynamic block 範例。",
+  "textdomain": "wp-skill-block-dynamic-basic",
+  "attributes": {
+    "count": {
+      "type": "number",
+      "default": 3
+    }
+  },
+  "editorScript": "file:./build/index.js",
+  "render": "file:./render.php"
+}

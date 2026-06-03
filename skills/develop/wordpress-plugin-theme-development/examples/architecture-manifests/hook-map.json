@@ -1,0 +1,35 @@
+{
+  "type": "hook-map",
+  "hooks": [
+    {
+      "name": "plugins_loaded",
+      "hookType": "action",
+      "callback": "Plugin::boot",
+      "lifecycle": "外掛載入後初始化服務",
+      "priority": 10,
+      "purpose": "檢查依賴並載入服務。",
+      "requiresCapability": false,
+      "requiresNonce": false
+    },
+    {
+      "name": "admin_init",
+      "hookType": "action",
+      "callback": "Admin_Settings::register_settings",
+      "lifecycle": "後台初始化",
+      "priority": 10,
+      "purpose": "註冊 Settings API 與 sanitize callback。",
+      "requiresCapability": true,
+      "requiresNonce": true
+    },
+    {
+      "name": "rest_api_init",
+      "hookType": "action",
+      "callback": "Rest_Controller::register_routes",
+      "lifecycle": "REST API 初始化",
+      "priority": 10,
+      "purpose": "註冊 API routes 與 permission_callback。",
+      "requiresCapability": true,
+      "requiresNonce": false
+    }
+  ]
+}

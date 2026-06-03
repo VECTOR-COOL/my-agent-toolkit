@@ -1,0 +1,4 @@
+interface:
+  display_name: "WordPress REST API 管理端"
+  short_description: "說明並管理 WordPress 認證 REST 後端配置"
+  default_prompt: "使用 $wordpress-rest-api-admin-development 說明 WordPress REST 管理端連線授權與安全檢查，或透過認證 REST API 配置後端環境。"

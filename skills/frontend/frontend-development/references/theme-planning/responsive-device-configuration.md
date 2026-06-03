@@ -130,23 +130,30 @@
 
 應明確定義：
 
-- desktop：top nav、sidebar、mega menu 或 segmented nav。
-- tablet：是否保留 desktop nav，或改成 compact nav。
-- mobile：drawer、sheet、bottom nav 或簡化 header。
+- 資料結構：主選單項目需支援 `children`，不得在 IA 有階層時強制攤平成單層連結。
+- desktop：top nav、sidebar、dropdown、flyout、mega menu 或 segmented nav。
+- tablet：是否保留 desktop nav，或改成 compact nav；若寬度不足，子選單不得被裁切。
+- mobile：drawer、sheet、accordion、bottom nav 或簡化 header；多層選單不得依賴 hover。
 - active state：目前 route 如何顯示。
+- ancestor active state：目前 route 的父層項目如何顯示。
 - overflow：導覽項目過多時怎麼處理。
-- keyboard：focus order、Esc close、Tab trap。
+- keyboard：focus order、Esc close、Tab trap、方向鍵或 Tab 瀏覽、子選單展開/收合。
+- accessibility：`aria-expanded`、`aria-controls`、focus-visible、outside click close、screen reader label。
 
 範例：
 
 ```json
 {
   "navigation": {
-    "desktop": "persistent header with inline nav",
-    "tablet": "compact header, inline nav if item count <= 5",
-    "mobile": "header with menu sheet",
+    "dataModel": "items support label, href, children, active, ancestorActive, external",
+    "desktop": "persistent header with inline nav and dropdown/mega menu for child items",
+    "tablet": "compact header; keep dropdown only when child panels fit without clipping",
+    "mobile": "header with menu sheet and nested accordion groups",
+    "maxDepth": "2 levels by default, 3 only when IA requires it",
     "touchTarget": "44px minimum",
-    "states": ["default", "hover", "active", "focus-visible", "open"]
+    "states": ["default", "hover", "active", "ancestor-active", "focus-visible", "open"],
+    "closeBehavior": ["Esc", "outside click", "route change"],
+    "qa": ["desktop dropdown", "mobile nested expansion", "deep-link active parent"]
   }
 }
 ```

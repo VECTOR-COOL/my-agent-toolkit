@@ -47,6 +47,7 @@ Use this skill when the task involves:
    - Map routes to pages, loaders/server functions when applicable, layouts, shared components, and critical states.
    - Prefer existing app conventions over new abstractions.
    - Keep component decomposition practical: page layout, feature sections, reusable primitives, data display, forms, and feedback states.
+   - When creating a primary site menu, support multi-level navigation from the data contract through the rendered UI instead of flattening everything into top-level links.
 
 4. Plan data and services.
    - Start with realistic mock data when the backend is not ready.
@@ -99,6 +100,18 @@ When a project has routing, publishing, SSR, SSG, or static-hosting behavior, in
 - Keep error pages inside the existing app shell or documented framework convention, with stable navigation back to a valid workflow.
 - For content pages that need SEO, return the correct HTTP status where the platform supports it; do not rely only on client-side text after a 200 response.
 - Verify direct navigation, refresh, deep links, static-host fallback behavior, and mobile layout for each implemented error page.
+
+## Primary Navigation
+
+When creating or revising the main site menu, treat hierarchy as a first-class requirement.
+
+- Model navigation items with stable fields such as `label`, `href`, `children`, `isActive`, `external`, and optional `description` or `icon`.
+- Support at least two levels of menu items when the information architecture includes child pages; use a third level only when the content structure requires it and the UI pattern can remain usable.
+- Desktop may use dropdown, flyout, or mega menu patterns. Mobile should use a drawer, sheet, or accordion pattern that exposes nested items without relying on hover.
+- Preserve keyboard and screen-reader behavior: `aria-expanded`, `aria-controls`, focus-visible states, Esc close, outside-click close, and predictable Tab order.
+- Keep active and ancestor-active states visible so users can understand both the current page and its parent section.
+- Define overflow behavior for long labels, many siblings, and narrow desktop/tablet widths.
+- Verify desktop hover/click behavior, mobile open/close and nested expansion, deep-link active states, and layout at the smallest supported mobile width.
 
 ## Platform Notes
 

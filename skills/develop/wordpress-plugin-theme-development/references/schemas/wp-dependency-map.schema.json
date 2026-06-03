@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WordPress Dependency Map",
+  "type": "object",
+  "required": ["type", "component", "dependencies"],
+  "properties": {
+    "type": { "type": "string", "enum": ["dependency-map"] },
+    "component": { "type": "string" },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "kind", "required", "strategy"],
+        "properties": {
+          "name": { "type": "string" },
+          "slug": { "type": "string" },
+          "kind": { "type": "string", "enum": ["plugin", "theme", "composer", "wordpress-core", "php-extension"] },
+          "required": { "type": "boolean" },
+          "strategy": { "type": "string", "enum": ["requires-plugins-header", "soft-check", "composer", "runtime-check", "manual"] },
+          "fallback": { "type": "string" },
+          "detect": { "type": "string" },
+          "integrationNotes": { "type": "string" }
+        }
+      }
+    }
+  }
+}

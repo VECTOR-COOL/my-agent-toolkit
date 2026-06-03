@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WordPress Hook Map",
+  "type": "object",
+  "required": ["type", "hooks"],
+  "properties": {
+    "type": { "type": "string", "enum": ["hook-map"] },
+    "hooks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "hookType", "callback", "lifecycle", "purpose"],
+        "properties": {
+          "name": { "type": "string" },
+          "hookType": { "type": "string", "enum": ["action", "filter"] },
+          "callback": { "type": "string" },
+          "lifecycle": { "type": "string" },
+          "priority": { "type": "integer" },
+          "purpose": { "type": "string" },
+          "requiresCapability": { "type": "boolean" },
+          "requiresNonce": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

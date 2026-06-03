@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "site": {
+    "baseUrl": "https://example.com/wp-json",
+    "environment": "staging"
+  },
+  "settings": {
+    "title": "範例網站",
+    "description": "透過 WordPress REST API 管理的測試站"
+  },
+  "taxonomies": [
+    {
+      "taxonomy": "categories",
+      "terms": [
+        {
+          "name": "最新消息",
+          "slug": "news",
+          "description": "網站最新消息"
+        }
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "slug": "about",
+      "status": "draft",
+      "title": "關於我們",
+      "content": "<p>這是由管理端 REST API manifest 建立的頁面。</p>",
+      "excerpt": "關於我們頁面"
+    }
+  ],
+  "posts": [
+    {
+      "slug": "hello-rest-admin",
+      "status": "draft",
+      "title": "REST 管理端測試文章",
+      "content": "<p>這是一篇測試文章。</p>",
+      "excerpt": "REST 管理端測試"
+    }
+  ],
+  "media": [],
+  "users": [],
+  "menus": [],
+  "customEndpointChecks": [
+    {
+      "name": "REST discovery",
+      "method": "GET",
+      "path": "/",
+      "expectStatus": 200
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WordPress Review Report",
+  "type": "object",
+  "required": ["type", "summary", "findings", "acceptance"],
+  "properties": {
+    "type": { "type": "string", "enum": ["review-report"] },
+    "summary": { "type": "string" },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["severity", "category", "message"],
+        "properties": {
+          "severity": { "type": "string", "enum": ["low", "medium", "high"] },
+          "category": { "type": "string", "enum": ["security", "performance", "architecture", "i18n", "comments", "testing"] },
+          "file": { "type": "string" },
+          "line": { "type": "integer" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "acceptance": {
+      "type": "object",
+      "required": ["securityPassed", "performancePassed", "architecturePassed"],
+      "properties": {
+        "securityPassed": { "type": "boolean" },
+        "performancePassed": { "type": "boolean" },
+        "architecturePassed": { "type": "boolean" }
+      }
+    }
+  }
+}

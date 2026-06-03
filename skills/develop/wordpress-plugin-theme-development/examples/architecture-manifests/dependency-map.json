@@ -1,0 +1,60 @@
+{
+  "type": "dependency-map",
+  "component": "wp-skill-example",
+  "dependencies": [
+    {
+      "name": "WordPress Core 6.5",
+      "kind": "wordpress-core",
+      "required": true,
+      "strategy": "runtime-check",
+      "fallback": "顯示 admin notice 並停用需要新版 Core 的功能。"
+    },
+    {
+      "name": "PHP 8.1",
+      "kind": "php-extension",
+      "required": true,
+      "strategy": "runtime-check",
+      "fallback": "在 activation 前阻止啟用。"
+    },
+    {
+      "name": "WooCommerce",
+      "slug": "woocommerce",
+      "kind": "plugin",
+      "required": false,
+      "strategy": "soft-check",
+      "fallback": "隱藏商店整合功能，保留基礎外掛功能。",
+      "detect": "class_exists('WooCommerce')",
+      "integrationNotes": "只在 WooCommerce active 時註冊商品相關 hooks。"
+    },
+    {
+      "name": "Advanced Custom Fields",
+      "slug": "advanced-custom-fields",
+      "kind": "plugin",
+      "required": false,
+      "strategy": "soft-check",
+      "fallback": "改用 WordPress core metadata APIs，或停用 ACF field group 整合。",
+      "detect": "function_exists('acf_add_local_field_group')",
+      "integrationNotes": "ACF 欄位註冊應放在 acf/init，讀取欄位值仍需 escape output。"
+    },
+    {
+      "name": "Elementor",
+      "slug": "elementor",
+      "kind": "plugin",
+      "required": false,
+      "strategy": "soft-check",
+      "fallback": "保留原生 block/theme template 版本，不註冊 Elementor widget。",
+      "detect": "did_action('elementor/loaded')",
+      "integrationNotes": "Elementor widgets 應在 elementor/widgets/register lifecycle 註冊。"
+    },
+    {
+      "name": "WPML Multilingual CMS",
+      "slug": "sitepress-multilingual-cms",
+      "kind": "plugin",
+      "required": false,
+      "strategy": "soft-check",
+      "fallback": "使用 WordPress 原始 permalink 與目前語系內容，不強制 multilingual routing。",
+      "detect": "defined('ICL_SITEPRESS_VERSION')",
+      "integrationNotes": "多語 URL 與 translated object ID 使用 WPML hooks/API，避免自行拼語系路徑。"
+    }
+  ]
+}

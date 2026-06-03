@@ -1,0 +1,33 @@
+{
+  "type": "plugin",
+  "name": "WP Skill Content Setup",
+  "textDomain": "wp-skill-content-setup",
+  "mainFile": "content-setup-plugin.php",
+  "namespace": "WpSkill\\ContentSetup",
+  "php": {
+    "minimumVersion": "8.1",
+    "strictTypes": true,
+    "composerOptional": true
+  },
+  "services": [
+    {
+      "class": "WpSkill\\ContentSetup\\Content_Setup",
+      "responsibility": "以 idempotent 流程建立文章、分類、標籤與主選單。"
+    }
+  ],
+  "hooks": [
+    {
+      "name": "register_activation_hook",
+      "type": "action",
+      "callback": "Content_Setup::install",
+      "priority": 10
+    }
+  ],
+  "assets": [],
+  "security": {
+    "nonce": true,
+    "capability": true,
+    "sanitize": true,
+    "escape": true
+  }
+}

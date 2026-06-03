@@ -1,0 +1,48 @@
+{
+  "type": "plugin",
+  "name": "WP Skill OOP Basic",
+  "textDomain": "wp-skill-oop-basic",
+  "mainFile": "plugin-oop-basic.php",
+  "namespace": "WpSkill\\OopBasic",
+  "php": {
+    "minimumVersion": "8.1",
+    "strictTypes": true,
+    "composerOptional": true
+  },
+  "services": [
+    {
+      "class": "WpSkill\\OopBasic\\Plugin",
+      "responsibility": "註冊 hooks 並協調外掛服務。"
+    },
+    {
+      "class": "WpSkill\\OopBasic\\Admin_Settings",
+      "responsibility": "管理 Settings API 與後台 UI。"
+    }
+  ],
+  "hooks": [
+    {
+      "name": "admin_menu",
+      "type": "action",
+      "callback": "Admin_Settings::register_menu",
+      "priority": 10
+    },
+    {
+      "name": "admin_init",
+      "type": "action",
+      "callback": "Admin_Settings::register_settings",
+      "priority": 10
+    }
+  ],
+  "assets": [
+    {
+      "handle": "wp-skill-oop-basic-admin",
+      "context": "settings_page_wp-skill-oop-basic"
+    }
+  ],
+  "security": {
+    "nonce": true,
+    "capability": true,
+    "sanitize": true,
+    "escape": true
+  }
+}

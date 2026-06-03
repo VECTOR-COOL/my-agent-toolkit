@@ -1,0 +1,4 @@
+interface:
+  display_name: "WordPress 外掛與主題開發"
+  short_description: "企業級安全 WordPress 外掛、主題與區塊開發"
+  default_prompt: "使用 $wordpress-plugin-theme-development 直接完成企業級 WordPress 外掛、主題、REST API、AJAX、Gutenberg block 的架構規劃、程式開發、審查、除錯與測試。"
