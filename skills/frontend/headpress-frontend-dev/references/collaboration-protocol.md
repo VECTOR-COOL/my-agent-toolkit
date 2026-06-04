@@ -18,7 +18,7 @@ If the project repo is available, read the relevant file directly before changin
 | --- | --- | --- |
 | Preview URLs, publish/deploy controls, domain binding | Owns when platform-managed | Do not replace without request |
 | Visual editing and platform assets | Can own primary edits | Preserve platform files and generated assets |
-| Code architecture, /headless/v1/ integration, service layer | Can generate local patches | Owns durable implementation |
+| Code architecture, headpress/api/v1 integration, service layer | Can generate local patches | Owns durable implementation |
 | `openapi.json` (API surface definition) | Read-only reference | HeadPress CMS repo owns; do not edit from frontend |
 | WordPress content | Not source of truth | Do not directly mutate production content unless requested |
 | SEO review, live scan, GSC setup | Platform tooling may lead | Implement code-side metadata only when requested |
@@ -37,7 +37,7 @@ If the project repo is available, read the relevant file directly before changin
 - Platform build config, generated files, preview bridge, or error reporting pipeline unless the task specifically fixes those files.
 - Generated route manifests such as `routeTree.gen.ts` by hand.
 - Existing agent-generated SEO/head/script output without a direct reason.
-- CMS mock/data structure in a way that no longer matches `/headless/v1/` response shape per `openapi.json`.
+- CMS mock/data structure in a way that no longer matches `headpress/api/v1` response shape per `openapi.json`.
 
 ## Platform Notes
 

@@ -39,7 +39,7 @@
 每個 UI scenario 建立一個新的 `scenes-*.md` 檔案。每個 scene 只聚焦：
 
 - route/page purpose
-- expected data service（對應哪個 `/headless/v1/` endpoint）
+- expected data service（對應哪個 `headpress/api/v1` endpoint，優先於 `/wp/v2/`）
 - WordPress REST fields（查 openapi.json）
 - SEO requirements
 - UI states

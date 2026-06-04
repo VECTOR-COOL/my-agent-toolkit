@@ -1,14 +1,20 @@
 # HeadPress Composition API Data Contract
 
-本文件說明前端如何消費 HeadPress Composition API（`/headless/v1/`）。
+本文件說明前端如何消費 HeadPress Composition API（REST namespace：`headpress/api/v1`）。
 
 > 所有網域範例使用 `example.com`；實際使用時替換為部署的真實網域。
+
+## API 優先順序
+
+1. **優先** `wp-json/headpress/api/v1/*`（HeadPress Composition API）。
+2. **僅當** HeadPress 無對應能力或 openapi 未涵蓋時，在 **service layer** 使用 `wp-json/wp/v2/*`。
+3. Component 不得直接呼叫任一 CMS URL；經 `headpressClient` 或 service 內 `wpClient`。
 
 ## API Base URL
 
 ```bash
 # 前端環境變數（範例）
-VITE_WP_API_URL=https://example.com/wp-json/headless/v1
+VITE_WP_API_URL=https://example.com/wp-json/headpress/api/v1
 ```
 
 ## Schema 查詢位置
@@ -20,31 +26,42 @@ themes/headpress/docs/prd/openapi.json
 ```
 
 Runtime 取得（WordPress 啟動後）：
+
 ```
-GET https://example.com/wp-json/headless/v1/openapi.json
+GET https://example.com/wp-json/headpress/api/v1/openapi.json
 ```
 
 > AI Builder 或 agent：使用任何欄位前，**必須先在 openapi.json 中確認欄位存在**。未列入的欄位代表未實作或已廢棄。
 
-## Composition API Endpoints
+## Composition API Endpoints（優先）
 
-前端只消費以下 endpoints（完整 schema 見 `openapi.json`）：
+路徑相對於 `wp-json/headpress/api/v1`（完整 schema 見 `openapi.json`）：
 
 ```
-GET /headless/v1/site
-GET /headless/v1/page?path={frontendPath}
-GET /headless/v1/collection?type={postType}&page={page}
-GET /headless/v1/search?q={keyword}&page={page}
-GET /headless/v1/sitemap?type={type}&page={page}
-GET /headless/v1/taxonomies
-GET /headless/v1/taxonomy/{taxonomy}?slug={slug}
-GET /headless/v1/media/{id}
-GET /headless/v1/openapi.json
+# 主流程
+GET /site
+GET /page
+GET /page/{path}
+
+# 進階
+GET /collection
+GET /search
+GET /sitemap
+GET /taxonomies
+GET /taxonomy/{taxonomy}
+GET /media/{id}
+GET /openapi.json
+GET /manifest
+GET /health
+
+# deprecated（勿新開發）
+GET /site-layout
+GET /route?path=...
 ```
 
-## WordPress Native Endpoints（內部使用，前端不直接呼叫）
+## WordPress Native Endpoints（備援，service layer only）
 
-以下為 Composition API 內部使用的 WordPress 原生 endpoint，前端不應直接呼叫：
+以下僅在 HeadPress 無法提供同等資料時，由 service layer 透過 `wpClient` 呼叫；component 不直接消費：
 
 ```
 GET /wp/v2/posts
@@ -58,13 +75,13 @@ GET /wp/v2/media/{id}
 
 ```
 route loader / server function
-  → headlessClient（指向 /headless/v1/）
-  → /headless/v1/* composition API
+  → headpressClient（主：/headpress/api/v1/）
+  → [必要時] wpClient（備：/wp/v2/*）
   → mapper → normalized view model
   → UI components
 ```
 
-前端只需要 **一個 API client** 指向 `/headless/v1/`。OpenAPI spec 可以自動產生 TypeScript client。
+主 client 指向 `/headpress/api/v1/`。OpenAPI spec 可自動產生 TypeScript client。
 
 ## Required Shape Discipline
 
@@ -80,9 +97,9 @@ Composition API 的 `entity`、`items`、media、taxonomy 欄位保留 WordPress
 | 特色圖 ID | `featured_media` | `featured_image_id` |
 | 特色圖 URL | `_embedded["wp:featuredmedia"][0].source_url` | 自行拼接 URL |
 | 分類/標籤 | `_embedded["wp:term"]` | `categories`（ID 陣列） |
-| SEO meta | `yoast_head_json`（若 Yoast 可用） | 自行推測 meta |
+| SEO meta | 頂層 `seo`（HeadPress `/page`）或 `yoast_head_json` | 自行推測 meta |
 
-站台擴充欄位預設放在 `headless` key（見 openapi.json）。
+站台擴充欄位可能出現在 `entity` 或自訂 key；以 `openapi.json` 為準（勿假設舊版 `headless` key 仍存在）。
 
 ## Components 禁止事項
 
@@ -91,17 +108,18 @@ Components 不得：
 - 直接呼叫 `fetch("https://example.com/...")` 或任何 CMS URL
 - 直接 import mock fixtures
 - 假設 openapi.json 未定義的後端欄位
+- 在 HeadPress 已有 `/page/{path}` 或 `/collection` 時，繞過 service layer 直連 `/wp/v2/`
 - 在 SSR/SSG/pre-render 可用時，從 client-only effects 取得主要內容
 
 ## Schema Change Protocol
 
 若 UI 需要 REST response 中不存在的資料：
 
-1. 確認欄位是否已在 `openapi.json` 定義。
+1. 確認欄位是否已在 `openapi.json` 的 HeadPress paths 定義。
 2. 識別缺少的欄位與 UI 場景。
 3. 決定它屬於 WordPress core、ACF/custom fields、taxonomy、media metadata 或 SEO plugin。
-4. 記錄預期的 REST path 與 type（在 openapi.json 或文件中）。
-5. 不要在前端永久 fake 該欄位；提交後端 PR 或 issue。
+4. **優先** 提交 HeadPress 後端／openapi 擴充；短期才在 service layer 用 `/wp/v2/` 備援。
+5. 不要在前端永久 fake 該欄位。
 
 ## Production Fallback
 
@@ -114,7 +132,7 @@ Components 不得：
 - Fetcher 必須捕捉 HTTP status、WordPress REST error body、timeout、network failure、invalid JSON、CORS/auth 失敗、rate limit 與 server/maintenance errors。
 - Service layer 必須把錯誤正規化成 typed states：`error`、`notFound`、`unauthorized`、`forbidden`、`rateLimited`、`timeout`、`unavailable`。
 - Dynamic slug routes 在 API 返回零筆 published items 時，必須回傳框架級 404/not-found。
-- `/headless/v1/page` 404 必須對應框架級 404；`/headless/v1/sitemap` 失敗不得 publish 失效 URL。
+- `/page/{path}` 的 `route.status = 404` 必須對應框架級 404；`/sitemap` 失敗不得 publish 失效 URL。
 - 缺 `_embedded`、缺 media、空 ACF 欄位、`null` rendered 欄位、unpublished/private content 必須在 mapper 或 service code 處理，不可讓 UI components 直接面對。
 - Production fallback 絕不能靜默用 mock 替換失敗的 API 內容；改顯示受控 degraded/error state。
 
@@ -125,3 +143,4 @@ Components 不得：
 - 讀 pagination headers：`X-WP-Total`、`X-WP-TotalPages`；不要從當前 response 長度推算總頁數。
 - 確認 custom post type 的 `show_in_rest` 和 `rest_base` 設定，再建立對應 route。
 - `rendered` 欄位是 HTML；card excerpt/meta description 要 strip HTML，不可直接用原始值。
+- 列表／archive 優先 `GET /page/{path}` 或 `/collection`；勿預設改打 `/wp/v2/posts`。
