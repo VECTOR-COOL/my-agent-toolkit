@@ -5,7 +5,7 @@ Use official docs first for platform/API behavior. Verify current docs before ma
 ## HeadPress API Schema（最優先）
 
 - **OpenAPI 3.1 Spec（CMS repo 本機）**：`themes/headpress/docs/prd/openapi.json`
-- **OpenAPI（Runtime，WordPress 啟動後）**：`GET https://cms.example.com/wp-json/headless/v1/openapi.json`
+- **OpenAPI（Runtime，WordPress 啟動後）**：`GET https://cms.example.com/wp-json/headpress/api/v1/openapi.json`
 - API 混合架構 PRD：`themes/headpress/docs/prd/混合型HeadlessAPI架構PRD.md`
 - Deprecation 政策：`themes/headpress/docs/standards/deprecation-policy.md`
 

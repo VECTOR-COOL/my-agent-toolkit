@@ -26,23 +26,23 @@
 Dynamic CMS routes 的資料取得順序：
 
 ```text
-route/server data → /headless/v1/page?path={path}
+route/server data → /headpress/api/v1/page/{path}
   → mapper 取出 entity.seo 或 title.rendered/excerpt.rendered
   → metadata/head 使用 CMS SEO 欄位生成
   → component renders SEO-visible content
 ```
 
-## CMS SEO Field Priority（對應 /headless/v1/page response）
+## CMS SEO Field Priority（對應 `/page/{path}` response）
 
-1. `entity.seo`（若 HeadPress 輸出 Yoast/RankMath SEO 欄位）
+1. 頂層 `seo`（HeadPress `/page` response）
 2. `entity.title.rendered`
 3. stripped `entity.excerpt.rendered`
 4. embedded featured media（`entity._embedded["wp:featuredmedia"][0]`）
-5. site defaults（來自 `VITE_SITE_URL` 與 `/headless/v1/site` 的 site 設定）
+5. site defaults（來自 `VITE_SITE_URL` 與 `/site` 的 site 設定）
 
 ## HTTP Status And Error Pages
 
-- 缺少 CMS content（`/headless/v1/page` 返回 404）應產生框架級 404/not-found。
+- 缺少 CMS content（`/page/{path}` 的 `route.status = 404`）應產生框架級 404/not-found。
 - 已移除 content 使用 410（若產品有明確 removed-content state），否則使用 404。
 - Protected preview 或 account routes 應區分 401 與 403。
 - API outage、WordPress maintenance、timeout 或 build-time fetch failure 應 render 受控 500/503 state，不洩漏 secrets。
@@ -50,7 +50,7 @@ route/server data → /headless/v1/page?path={path}
 
 ## Sitemap And Robots
 
-- 使用 `/headless/v1/sitemap` 作為 sitemap data source；前端平台仍然負責最終 `sitemap.xml` 和 `robots.txt` 輸出。
+- 使用 `/sitemap`（`headpress/api/v1`）作為 sitemap data source；前端平台仍然負責最終 `sitemap.xml` 和 `robots.txt` 輸出。
 - 以 `VITE_SITE_URL`（例如 `https://example.com`）作為 sitemap host URL。
 - CMS-backed dynamic routes 只有在 API/source 穩定後才加入 sitemap，避免 publish broken URLs。
 - 不要在 production 把 `robots.txt` 設成 block all crawlers，除非明確要求。
@@ -72,5 +72,5 @@ SEO/deployment 相關 code work 完成後回報：
 - 是否需要 SEO scan rerun
 - 是否需要 Google Search Console/sitemap submission follow-up
 - 是否需要確認 `VITE_SITE_URL`、`VITE_WP_API_URL`、image domains 或 auth/env 設定
-- `/headless/v1/page` metadata 與 `/headless/v1/sitemap` data 是否已對照 production canonical URLs 驗證
+- `/page/{path}` metadata 與 `/sitemap` data 是否已對照 production canonical URLs 驗證
 - HeadPress CMS 的 CORS 是否允許 production frontend domain
