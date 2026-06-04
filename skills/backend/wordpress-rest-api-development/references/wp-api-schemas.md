@@ -22,6 +22,8 @@
 | `schemas/menu-item.json5` | Menu Item（選單項目） | `GET /wp/v2/menu-items?menus=<id>` | 含 `title.rendered`、`url`、`parent`、`menu_order` |
 | `schemas/navigation.json5` | Navigation（Block Theme） | `GET /wp/v2/navigation` | Block theme/FSE 的 `wp_navigation` posts |
 | `schemas/error-response.json5` | Error Response（錯誤回應） | 任一非 2xx REST response | 含 `code`、`message`、`data.status`，不可靜默轉成空資料 |
+| `schemas/headpress-site-response.json5` | HeadPress Site Response | `GET /site` | 全站共用資料、menus、SEO defaults、global settings |
+| `schemas/headpress-page-response.json5` | HeadPress Page Response | `GET /page`、`GET /page/{path}` | 前端整頁資料：site、route、entity、sections、seo、media、archive、collections |
 
 ---
 
@@ -96,6 +98,18 @@
 | `additional_errors` | 多重錯誤時可能出現，shape 與主要 error 相同 |
 
 Service layer 遇到非 2xx response 時，先解析此 error body，再丟出包含 status、url、body 的錯誤；production 不可把錯誤轉成 `[]`、`null` 或 mock 資料。
+
+### HeadPress Composition API 特殊注意
+
+`/page` 是 Frontend Page Data Endpoint，不等於 WordPress `page` post type。它根據 frontend path 回傳整頁渲染資料。
+
+| 舊端點 | 新主力端點 |
+| --- | --- |
+| `/site-layout` | `/site` |
+| `/route?path=/about` | `/page/about` |
+| `/route?path=/` | `/page` |
+
+`/page/{path}` 支援多層 path，例如 `/page/about/team`、`/page/blog/my-post`、`/page/category/news`。詳細 contract 見 `references/headpress-composition-api.md`。
 
 ### Classic Menu vs Block Navigation
 

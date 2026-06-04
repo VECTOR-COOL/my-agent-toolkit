@@ -1,0 +1,61 @@
+{
+  site: {},
+  route: {
+    path: "/about",
+    kind: "page", // front-page | page | single | post-type-archive | taxonomy-archive | search | not-found | redirect
+    status: 200,
+    canonical: "https://uavs.tw/about",
+    location: null,
+  },
+  entity: {
+    id: 12,
+    type: "page",
+    slug: "about",
+    title: {
+      rendered: "關於我們",
+    },
+    content: {
+      rendered: "<p>頁面內容</p>",
+    },
+    acf: {
+      hero_title: "專業無人機服務",
+      hero_subtitle: "整合空拍、測繪與巡檢",
+    },
+  },
+  sections: [
+    {
+      type: "hero",
+      props: {
+        title: "專業無人機服務",
+        subtitle: "整合空拍、測繪與巡檢",
+        image: {
+          url: "https://cms.uavs.tw/wp-content/uploads/hero.jpg",
+          alt: "無人機空拍",
+        },
+      },
+    },
+  ],
+  seo: {
+    title: "關於我們 - UAVS",
+    description: "頁面描述",
+    canonical: "https://uavs.tw/about",
+    robots: "index,follow",
+    og_title: "關於我們 - UAVS",
+    og_description: "頁面描述",
+    og_image: null,
+    resolved_og_image: "https://cms.uavs.tw/wp-content/uploads/default-og.jpg",
+  },
+  breadcrumb: [],
+  schema: {},
+  media: {
+    featured_image: null,
+    items: [],
+  },
+  archive: null,
+  collections: null,
+  meta: {
+    api_version: "1.1.0",
+    generated_at: "2026-06-04T10:00:00",
+    cache_key: "page:/about",
+  },
+}

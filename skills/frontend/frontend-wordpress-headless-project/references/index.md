@@ -7,6 +7,7 @@
 | 確認專案身分、domain、環境名稱、平台與 source-of-truth 邊界 | `project-contract.md` |
 | 避免 AI-builder/Cursor/Git 覆寫衝突，或決定變更 owner | `collaboration-protocol.md` |
 | 對齊 UI 需求、WordPress REST API 欄位、mock shape 或 service-layer contract | `data-contract.md` |
+| 對齊 HeadPress Composition API `/site`、`/page`、`/page/{path}` 或 deprecated `/route`、`/site-layout` | `data-contract.md`、`skills/backend/wordpress-rest-api-development/references/headpress-composition-api.md` |
 | 確認 WordPress-backed data 必須遵守 WordPress REST API 結構與 mapper 邊界 | `wordpress-data-structure-policy.md` |
 | 規劃或修補 API error、timeout、auth、CORS、not found、empty data、fallback media | `data-contract.md`、`frontend-seo-deployment.md` |
 | 處理 SSR/SSG/pre-render SEO、custom domain、publish、sitemap、robots 或 GSC readiness | `frontend-seo-deployment.md` |

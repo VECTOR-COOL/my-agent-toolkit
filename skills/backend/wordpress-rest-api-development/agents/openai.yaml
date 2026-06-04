@@ -1,4 +1,4 @@
 interface:
   display_name: "WordPress REST API"
-  short_description: "WordPress REST schemas, errors, mocks, and services"
-  default_prompt: "Use this skill for frontend work that needs WordPress REST API schemas, error response shapes, mock fixtures, TypeScript types, or service-layer data fetching."
+  short_description: "WordPress and HeadPress REST schemas, errors, mocks, and services"
+  default_prompt: "Use this skill for frontend work that needs WordPress REST API schemas, HeadPress /site and /page contracts, error response shapes, mock fixtures, TypeScript types, or service-layer data fetching."

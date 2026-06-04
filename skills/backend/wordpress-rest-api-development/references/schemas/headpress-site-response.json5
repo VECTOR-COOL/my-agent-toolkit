@@ -1,0 +1,32 @@
+{
+  site: {
+    name: "UAVS",
+    description: "網站描述",
+    frontend_url: "https://uavs.tw",
+    cms_url: "https://cms.uavs.tw",
+    logo: {
+      id: 1,
+      url: "https://cms.uavs.tw/wp-content/uploads/logo.png",
+      alt: "UAVS",
+    },
+    menus: {
+      primary: [],
+      footer: [],
+    },
+    footer: {
+      text: "",
+      menus: [],
+    },
+    social_links: [],
+    seo_defaults: {
+      title: "UAVS",
+      description: "網站描述",
+      default_og_image: null,
+    },
+    global_settings: {},
+  },
+  meta: {
+    api_version: "1.1.0",
+    generated_at: "2026-06-04T10:00:00",
+  },
+}

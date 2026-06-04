@@ -1,7 +1,6 @@
 ---
 name: wordpress-rest-api-development
-version: "1.0.0"
-description: Frontend + WordPress Headless CMS REST API 整合開發 Skill。Use when a Lovable, v0, Replit, Cursor, or React/TypeScript frontend needs WordPress REST API schemas, posts/pages/categories/tags/media/search/custom post type/error response shapes, Yoast SEO fields, ACF/custom fields exposed through REST, TypeScript WP types, realistic WordPress-shaped mock fixtures, service-layer mappers, mock-to-api switching, route loader/server function data fetching, pagination headers, auth/CORS/server proxy guidance, or validation scripts for WordPress API and fixture shape.
+description: Frontend + WordPress Headless CMS REST API 整合開發 Skill。Use when a Lovable, v0, Replit, Cursor, or React/TypeScript frontend needs WordPress REST API schemas, HeadPress Composition API `/site` and `/page/{path}` contracts, posts/pages/categories/tags/media/search/custom post type/error response shapes, Yoast SEO fields, ACF/custom fields exposed through REST, TypeScript WP types, realistic WordPress-shaped mock fixtures, service-layer mappers, mock-to-api switching, route loader/server function data fetching, pagination headers, auth/CORS/server proxy guidance, or validation scripts for WordPress API and fixture shape.
 ---
 
 # WordPress REST API Development
@@ -28,6 +27,7 @@ description: Frontend + WordPress Headless CMS REST API 整合開發 Skill。Use
 | 需求 | 載入 |
 | --- | --- |
 | WordPress REST 核心概念、端點、全域參數、pagination、embedding | `references/wordpress-rest-api-handbook.md` |
+| HeadPress Composition API、`/site`、`/page`、`/page/{path}`、include、OpenAPI/MVP 驗收 | `references/headpress-composition-api.md` |
 | Lovable TanStack Start SSR 架構、route loader、server functions、env | `references/lovable-tanstack-start-architecture.md` |
 | Schema 速查與各 schema 檔位置 | `references/wp-api-schemas.md` |
 | 認證、Application Password、server-only secrets、CORS/proxy | `references/wp-rest-authentication.md` |
@@ -77,6 +77,7 @@ VITE_SITE_URL=https://example.com
 - Search: `title` 是 string，不是 `{ rendered }`；詳細差異見 `references/schemas/search.json5`。
 - Navigation menu: classic theme 通常用 `/wp/v2/menu-locations` 找 location，再用 `/wp/v2/menu-items?menus=<id>` 取得 items 並用 `parent` + `menu_order` 組 tree；block theme 可參考 `/wp/v2/navigation`。
 - Error response: 非 2xx 通常是 `{ code, message, data: { status } }`，詳細差異見 `references/schemas/error-response.json5`；service layer 必須回傳/丟出此錯誤，不可靜默轉成空資料。
+- HeadPress Composition API: 主力端點使用 `GET /site`、`GET /page`、`GET /page/{path}`；`/page` 是 Frontend Page Data Endpoint，不是 WordPress `page` post type；舊 `/site-layout` 與 `/route?path=` 只作 deprecated alias。
 
 常用 access paths:
 
