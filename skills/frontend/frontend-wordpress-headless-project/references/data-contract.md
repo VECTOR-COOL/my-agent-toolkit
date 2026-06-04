@@ -24,6 +24,29 @@ GET /media/{id}
 
 Custom post types must use the `rest_base` registered in WordPress. Do not guess the frontend route from the post type name without checking the API.
 
+## HeadPress Composition API
+
+If the project uses HeadPress as a WordPress Headless Composition API, the primary frontend data endpoints are:
+
+```text
+GET /site
+GET /page
+GET /page/{path}
+```
+
+Use `/page` as the main page data endpoint for AI Builder and SSR/SSG/CSR data loading. It is not the WordPress `page` post type endpoint; it resolves a frontend URL path into render-ready data.
+
+Deprecated or compatibility-only endpoints:
+
+```text
+GET /site-layout
+GET /route?path=/about
+```
+
+Default `/page` response should expose top-level `site`, `route`, `entity`, `sections`, `seo`, `breadcrumb`, `schema`, `media`, `archive`, `collections`, and `meta`. A minimum viable response may start with `site`, `route`, `entity`, `seo`, `media`, and `meta`.
+
+`entity.acf` contains raw ACF fields. `sections` contains HeadPress-normalized render blocks. `seo` belongs at the top level, not under `headless.seo`. For optimized clients, fetch `/site` separately and call `/page/{path}?include=route,entity,seo,breadcrumb,schema,media`.
+
 ## Required Shape Discipline
 
 Keep mock and API data aligned with WordPress REST conventions:

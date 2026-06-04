@@ -1,7 +1,6 @@
 ---
 name: wordpress-plugin-theme-development
-version: "1.0.0"
-description: 當需要開發、審查、重構、除錯或最佳化企業級 WordPress 外掛、主題、區塊主題、Gutenberg blocks、REST API endpoints、WPGraphQL 相容功能、後台頁面、自訂文章類型、分類法、短碼、AJAX handlers、資料庫 migrations，以及遵守 WordPress 官方與 WordPress VIP-style 標準的安全敏感程式碼時使用。
+description: 當需要開發、審查、重構、除錯或最佳化企業級 WordPress 外掛、主題、區塊主題、Gutenberg blocks、REST API endpoints、HeadPress Composition API `/site` and `/page/{path}` endpoints、WPGraphQL 相容功能、後台頁面、自訂文章類型、分類法、短碼、AJAX handlers、資料庫 migrations，以及遵守 WordPress 官方與 WordPress VIP-style 標準的安全敏感程式碼時使用。
 ---
 
 # WordPress 外掛與主題開發
@@ -30,6 +29,7 @@ description: 當需要開發、審查、重構、除錯或最佳化企業級 Wor
 | 外掛架構、headers、hooks、activation、uninstall、Cron、migrations | `references/wordpress-plugin-development-checklist.md` |
 | Classic Theme、Block Theme、child theme、template hierarchy、theme.json | `references/wordpress-theme-development-checklist.md` |
 | 自訂 REST endpoints、args、permissions、schemas、CORS、caching | `references/wordpress-rest-api-checklist.md` |
+| HeadPress Composition API route 設計、`/site`、`/page/{path}`、OpenAPI 與 MVP 驗收 | `skills/backend/wordpress-rest-api-development/references/headpress-composition-api.md` |
 | Gutenberg blocks、block.json、dynamic blocks、React、@wordpress/scripts | `references/wordpress-gutenberg-block-checklist.md` |
 | PHP 風格、命名、i18n、escaping translations、VIP-style review | `references/wordpress-code-style.md` |
 | 主題/外掛目錄結構、OOP、service 切分、autoload/no-Composer | `references/wordpress-code-architecture-playbook.md` |

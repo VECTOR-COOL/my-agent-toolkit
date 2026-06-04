@@ -10,6 +10,35 @@
 - success 與 error states 的 response shapes 保持一致。
 - errors 使用 `WP_Error`；正常回傳使用 `WP_REST_Response` 或 REST 可接受 arrays。
 
+### HeadPress Composition API routes
+
+若任務涉及 HeadPress API，主推下列 frontend-first endpoints：
+
+```txt
+GET /site
+GET /page
+GET /page/{path}
+```
+
+舊端點只作相容 alias 並標示 deprecated：
+
+```txt
+GET /site-layout
+GET /route?path=/about
+```
+
+`/page` 是 Frontend Page Data Endpoint，不是 WordPress `page` post type。`/page/{path}` 必須支援多層 path，route pattern 可使用：
+
+```php
+register_rest_route( 'headpress/api/v1', '/page(?:/(?P<path>.*))?', [
+    'methods'             => 'GET',
+    'callback'            => 'headpress_get_page',
+    'permission_callback' => '__return_true',
+] );
+```
+
+公開 read-only endpoint 使用 `__return_true` 前，必須確認 response 不暴露 private options、user emails、edit links、draft/private content 或 secrets。詳細 response contract 見 `skills/backend/wordpress-rest-api-development/references/headpress-composition-api.md`。
+
 ## Permission Callback
 
 每個 route 都必須包含 `permission_callback`。
