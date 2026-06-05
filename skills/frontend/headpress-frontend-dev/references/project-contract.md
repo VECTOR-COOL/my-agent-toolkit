@@ -13,6 +13,7 @@
 | CMS（HeadPress） | `VITE_WP_API_URL` 的 host | `https://example.com` |
 | REST API base（Composition） | `https://{CMS_HOST}/wp-json/headpress/api/v1` | `https://example.com/wp-json/headpress/api/v1` |
 | REST namespace | `headpress/api/v1` | `headpress/api/v1` |
+| HeadPress minimum version | `GET /health` 或 `manifest` 的 `version` ≥ skill 要求（目前 **0.6.0**） | `0.6.0` |
 | Frontend platform | 填入實際平台 | Lovable / v0 / Replit / 自架 Vite/Next/TanStack |
 | Rendering target | 保留 active SSR/SSG/pre-render/CSR mode | 視平台而定 |
 | Backend model | WordPress Headless CMS（HeadPress Theme）| 優先 REST via `headpress/api/v1`；必要時 service-layer `/wp/v2/` |
