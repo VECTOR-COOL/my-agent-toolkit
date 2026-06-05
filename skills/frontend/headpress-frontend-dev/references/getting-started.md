@@ -59,6 +59,24 @@
 
 ---
 
+## 6. Runtime Metadata 探索 (專給 AI Builder 與開發工具)
+
+為了讓 AI Builder 或前端產生器能夠自動了解站點的內容結構與建議的路由對應，HeadPress 提供了三個專屬的 Meta 端點。在初始化專案或建構路由表前，可以先呼叫這些端點來獲取系統資訊：
+
+### `GET /manifest` (系統整合清單)
+**使用時機：** 剛開始建構專案或設定 AI Builder 時的第一步。
+**功能：** 回傳推薦的 API 使用流程 (Recommended Flow)、支援的路由種類 (Route Kinds)、API Base URL 以及系統啟用的功能特徵 (Features)。這能幫助開發工具自動決定要呼叫哪些端點。
+
+### `GET /content-types` (內容模型探索)
+**使用時機：** 實作動態路由、篩選器或需要呈現所有可用內容類型時。
+**功能：** 列出系統中所有開放給前端的「文章類型 (Post Types)」與「分類法 (Taxonomies)」。你可藉此知道可以對 `/collection?type=...` 傳入哪些合法的 type 參數 (例如 `post`, `page`, `portfolio`)，或是取得各分類法的層級結構設定。
+
+### `GET /templates` (前端樣板映射)
+**使用時機：** 當 AI Builder 需要自動建立 React/Vue Component 結構時。
+**功能：** 列出所有可能的路由種類 (如 `front-page`, `single`, `taxonomy-archive`, `not-found`) 並推薦其對應的前端元件名稱 (例如 `HomePage`, `PageTemplate`, `ArchivePage`, `NotFoundPage`)。這有助於自動生成路由表或動態組件載入機制。
+
+---
+
 ## 快取與錯誤處理提示
 
 - **快取：** 主要的 GET 請求都會包含 `ETag` 與 `Cache-Control`。帶有符合 `If-None-Match` 的請求會收到 304 Not Modified。
