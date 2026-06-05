@@ -22,10 +22,21 @@ Common route patterns（以 active project 的 route naming 為準）：
 ```text
 GET /route/blog                   → post type archive（若 route 如此設計）
 GET /route/blog/{slug}            → 文章 detail
+GET /route/{post-slug}            → 文章 detail（若 frontend route 沒有 blog prefix）
 GET /route/category/{slug}        → 分類 archive
 GET /collection?type=post&page={page}  → 列表（進階端點，若 openapi 有定義）
 GET /taxonomy/category?slug={slug}     → 分類 meta（若 openapi 有定義）
 ```
+
+Custom Post Type detail 與列表也走同一個 HeadPress 規則：
+
+```text
+GET /route/{post_type}/{slug}     → CPT detail，例如 /route/project/demo-case
+GET /route?path=/{post_type}/{slug}    → SDK fallback，例如 /route?path=/project/demo-case
+GET /collection?type={post_type}&page={page}&per_page={perPage}
+```
+
+CPT 必須已在 WordPress 設定 `public`、`show_in_rest`，並由後端加入 `headpress/route/post_type_allowlist`。若只是想確認有哪些可用內容型別，先呼叫 `GET /content-types`。
 
 Pagination（來自 `collections.pagination` 或 response headers，以 openapi 為準）：
 

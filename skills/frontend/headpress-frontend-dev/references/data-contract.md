@@ -74,6 +74,18 @@ GET /wp/v2/tags
 GET /wp/v2/media/{id}
 ```
 
+若需要以 ID 直接取得某篇內容，且 HeadPress 尚未提供對應 endpoint，才可在 service layer 使用：
+
+```text
+GET /wp/v2/{rest_base}/{id}
+```
+
+例如 CPT `project` 的 `rest_base` 是 `projects`：
+
+```text
+GET /wp/v2/projects/123
+```
+
 ## Service Boundary
 
 ```
@@ -85,6 +97,91 @@ route loader / server function
 ```
 
 主 client 指向 `/headpress/api/v1/`。OpenAPI spec 可自動產生 TypeScript client。
+
+## 取得 WordPress Post / CPT 內容
+
+### 單篇文章、Page、CPT detail（優先）
+
+前端要取得某篇 WordPress content detail 時，優先用 HeadPress route resolver。它會一次回傳 route identity、主要 entity、SEO、media、breadcrumb 與 not-found 狀態，適合 SSR/SSG/pre-render 與 dynamic route loader。
+
+```text
+# 一般 post single，依實際 frontend path 傳入
+GET /route/{post-slug}
+GET /route/blog/{post-slug}
+
+# Custom Post Type single
+GET /route/{post_type}/{post-slug}
+
+# SDK / OpenAPI client 不方便傳多層 path 時
+GET /route?path=/{post_type}/{post-slug}
+```
+
+範例：
+
+```text
+GET /route/news-release-2026?include=route,entity,seo,media
+GET /route/project/demo-case?include=route,entity,seo,media
+GET /route?path=/project/demo-case&include=route,entity,seo,media
+```
+
+AI builder / mapper 必須依下列欄位判斷內容類型與畫面：
+
+| 需求 | 欄位 |
+| --- | --- |
+| route 狀態 | `route.kind`、`route.status` |
+| template key | `route.template`，例如 `single_post`、`single_project`、`page_default` |
+| render mode | `route.view`，例如 `single`、`page`、`system` |
+| content type | `entity.type`，例如 `post`、`page`、`project` |
+| 標題 | `entity.title.rendered` |
+| 內容 HTML | `entity.content.rendered` |
+| 摘要 | `entity.excerpt.rendered` |
+| slug | `entity.slug` |
+| 特色圖 ID | `entity.featured_media` |
+| SEO | 頂層 `seo` |
+
+若 `route.status = 404` 或 `route.kind = "not-found"`，route loader 必須回傳框架級 404，不要渲染空白 detail page。
+
+### CPT 列表或 archive cards
+
+列表、archive、卡片集合使用 `/collection`：
+
+```text
+GET /collection?type={post_type}&page=1&per_page=10
+GET /collection?type={post_type}&taxonomy={taxonomy}&term={term-slug}
+```
+
+範例：
+
+```text
+GET /collection?type=project&page=1&per_page=12
+GET /collection?type=project&taxonomy=project_category&term=featured
+```
+
+### CPT 可用條件
+
+後端 CPT 需要符合：
+
+```php
+'public'       => true,
+'show_in_rest' => true,
+```
+
+並加入 HeadPress allowlist，否則 `/collection`、search、sitemap、CPT archive 與 `/{post_type}/{slug}` route 解析可能無法取得：
+
+```php
+add_filter( 'headpress/route/post_type_allowlist', function ( array $types ): array {
+    $types[] = 'project';
+    return $types;
+} );
+```
+
+前端或 AI builder 可先查：
+
+```text
+GET /content-types
+```
+
+用 `post_types[].name`、`post_types[].rest_base`、`post_types[].archive` 確認 CPT 是否公開且有 REST metadata。
 
 ## Required Shape Discipline
 

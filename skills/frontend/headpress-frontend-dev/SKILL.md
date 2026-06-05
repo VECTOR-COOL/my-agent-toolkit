@@ -352,6 +352,54 @@ component 必須使用既有 normalized NewsCardModel。
 5. 找不到內容時回傳框架 404。
 6. metadata 使用內容資料生成，缺欄位時使用 site fallback。
 
+### 取得 WordPress Post / CPT 單篇文章
+
+AI builder 或前端 agent 需要取得某篇 WordPress 文章、Page 或 CPT detail 時，預設使用 HeadPress route resolver，而不是直接用 `/wp/v2/`：
+
+```text
+# 一般文章 single post
+GET /route/{post-slug}
+GET /route/blog/{post-slug}      # 若前端 route 設計有 blog prefix，依實際 frontend path 傳入
+
+# Custom Post Type single
+GET /route/{post_type}/{post-slug}
+
+# SDK 不方便處理多層 path parameter 時
+GET /route?path=/{post_type}/{post-slug}
+```
+
+範例：
+
+```text
+GET /route/news-release-2026?include=route,entity,seo,media
+GET /route/project/demo-case?include=route,entity,seo,media
+GET /route?path=/project/demo-case&include=route,entity,seo,media
+```
+
+mapper 應讀取：
+
+```text
+route.kind       -> single / page / not-found
+route.template   -> single_post / single_{post_type} / page_default
+route.view       -> single / page / system
+entity.type      -> post / page / CPT slug
+entity.slug      -> content slug
+entity.title.rendered
+entity.content.rendered
+entity.excerpt.rendered
+entity.featured_media
+seo              -> detail page metadata
+```
+
+取得 CPT 列表或 archive cards 時使用：
+
+```text
+GET /collection?type={post_type}&page=1&per_page=10
+GET /collection?type={post_type}&taxonomy={taxonomy}&term={term-slug}
+```
+
+後端必要條件：CPT 必須 `public: true`、`show_in_rest: true`，並加入 `headpress/route/post_type_allowlist`。若需要直接以 ID 取得內容，HeadPress 目前沒有 `GET /content/{type}/{id}`；只能在 service layer 使用 `/wp/v2/{rest_base}/{id}` 作短期備援，component 不得直接呼叫。
+
 ### 從 mock 切到正式 `/headpress/api/v1/` API
 
 1. 不直接刪 mock；保留做 regression 與 UI 開發。

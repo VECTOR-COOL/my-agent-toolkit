@@ -26,6 +26,7 @@
 | 確認專案身分、domain、環境名稱、平台與 source-of-truth 邊界 | `project-contract.md` |
 | 避免 AI-builder/Git 覆寫衝突，或決定變更 owner | `collaboration-protocol.md` |
 | 對齊 UI 需求、Composition API 欄位、mock shape 或 service-layer contract | `data-contract.md` |
+| 取得 WordPress post、Page 或 Custom Post Type 單篇 / 列表 | `data-contract.md`；文章 UI 另讀 `scenes-news.md` |
 | 確認 WordPress-backed data 必須遵守 WordPress REST API 結構與 mapper 邊界 | `wordpress-data-structure-policy.md` |
 | 規劃或修補 API error、timeout、auth、CORS、not found、empty data | `data-contract.md`、`frontend-seo-deployment.md` |
 | 處理 SSR/SSG/pre-render SEO、custom domain、publish、sitemap、robots | `frontend-seo-deployment.md` |
