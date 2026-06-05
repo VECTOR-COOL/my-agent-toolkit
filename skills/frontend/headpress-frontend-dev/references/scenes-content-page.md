@@ -6,19 +6,19 @@ Use this when building or changing static CMS-backed pages such as About, Servic
 
 ## Data
 
-**優先** 透過 `/page/{path}` 取得（查 `openapi.json` 確認 response schema）：
+**優先** 透過 `/route/{path}` 取得（查 `openapi.json` 確認 response schema）：
 
 ```text
-GET /page/about
-GET /page/services
-GET /page/contact
+GET /route/about
+GET /route/services
+GET /route/contact
 ```
 
 If a page requires structured sections that WordPress core pages cannot represent, document the required ACF/custom field or HeadPress endpoint contract before baking a frontend-only structure into the app. Short-term 才在 service layer 使用 `/wp/v2/pages`.
 
 ## Field Mapping
 
-欄位對應（以 `openapi.json` 的 `/page/{path}` response 為準）：
+欄位對應（以 `openapi.json` 的 `/route/{path}` response 為準）：
 
 | UI need | Composition API / WordPress REST field |
 | --- | --- |
@@ -43,5 +43,5 @@ Pages do not have normal post `categories` or `tags` unless the backend intentio
 - Do not infer page taxonomy support without checking CMS registration.
 - Do not copy WordPress admin URLs into frontend canonical links.
 - Do not store important CMS content only in frontend constants.
-- Do not use `/wp/v2/pages` when `/page/{path}` is available.
+- Do not use `/wp/v2/pages` when `/route/{path}` is available.
 - Confirm any field used exists in `openapi.json` before building against it.

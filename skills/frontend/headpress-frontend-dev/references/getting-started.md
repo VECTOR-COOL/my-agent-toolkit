@@ -23,7 +23,9 @@
 建立好 App Shell 後，接著就是取得首頁的專屬內容。
 
 **API Endpoints:**
-`GET /front-page` 或 `GET /page` (不帶 path 參數)
+`GET /route`
+
+既有整合也可使用 `GET /front-page` 或 `GET /page`，新前端優先使用 `/route`。
 
 **功能:**
 明確取得首頁資料。這會解析 WordPress 設定的 front page，並回傳完整的 `PageResponse`，內容包含：
@@ -39,14 +41,16 @@
 完成首頁後，可以使用相同的模式渲染其他任何前端頁面：
 
 **API Endpoint:**
-`GET /page/{path}`
+`GET /route/{path}`
+
+若 SDK 或 OpenAPI client 不擅長多層 path parameter，可使用 `GET /route?path=/about/team`。
 
 **功能:**
-傳入前端路徑 (例如 `/page/about`、`/page/blog/post-slug` 或 `/page/category/news`)。此端點會自動解析為頁面、文章、自訂文章類型、彙整頁面或 404 等，並回傳與首頁格式一致的 `PageResponse`。
+傳入前端路徑 (例如 `/route/about`、`/route/blog/post-slug` 或 `/route/category/news`)。此端點會自動解析為頁面、文章、自訂文章類型、彙整頁面或 404 等，並回傳與首頁格式一致的 `PageResponse`。
 
 ## 5. 補充資料：Atomic Endpoints
 
-開發時請優先使用 `/site` 與 `/page` 組合 API，當前端有獨立需求時才呼叫以下原子端點：
+開發時請優先使用 `/site` 與 `/route` 組合 API，當前端有獨立需求時才呼叫以下原子端點：
 - `/collection`: 取得列表 (如最新文章)、分類列表
 - `/search`: 全文搜尋
 - `/sitemap`: 用於產生 Sitemap
@@ -58,4 +62,4 @@
 ## 快取與錯誤處理提示
 
 - **快取：** 主要的 GET 請求都會包含 `ETag` 與 `Cache-Control`。帶有符合 `If-None-Match` 的請求會收到 304 Not Modified。
-- **錯誤處理：** 錯誤會被封裝在 `{ error: { code, message, status, details }, meta }`。當找不到路徑時，`/page/{path}` 會回傳 HTTP 404 以及 `route.kind=not-found`，讓前端可以渲染專屬的 404 畫面。
+- **錯誤處理：** 錯誤會被封裝在 `{ error: { code, message, status, details }, meta }`。當找不到路徑時，`/route/{path}` 會回傳 HTTP 404 以及 `route.kind=not-found`，讓前端可以渲染專屬的 404 畫面。

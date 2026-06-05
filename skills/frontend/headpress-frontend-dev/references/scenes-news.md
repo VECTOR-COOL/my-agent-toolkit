@@ -20,9 +20,9 @@ Common route patterns（以 active project 的 route naming 為準）：
 **優先** `headpress/api/v1`（查 `openapi.json` 確認欄位與 response schema）：
 
 ```text
-GET /page/blog                    → post type archive（若 route 如此設計）
-GET /page/blog/{slug}             → 文章 detail
-GET /page/category/{slug}         → 分類 archive
+GET /route/blog                   → post type archive（若 route 如此設計）
+GET /route/blog/{slug}            → 文章 detail
+GET /route/category/{slug}        → 分類 archive
 GET /collection?type=post&page={page}  → 列表（進階端點，若 openapi 有定義）
 GET /taxonomy/category?slug={slug}     → 分類 meta（若 openapi 有定義）
 ```
@@ -38,7 +38,7 @@ X-WP-TotalPages
 
 ## Field Mapping
 
-欄位對應（完整形狀以 `openapi.json` 的 `/page/{path}` 與 `/collection` response 為準）：
+欄位對應（完整形狀以 `openapi.json` 的 `/route/{path}` 與 `/collection` response 為準）：
 
 | UI need | Composition API / WordPress REST field |
 | --- | --- |
@@ -56,7 +56,7 @@ X-WP-TotalPages
 
 Article detail pages should use:
 
-- 頂層 `seo`（HeadPress `/page/{path}`）
+- 頂層 `seo`（HeadPress `/route/{path}`）
 - Fallback：`entity.title.rendered` 作為 `<title>`，stripped `entity.excerpt.rendered` 作為 `<meta description>`
 - Canonical：`${VITE_SITE_URL}/news/{slug}` 或 active route pattern
 - `og:type=article`
@@ -68,5 +68,5 @@ Article detail pages should use:
 - Do not use a plain string title model unless it is explicitly a view model created by the service layer.
 - Do not fetch article data inside the component only; use route loader + headpressClient.
 - Do not assume category/tag index positions in `_embedded["wp:term"]` unless the service layer has guarded the shape.
-- Do not default to `/wp/v2/posts` when `/page/{path}` or `/collection` covers the scenario.
+- Do not default to `/wp/v2/posts` when `/route/{path}` or `/collection` covers the scenario.
 - Confirm any endpoint used exists in `openapi.json` before building against it.

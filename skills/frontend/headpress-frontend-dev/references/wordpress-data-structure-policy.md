@@ -21,7 +21,7 @@
 - 媒體資料必須相容 WordPress REST API 媒體回應格式：`id`、`source_url`、`alt_text`、`caption`、`media_details` 及可用的圖片尺寸版本。
 - 分類法參照必須相容 WordPress REST API：詞彙物件使用 `id`、`count`、`description`、`link`、`name`、`slug`、`taxonomy`。
 - 自訂文章類型與 ACF 欄位只能作為 WordPress REST API 結構的擴充，不得取代 WordPress 核心欄位。
-- 頁面級 SEO 以 `/page/{path}` 回應的頂層 `seo` 為準（見 openapi.json）；勿假設舊版巢狀 `headless.seo`。
+- 頁面級 SEO 以 `/route/{path}` 回應的頂層 `seo` 為準（見 openapi.json）；勿假設舊版巢狀 `headless.seo`。
 
 ## 模擬資料與 API 邊界
 
@@ -34,6 +34,6 @@
 ## Frontend 專案規則
 
 - Route loader、server function、server component、static generation 或專案既有資料流程應透過 `headpressClient`（指向 `headpress/api/v1`）取得資料；必要時 service layer 才用 `wpClient`。
-- SEO 相關頁面資料應從 `/page/{path}` 的頂層 `seo`、`entity.title.rendered`、`entity.excerpt.rendered` 或 `/site` 的 site 設定取得。
+- SEO 相關頁面資料應從 `/route/{path}` 的頂層 `seo`、`entity.title.rendered`、`entity.excerpt.rendered` 或 `/site` 的 site 設定取得。
 - 不得使用 Supabase、Firebase 或任意 CMS 資料表風格的資料結構，除非使用者明確說明後端不是 WordPress。
 - 若 prompt、實作計畫或生成檔案提到後端結構，必須說明後端資料合約遵循 `openapi.json` 的 HeadPress Composition API 與 WordPress REST 欄位慣例。
