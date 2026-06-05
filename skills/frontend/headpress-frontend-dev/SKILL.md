@@ -1,12 +1,12 @@
 ---
 name: headpress-frontend-dev
-version: "1.1.0"
+version: "1.1.2"
 description: HeadPress WordPress Headless Theme 前端 UI 開發協作 Skill。用於規劃或修改 HeadPress 驅動的前端 routes、layouts、components、SSR/pre-render、SEO metadata；優先消費 Composition API（namespace headpress/api/v1）；僅在 HeadPress 無法提供所需資料時才於 service layer 使用 /wp/v2/；對齊 openapi.json schema、normalized view model、mock-to-api 遷移、service-layer 邊界、環境變數與錯誤處理；撰寫 Lovable、v0、Replit、Cursor 等 AI builder prompt；debug hydration、CORS、auth、404、空資料與媒體 fallback。搭配 wordpress-rest-api-development 或 wordpress-plugin-theme-development 處理 schema 與主題後端。
 ---
 
 # HeadPress Frontend UI DEV Skill
 
-[![version](https://img.shields.io/badge/version-1.1.0-blue)]()
+[![version](https://img.shields.io/badge/version-1.1.2-blue)]()
 
 本 skill 是 **HeadPress WordPress Headless Theme 前端 UI 開發** 的 canonical 協作規則檔。所有 AI builder、coding agent 與人工開發者在操作使用 HeadPress 主題的前端（Lovable、v0、Replit、Cursor 或任何 React/TypeScript repo）時，**必須優先載入此 skill**。
 
@@ -245,6 +245,18 @@ node scripts/wp-rest-check.mjs
 
 ---
 
+## 導覽選單 (Primary Navigation)
+
+為相容 WordPress 內建選單行為，建立或修改主導覽列時，必須將階層結構（Hierarchy）視為一級需求：
+
+- **多層架構支援**：模型需包含如 `label`、`href`、`children`、`isActive`、`external` 等穩定欄位。無論是哪種版本的實作，皆須支援至少兩層的子選單（如 WordPress 後台設定的下拉選單）；在內容結構需要且 UI 允許的情況下，應支援第三層。
+- **元件模式**：Desktop 版應實作 dropdown、flyout 或 mega menu 模式；Mobile 版應實作 drawer、sheet 或 accordion 模式，並確保不依賴 hover 即可展開巢狀項目。
+- **無障礙存取 (a11y)**：保留鍵盤與螢幕閱讀器行為：如 `aria-expanded`、`aria-controls`、focus-visible 狀態、Esc 關閉、點擊外部關閉以及可預期的 Tab 順序。
+- **當前狀態標示**：讓當前頁面 (active) 及其父層級 (ancestor-active) 狀態保持可見，幫助使用者理解當前所處區塊。
+- **極端情況處理**：定義長標籤、過多子項目或窄螢幕時的溢位與折行行為。
+
+---
+
 ## 建議目錄邊界（前端 repo）
 
 依現有 repo 為準；若尚未建立，可採用：
@@ -355,6 +367,12 @@ component 必須使用既有 normalized NewsCardModel。
    - 決定它屬於 WordPress core、ACF、taxonomy、media metadata 或 SEO plugin。
    - 記錄預期的 REST path 與 type。
    - 提交後端 PR 或 issue，不在前端永久 fake。
+
+### 媒體與缺圖處理 (Media Fallback)
+
+1. **缺圖替代 (Placeholder)**：當 API 未回傳圖片 URL 或欄位為空時，必須提供與網站視覺風格相近的預設代圖，維持 UI 佈局完整，不可讓版面破圖或留白。
+2. **載入錯誤偵測**：必須在 `<img>` 或圖片元件綁定 `onError` 事件（或對應框架的 error handler），主動偵測圖片載入失敗。當圖片載入錯誤（例如外部圖床失效）時，自動替換為前述的預設代圖。
+3. **樣式對齊**：代圖的尺寸比例（aspect-ratio）、object-fit 行為與原圖設定需保持一致，避免替換代圖時引發版面跳動 (Layout Shift)。
 
 ### Custom domain / production 準備
 
