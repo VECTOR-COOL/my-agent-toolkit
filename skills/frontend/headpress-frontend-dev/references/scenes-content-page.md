@@ -14,6 +14,16 @@ GET /route/services
 GET /route/contact
 ```
 
+若此頁其實是 WordPress post 或 Custom Post Type detail，也一樣用 `/route/{path}`，讓 HeadPress 回傳 `route.template`、`route.view`、`entity` 與 `seo`：
+
+```text
+GET /route/{post-slug}                 # 一般 post detail，依實際 frontend path
+GET /route/{post_type}/{post-slug}     # CPT detail，例如 /route/project/demo-case
+GET /route?path=/{post_type}/{post-slug}
+```
+
+讀取回應時以 `route.template` 判斷 template，例如 `single_post`、`single_project`、`page_default`；以 `entity.type` 判斷資料型別，例如 `post`、`page`、`project`。
+
 If a page requires structured sections that WordPress core pages cannot represent, document the required ACF/custom field or HeadPress endpoint contract before baking a frontend-only structure into the app. Short-term 才在 service layer 使用 `/wp/v2/pages`.
 
 ## Field Mapping
