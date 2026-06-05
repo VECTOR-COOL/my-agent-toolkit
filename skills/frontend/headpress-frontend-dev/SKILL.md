@@ -1,12 +1,12 @@
 ---
 name: headpress-frontend-dev
-version: "1.2.0"
+version: "1.2.1"
 description: HeadPress WordPress Headless Theme 前端 UI 開發協作 Skill。用於規劃或修改 HeadPress 驅動的前端 routes、layouts、components、SSR/pre-render、SEO metadata；優先消費 Composition API（namespace headpress/api/v1）；僅在 HeadPress 無法提供所需資料時才於 service layer 使用 /wp/v2/；對齊 openapi.json schema、normalized view model、mock-to-api 遷移、service-layer 邊界、環境變數與錯誤處理；撰寫 Lovable、v0、Replit、Cursor 等 AI builder prompt；debug hydration、CORS、auth、404、空資料與媒體 fallback。搭配 wordpress-rest-api-development 或 wordpress-plugin-theme-development 處理 schema 與主題後端。
 ---
 
 # HeadPress Frontend UI DEV Skill
 
-[![version](https://img.shields.io/badge/version-1.2.0-blue)]()
+[![version](https://img.shields.io/badge/version-1.2.1-blue)]()
 
 本 skill 是 **HeadPress WordPress Headless Theme 前端 UI 開發** 的 canonical 協作規則檔。所有 AI builder、coding agent 與人工開發者在操作使用 HeadPress 主題的前端（Lovable、v0、Replit、Cursor 或任何 React/TypeScript repo）時，**必須優先載入此 skill**。
 
