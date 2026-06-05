@@ -26,15 +26,15 @@
 Dynamic CMS routes 的資料取得順序：
 
 ```text
-route/server data → /headpress/api/v1/page/{path}
+route/server data → /headpress/api/v1/route/{path}
   → mapper 取出 entity.seo 或 title.rendered/excerpt.rendered
   → metadata/head 使用 CMS SEO 欄位生成
   → component renders SEO-visible content
 ```
 
-## CMS SEO Field Priority（對應 `/page/{path}` response）
+## CMS SEO Field Priority（對應 `/route/{path}` response）
 
-1. 頂層 `seo`（HeadPress `/page` response）
+1. 頂層 `seo`（HeadPress `/route` response）
 2. `entity.title.rendered`
 3. stripped `entity.excerpt.rendered`
 4. embedded featured media（`entity._embedded["wp:featuredmedia"][0]`）
@@ -42,7 +42,7 @@ route/server data → /headpress/api/v1/page/{path}
 
 ## HTTP Status And Error Pages
 
-- 缺少 CMS content（`/page/{path}` 的 `route.status = 404`）應產生框架級 404/not-found。
+- 缺少 CMS content（`/route/{path}` 的 `route.status = 404`）應產生框架級 404/not-found。
 - 已移除 content 使用 410（若產品有明確 removed-content state），否則使用 404。
 - Protected preview 或 account routes 應區分 401 與 403。
 - API outage、WordPress maintenance、timeout 或 build-time fetch failure 應 render 受控 500/503 state，不洩漏 secrets。
@@ -72,5 +72,5 @@ SEO/deployment 相關 code work 完成後回報：
 - 是否需要 SEO scan rerun
 - 是否需要 Google Search Console/sitemap submission follow-up
 - 是否需要確認 `VITE_SITE_URL`、`VITE_WP_API_URL`、image domains 或 auth/env 設定
-- `/page/{path}` metadata 與 `/sitemap` data 是否已對照 production canonical URLs 驗證
+- `/route/{path}` metadata 與 `/sitemap` data 是否已對照 production canonical URLs 驗證
 - HeadPress CMS 的 CORS 是否允許 production frontend domain

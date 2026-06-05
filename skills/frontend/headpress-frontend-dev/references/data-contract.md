@@ -40,6 +40,12 @@ GET https://example.com/wp-json/headpress/api/v1/openapi.json
 ```
 # 主流程
 GET /site
+GET /route
+GET /route/{path}
+GET /route?path=/about/team
+
+# supported alternatives（既有整合可用，新整合優先 /route）
+GET /front-page
 GET /page
 GET /page/{path}
 
@@ -54,9 +60,6 @@ GET /openapi.json
 GET /manifest
 GET /health
 
-# deprecated（勿新開發）
-GET /site-layout
-GET /route?path=...
 ```
 
 ## WordPress Native Endpoints（備援，service layer only）
@@ -97,7 +100,7 @@ Composition API 的 `entity`、`items`、media、taxonomy 欄位保留 WordPress
 | 特色圖 ID | `featured_media` | `featured_image_id` |
 | 特色圖 URL | `_embedded["wp:featuredmedia"][0].source_url` | 自行拼接 URL |
 | 分類/標籤 | `_embedded["wp:term"]` | `categories`（ID 陣列） |
-| SEO meta | 頂層 `seo`（HeadPress `/page`）或 `yoast_head_json` | 自行推測 meta |
+| SEO meta | 頂層 `seo`（HeadPress `/route` / `/page`）或 `yoast_head_json` | 自行推測 meta |
 
 站台擴充欄位可能出現在 `entity` 或自訂 key；以 `openapi.json` 為準（勿假設舊版 `headless` key 仍存在）。
 
@@ -108,7 +111,7 @@ Components 不得：
 - 直接呼叫 `fetch("https://example.com/...")` 或任何 CMS URL
 - 直接 import mock fixtures
 - 假設 openapi.json 未定義的後端欄位
-- 在 HeadPress 已有 `/page/{path}` 或 `/collection` 時，繞過 service layer 直連 `/wp/v2/`
+- 在 HeadPress 已有 `/route/{path}`、`/page/{path}` 或 `/collection` 時，繞過 service layer 直連 `/wp/v2/`
 - 在 SSR/SSG/pre-render 可用時，從 client-only effects 取得主要內容
 
 ## Schema Change Protocol
@@ -132,7 +135,7 @@ Components 不得：
 - Fetcher 必須捕捉 HTTP status、WordPress REST error body、timeout、network failure、invalid JSON、CORS/auth 失敗、rate limit 與 server/maintenance errors。
 - Service layer 必須把錯誤正規化成 typed states：`error`、`notFound`、`unauthorized`、`forbidden`、`rateLimited`、`timeout`、`unavailable`。
 - Dynamic slug routes 在 API 返回零筆 published items 時，必須回傳框架級 404/not-found。
-- `/page/{path}` 的 `route.status = 404` 必須對應框架級 404；`/sitemap` 失敗不得 publish 失效 URL。
+- `/route/{path}` 的 `route.status = 404` 必須對應框架級 404；`/sitemap` 失敗不得 publish 失效 URL。
 - 缺 `_embedded`、缺 media、空 ACF 欄位、`null` rendered 欄位、unpublished/private content 必須在 mapper 或 service code 處理，不可讓 UI components 直接面對。
 - Production fallback 絕不能靜默用 mock 替換失敗的 API 內容；改顯示受控 degraded/error state。
 
@@ -143,4 +146,4 @@ Components 不得：
 - 讀 pagination headers：`X-WP-Total`、`X-WP-TotalPages`；不要從當前 response 長度推算總頁數。
 - 確認 custom post type 的 `show_in_rest` 和 `rest_base` 設定，再建立對應 route。
 - `rendered` 欄位是 HTML；card excerpt/meta description 要 strip HTML，不可直接用原始值。
-- 列表／archive 優先 `GET /page/{path}` 或 `/collection`；勿預設改打 `/wp/v2/posts`。
+- 列表／archive 優先 `GET /route/{path}` 或 `/collection`；勿預設改打 `/wp/v2/posts`。

@@ -1,4 +1,4 @@
 interface:
   display_name: "HeadPress 前端協作 (Frontend UI DEV)"
   short_description: "專為 HeadPress WordPress Headless Theme 前端開發設計"
-  default_prompt: "使用此 skill 處理 HeadPress Composition API（namespace headpress/api/v1，優先於 /wp/v2/）驅動的 Lovable、v0、Replit、Cursor 或 React/TypeScript 前端專案，包含 schema 對齊、CMS mapping、service-layer 邊界、錯誤處理、SEO、部署與 AI-builder 協作。"
+  default_prompt: "使用此 skill 處理 HeadPress Composition API（namespace headpress/api/v1，route-first：優先 /route 與 /route/{path}，並優先於 /wp/v2/）驅動的 Lovable、v0、Replit、Cursor 或 React/TypeScript 前端專案，包含 schema 對齊、CMS mapping、service-layer 邊界、錯誤處理、SEO、部署與 AI-builder 協作。"

@@ -27,7 +27,7 @@ Do not replace the active frontend stack, router, rendering mode, or package man
 ## Common Pitfalls（HeadPress 特有）
 
 - 未查 `openapi.json` 就假設 `headpress/api/v1` endpoint 存在或回傳特定欄位。
-- HeadPress 已有 `/page/{path}` 或 `/collection` 時，仍從 component 直連 `/wp/v2/posts`。
+- HeadPress 已有 `/route/{path}`、`/page/{path}` 或 `/collection` 時，仍從 component 直連 `/wp/v2/posts`。
 - 以為 `data-contract.md` 列的欄位就是全部；實際 schema 以 `openapi.json` 為準。
 - 設計 mock data 為方便 UI 的物件，未對齊 `headpress/api/v1` response 形狀，導致 API 切換後破版。
 - 假設 `title`、`content`、`excerpt` 是純字串；WordPress 使用 `*.rendered` HTML 欄位。
