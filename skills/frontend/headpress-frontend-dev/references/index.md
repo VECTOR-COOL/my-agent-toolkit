@@ -23,6 +23,7 @@
 | --- | --- |
 | 從零開始：入門與如何建立首頁 | `getting-started.md` |
 | 確認 HeadPress API endpoints、response schema、欄位定義 | `themes/headpress/docs/prd/openapi.json` + `data-contract.md` |
+| 確認 CMS HeadPress 版本 ≥ skill 最低版（目前 0.6.0） | `SKILL.md`（`minimum_headpress_version`）、`data-contract.md`、`GET /health` |
 | 確認專案身分、domain、環境名稱、平台與 source-of-truth 邊界 | `project-contract.md` |
 | 避免 AI-builder/Git 覆寫衝突，或決定變更 owner | `collaboration-protocol.md` |
 | 對齊 UI 需求、Composition API 欄位、mock shape 或 service-layer contract | `data-contract.md` |

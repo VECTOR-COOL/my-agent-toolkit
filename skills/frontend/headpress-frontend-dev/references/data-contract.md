@@ -17,6 +17,16 @@
 VITE_WP_API_URL=https://example.com/wp-json/headpress/api/v1
 ```
 
+## Minimum HeadPress Version
+
+本 skill（`headpress-frontend-dev` v1.2.2+）假設 CMS 端 HeadPress Theme **≥ 0.6.0**。
+
+整合或切換到正式 API 前：
+
+1. 呼叫 `GET /health`（或 `GET /manifest`）確認執行中 `version`。
+2. 若版本低於最低版，先升級 HeadPress；不要在前端永久依賴本文件列出但 openapi 未提供的端點。
+3. 個別 endpoint 是否可用，仍以 runtime `GET /openapi.json` 為唯一權威。
+
 ## Schema 查詢位置
 
 **OpenAPI 3.1 Spec（唯一 canonical）**：
@@ -51,11 +61,16 @@ GET /page/{path}
 
 # 進階
 GET /collection
+GET /content/{post_type}
+GET /content/{post_type}/{identifier}
+GET /content-object/{id}
+POST /query
 GET /search
 GET /sitemap
 GET /taxonomies
 GET /taxonomy/{taxonomy}
 GET /media/{id}
+GET /languages
 GET /openapi.json
 GET /manifest
 GET /health
@@ -74,7 +89,13 @@ GET /wp/v2/tags
 GET /wp/v2/media/{id}
 ```
 
-若需要以 ID 直接取得某篇內容，且 HeadPress 尚未提供對應 endpoint，才可在 service layer 使用：
+若需要以 ID 直接取得某篇內容，優先使用 HeadPress 的單筆 resolver：
+
+```text
+GET /content-object/{id}
+```
+
+只有 HeadPress 沒有對應 public endpoint、且需求明確超出 composition API 時，才可在 service layer 使用：
 
 ```text
 GET /wp/v2/{rest_base}/{id}
@@ -143,9 +164,10 @@ AI builder / mapper 必須依下列欄位判斷內容類型與畫面：
 
 ### CPT 列表或 archive cards
 
-列表、archive、卡片集合使用 `/collection`：
+列表、archive、卡片集合使用 `/content/{post_type}` 或 `/collection`：
 
 ```text
+GET /content/{post_type}?page=1&per_page=10
 GET /collection?type={post_type}&page=1&per_page=10
 GET /collection?type={post_type}&taxonomy={taxonomy}&term={term-slug}
 ```
@@ -153,9 +175,46 @@ GET /collection?type={post_type}&taxonomy={taxonomy}&term={term-slug}
 範例：
 
 ```text
+GET /content/project?page=1&per_page=12
 GET /collection?type=project&page=1&per_page=12
 GET /collection?type=project&taxonomy=project_category&term=featured
 ```
+
+### 單一 WordPress object（service layer）
+
+只需要一個 publish object、且不需要 route SEO / breadcrumb / redirect / not-found 時，可用：
+
+```text
+GET /content/{post_type}/{identifier}
+```
+
+`identifier` 可為 ID 或 slug。回應保留 WordPress-shaped `title.rendered`、`content.rendered`、`excerpt.rendered`。公開頁面渲染仍優先 `/route/{path}`。
+
+若只知道 WordPress ID、不知道 post type，可用：
+
+```text
+GET /content-object/{id}
+```
+
+`/content-object/{id}` 類似 WordPress object resolver，但只解析公開 publish 且在 HeadPress allowlist 內的 post/page/CPT。它不是通用 WP object dump，不可用來查 user、term、option、private object。單筆 endpoint 永遠回單一 object 或 404，不回 `items[]`。
+
+### Safe WP_Query-shaped 查詢
+
+需要 array-style 查詢條件時才使用：
+
+```text
+POST /query
+```
+
+Body 必須符合 openapi.json `QueryRequest`；後端永遠限制 `post_status=publish`、allowlisted `post_type`、`per_page<=100`，且 taxonomy 必須 public + `show_in_rest`。不得在前端假設可以傳 raw `meta_query`、private/draft status、`posts_per_page=-1` 或任意 `WP_Query` args。
+
+### 語言資訊
+
+```text
+GET /languages
+```
+
+WordPress core 只提供目前 site locale 與已安裝語言包，不代表內容已翻譯。若 API 回傳只有 `source=wordpress-core` 的單一語言，前端應隱藏語言切換或顯示單語 UI；多語 route / content 行為必須等後端多語 plugin 或子主題透過 openapi 契約定義。
 
 ### CPT 可用條件
 
@@ -244,3 +303,4 @@ Components 不得：
 - 確認 custom post type 的 `show_in_rest` 和 `rest_base` 設定，再建立對應 route。
 - `rendered` 欄位是 HTML；card excerpt/meta description 要 strip HTML，不可直接用原始值。
 - 列表／archive 優先 `GET /route/{path}` 或 `/collection`；勿預設改打 `/wp/v2/posts`。
+- 簡單 post type 列表可用 `/content/{post_type}`；複雜條件才用 `POST /query`，且只傳 OpenAPI 允許的 safe subset。
