@@ -1,51 +1,65 @@
 # HeadPress Composition API Data Contract
 
-本文件說明前端如何消費 HeadPress Composition API（REST namespace：`headpress/api/v1`）。
+本文件說明前端如何消費 HeadPress Composition API（public base：`/headpress/api/v1`；REST namespace：`headpress/api/v1`）。
 
 > 所有網域範例使用 `example.com`；實際使用時替換為部署的真實網域。
 
+## 後端定位：WordPress Headless CMS
+
+HeadPress 的前端資料契約建立在 WordPress 上。Agent 不應把後端想成無狀態 JSON datastore、Supabase table 或自訂 SaaS CMS，而要使用 WordPress 的資料邏輯：
+
+- content objects：`post`、`page`、Custom Post Type。
+- routing：WordPress permalink、front page、posts page、archive、taxonomy archive、single object、redirect、404。
+- classification：taxonomy、term、category、tag、custom taxonomy。
+- media：attachment、featured media、image sizes、alt text、caption。
+- navigation：WordPress nav menu location、menu item hierarchy、external link、current/ancestor state。
+- SEO：SEO plugin fields、canonical source data、robots、schema、breadcrumb、Open Graph image。
+
+HeadPress Composition API 會把這些 WordPress 資料組裝為前端可渲染的 payload；它不取消 WordPress 欄位慣例。因此 mapper 必須理解 `title.rendered`、`content.rendered`、`excerpt.rendered`、`featured_media`、taxonomy ids、media objects 與 publish/private 狀態。
+
 ## API 優先順序
 
-1. **優先** `wp-json/headpress/api/v1/*`（HeadPress Composition API）。
-2. **僅當** HeadPress 無對應能力或 openapi 未涵蓋時，在 **service layer** 使用 `wp-json/wp/v2/*`。
+1. **優先** `/headpress/api/v1/*`（HeadPress Composition API）。
+2. **僅當** HeadPress 無對應能力或 openapi 未涵蓋時，在 **service layer** 使用 `/wp/v2/*`（完整 URL 通常位於 `{CMS}/wp-json/wp/v2/*`）。
 3. Component 不得直接呼叫任一 CMS URL；經 `headpressClient` 或 service 內 `wpClient`。
 
 ## API Base URL
 
 ```bash
 # 前端環境變數（範例）
-VITE_WP_API_URL=https://example.com/wp-json/headpress/api/v1
+VITE_WP_API_URL=https://example.com/headpress/api/v1
 ```
-
-## Minimum HeadPress Version
-
-本 skill（`headpress-frontend-dev` v1.2.2+）假設 CMS 端 HeadPress Theme **≥ 0.6.0**。
-
-整合或切換到正式 API 前：
-
-1. 呼叫 `GET /health`（或 `GET /manifest`）確認執行中 `version`。
-2. 若版本低於最低版，先升級 HeadPress；不要在前端永久依賴本文件列出但 openapi 未提供的端點。
-3. 個別 endpoint 是否可用，仍以 runtime `GET /openapi.json` 為唯一權威。
 
 ## Schema 查詢位置
 
-**OpenAPI 3.1 Spec（唯一 canonical）**：
+**OpenAPI 3.1 契約 SSOT（repo，後端開發／CI）**：
 
 ```
 themes/headpress/docs/prd/openapi.json
 ```
 
-Runtime 取得（WordPress 啟動後）：
+**Runtime（AI builder、前端整合、codegen 應優先使用）**：
 
 ```
-GET https://example.com/wp-json/headpress/api/v1/openapi.json
+GET https://example.com/headpress/api/v1/manifest
+GET https://example.com/headpress/api/v1/openapi.json
 ```
 
-> AI Builder 或 agent：使用任何欄位前，**必須先在 openapi.json 中確認欄位存在**。未列入的欄位代表未實作或已廢棄。
+`/manifest` 提供站點 URL 與整合 recipes；`/openapi.json` 回傳與 SSOT 同形的 spec，並注入實際 CMS `servers` URL。勿把 repo 靜態檔當 live API base。
+
+**離線 placeholder（僅 Swagger UI 無 WP 時）**：
+
+```
+themes/headpress/docs/prd/openapi.example.json
+```
+
+`openapi.example.json` 的 `servers` 為範例網域，不可作為 production fetch 或 Try it out 目標。
+
+> AI Builder 或 agent：使用任何欄位前，**必須先在 openapi.json（優先 runtime GET）中確認欄位存在**。未列入的欄位代表未實作或已廢棄。
 
 ## Composition API Endpoints（優先）
 
-路徑相對於 `wp-json/headpress/api/v1`（完整 schema 見 `openapi.json`）：
+路徑相對於 `/headpress/api/v1`（完整 schema 見 `openapi.json`）：
 
 ```
 # 主流程
@@ -64,7 +78,7 @@ GET /collection
 GET /content/{post_type}
 GET /content/{post_type}/{identifier}
 GET /content-object/{id}
-POST /query
+POST /collection
 GET /search
 GET /sitemap
 GET /taxonomies
@@ -76,6 +90,25 @@ GET /manifest
 GET /health
 
 ```
+
+## Endpoint 選擇矩陣
+
+| 場景 | 優先 endpoint | 說明 |
+| --- | --- | --- |
+| 初始化 AI builder / codegen | `GET /manifest` → `GET /openapi.json` | 先取得 recommended flow、runtime servers URL 與 schema |
+| 全站 layout / App Shell | `GET /site` | site identity、menus、SEO defaults、social links、meta |
+| 首頁 | `GET /route?include=all` | 解析 WordPress front page；比 `/front-page` 更適合新整合 |
+| 一般公開路由 | `GET /route?path={current_path}&include=all` | 解析 page、post、CPT、archive、redirect、404；AI builder / SDK 優先 |
+| 手寫測試公開路由 | `GET /route/{path}` | 完全受支援；人工測試可讀性較好 |
+| header/footer 選單 | `GET /menus`、`GET /menus/{slug}`、`GET /menus/locations` | 保留 WordPress menu hierarchy |
+| 最新文章 / CPT 列表 | `GET /collection?type={post_type}` 或 `GET /content/{post_type}` | 含 pagination；卡片資料仍需 mapper |
+| taxonomy filter / archive | `GET /taxonomies`、`GET /taxonomy/{taxonomy}`、`GET /collection?taxonomy={taxonomy}&term={slug}` | 先探索 taxonomy，再查 collection |
+| 搜尋 | `GET /search?q={query}` | 公開 allowlisted content search |
+| 單筆物件，不需要 SEO context | `GET /content/{post_type}/{identifier}` | 已知 post type，依 ID 或 slug 取 publish object |
+| 只知道 WordPress ID | `GET /content-object/{id}` | 不知道 post type 的 publish object resolver |
+| 設計 token / assets | `GET /theme`、`GET /assets` | 不要猜測 theme.json 或 uploads URL |
+| sitemap / robots / redirects source | `GET /sitemap`、`GET /robots`、`GET /redirects` | 前端平台負責正式輸出 |
+| HeadPress 無能力且短期不能補 | `/wp/v2/*` via `wpClient` | 僅限 service layer fallback；component 不可直連 |
 
 ## WordPress Native Endpoints（備援，service layer only）
 
@@ -203,7 +236,7 @@ GET /content-object/{id}
 需要 array-style 查詢條件時才使用：
 
 ```text
-POST /query
+POST /collection
 ```
 
 Body 必須符合 openapi.json `QueryRequest`；後端永遠限制 `post_status=publish`、allowlisted `post_type`、`per_page<=100`，且 taxonomy 必須 public + `show_in_rest`。不得在前端假設可以傳 raw `meta_query`、private/draft status、`posts_per_page=-1` 或任意 `WP_Query` args。
@@ -303,4 +336,4 @@ Components 不得：
 - 確認 custom post type 的 `show_in_rest` 和 `rest_base` 設定，再建立對應 route。
 - `rendered` 欄位是 HTML；card excerpt/meta description 要 strip HTML，不可直接用原始值。
 - 列表／archive 優先 `GET /route/{path}` 或 `/collection`；勿預設改打 `/wp/v2/posts`。
-- 簡單 post type 列表可用 `/content/{post_type}`；複雜條件才用 `POST /query`，且只傳 OpenAPI 允許的 safe subset。
+- 簡單 post type 列表可用 `/content/{post_type}`；複雜條件才用 `POST /collection`，且只傳 OpenAPI 允許的 safe subset。

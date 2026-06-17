@@ -50,7 +50,7 @@ route/server data → /headpress/api/v1/route/{path}
 
 ## Sitemap And Robots
 
-- 使用 `/sitemap`（`headpress/api/v1`）作為 sitemap data source；前端平台仍然負責最終 `sitemap.xml` 和 `robots.txt` 輸出。
+- 使用 `/headpress/api/v1/sitemap` 作為 sitemap data source；前端平台仍然負責最終 `sitemap.xml` 和 `robots.txt` 輸出。
 - 以 `VITE_SITE_URL`（例如 `https://example.com`）作為 sitemap host URL。
 - CMS-backed dynamic routes 只有在 API/source 穩定後才加入 sitemap，避免 publish broken URLs。
 - 不要在 production 把 `robots.txt` 設成 block all crawlers，除非明確要求。

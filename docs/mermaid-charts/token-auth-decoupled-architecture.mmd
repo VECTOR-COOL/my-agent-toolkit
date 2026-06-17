@@ -1,0 +1,65 @@
+flowchart LR
+  subgraph FE["前台 Frontend"]
+    direction TB
+    AdminUI["Admin Portal<br/>Token 管理"]
+    ClientApp["Client App / SDK"]
+  end
+
+  subgraph GW["邊界層"]
+    direction TB
+    BFF["BFF / API Gateway"]
+    VerifyMW["Verification Middleware"]
+    BFF --> VerifyMW
+  end
+
+  subgraph ISSUE["簽發域"]
+    direction TB
+    Issuer["Token Issuance"]
+    Policy["Token Policy"]
+    KMS["Key Management"]
+    Issuer --> Policy
+    Issuer --> KMS
+  end
+
+  subgraph VERIFY["驗證域"]
+    direction TB
+    Verifier["Token Verification"]
+    Store[("Token Store")]
+    Verifier --> Store
+  end
+
+  subgraph SHARED["共用"]
+    direction TB
+    Bus{{"Event Bus"}}
+    Audit[("Audit Log")]
+  end
+
+  subgraph APP["業務層"]
+    BizAPI["Business APIs"]
+  end
+
+  AdminUI -->|"Admin Session"| BFF
+  ClientApp -->|"Bearer Token"| BFF
+  AdminUI -.->|"管理"| Issuer
+  VerifyMW -->|"驗證"| Verifier
+  VerifyMW -->|"通過"| BizAPI
+  Issuer --> Store
+  Issuer --> Bus
+  Bus -.->|"revoke/rotate"| Verifier
+  Issuer --> Audit
+  Verifier --> Audit
+  Verifier --> Policy
+  Verifier --> KMS
+
+  classDef fe fill:#e8f4fd,stroke:#1d6fa5
+  classDef gw fill:#fff4e6,stroke:#c77d00
+  classDef issue fill:#eef7ee,stroke:#2e7d32
+  classDef verify fill:#f3e8fd,stroke:#6a1b9a
+  classDef shared fill:#f5f5f5,stroke:#616161
+  classDef app fill:#fff8e1,stroke:#f9a825
+  class AdminUI,ClientApp fe
+  class BFF,VerifyMW gw
+  class Issuer,Policy,KMS issue
+  class Verifier,Store verify
+  class Bus,Audit shared
+  class BizAPI app

@@ -1,0 +1,37 @@
+flowchart LR
+  subgraph CLIENT["Client"]
+    A["Cursor IDE<br/>AI Agent"]
+  end
+
+  subgraph PROXY["n8n MCP Router Proxy"]
+    direction TB
+    F["MCP Server Trigger<br/>暴露端點"]
+    G["AI Agent 節點<br/>解析提示"]
+    H["Switch 節點<br/>路由邏輯"]
+    F --> G --> H
+    H --> I["MCP Client<br/>n8n"]
+    H --> J["MCP Client<br/>GitHub"]
+    H --> K["MCP Client<br/>Custom"]
+  end
+
+  subgraph SERVICES["MCP Services"]
+    direction TB
+    C["MCP Service 1<br/>n8n API"]
+    D["MCP Service 2<br/>GitHub API"]
+    E["MCP Service 3<br/>Custom API"]
+  end
+
+  A -->|"mcp.json 配置"| F
+  A -->|"Agent 提示"| G
+  I --> C
+  J --> D
+  K --> E
+  C -->|"執行結果"| F
+  F -->|"回傳 Agent"| A
+
+  classDef client fill:#e8f4fd,stroke:#1d6fa5
+  classDef proxy fill:#fff4e6,stroke:#c77d00
+  classDef svc fill:#eef7ee,stroke:#2e7d32
+  class A client
+  class F,G,H,I,J,K proxy
+  class C,D,E svc

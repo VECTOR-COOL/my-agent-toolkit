@@ -6,7 +6,7 @@ Use this when building or changing the site homepage or homepage sections.
 
 ## Data
 
-Homepage data **優先** 透過 `headpress/api/v1` 組裝。查 `openapi.json` 確認 `/site` 與 `/route` 的 response schema。
+Homepage data **優先** 透過 `/headpress/api/v1` 組裝。查 `openapi.json` 確認 `/site` 與 `/route` 的 response schema。
 
 常見 section 資料來源：
 
