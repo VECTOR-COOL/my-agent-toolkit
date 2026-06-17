@@ -17,7 +17,7 @@ Common route patterns（以 active project 的 route naming 為準）：
 
 ## Data
 
-**優先** `headpress/api/v1`（查 `openapi.json` 確認欄位與 response schema）：
+**優先** `/headpress/api/v1`（查 `openapi.json` 確認欄位與 response schema）：
 
 ```text
 GET /route/blog                   → post type archive（若 route 如此設計）

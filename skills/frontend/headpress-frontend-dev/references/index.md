@@ -2,7 +2,7 @@
 
 先載入此檔案，再只載入當前任務需要的 reference。
 
-> 所有網域範例使用 `example.com` / `cms.example.com`；實際使用時替換為部署的真實網域。
+> 所有網域範例使用 `example.com`；實際使用時替換為部署的真實網域。
 
 ## HeadPress 關鍵文件路徑
 
@@ -21,13 +21,12 @@
 
 | 任務 | 讀取 |
 | --- | --- |
-| 從零開始：入門與如何建立首頁 | `getting-started.md` |
-| 確認 HeadPress API endpoints、response schema、欄位定義 | `themes/headpress/docs/prd/openapi.json` + `data-contract.md` |
-| 確認 CMS HeadPress 版本 ≥ skill 最低版（目前 0.6.0） | `SKILL.md`（`minimum_headpress_version`）、`data-contract.md`、`GET /health` |
+| 從零開始建立 HeadPress 前端、App Shell、route loader、template mapping、SEO | `getting-started.md` |
+| 確認 HeadPress API endpoints、response schema、欄位定義與 endpoint 選擇 | `themes/headpress/docs/prd/openapi.json` + `data-contract.md` |
 | 確認專案身分、domain、環境名稱、平台與 source-of-truth 邊界 | `project-contract.md` |
 | 避免 AI-builder/Git 覆寫衝突，或決定變更 owner | `collaboration-protocol.md` |
 | 對齊 UI 需求、Composition API 欄位、mock shape 或 service-layer contract | `data-contract.md` |
-| 取得 WordPress post、Page 或 Custom Post Type 單篇 / 列表 | `data-contract.md`；文章 UI 另讀 `scenes-news.md` |
+| 取得 WordPress post、Page 或 Custom Post Type 單篇 / 列表 | `data-contract.md` + `wordpress-data-structure-policy.md`；文章 UI 另讀 `scenes-news.md` |
 | 確認 WordPress-backed data 必須遵守 WordPress REST API 結構與 mapper 邊界 | `wordpress-data-structure-policy.md` |
 | 規劃或修補 API error、timeout、auth、CORS、not found、empty data | `data-contract.md`、`frontend-seo-deployment.md` |
 | 處理 SSR/SSG/pre-render SEO、custom domain、publish、sitemap、robots | `frontend-seo-deployment.md` |
@@ -42,7 +41,7 @@
 每個 UI scenario 建立一個新的 `scenes-*.md` 檔案。每個 scene 只聚焦：
 
 - route/page purpose
-- expected data service（對應哪個 `headpress/api/v1` endpoint，優先於 `/wp/v2/`）
+- expected data service（對應哪個 `/headpress/api/v1` endpoint，優先於 `/wp/v2/`）
 - WordPress REST fields（查 openapi.json）
 - SEO requirements
 - UI states
