@@ -1,6 +1,9 @@
-# Anti-Prompts And Pitfalls — HeadPress Frontend Dev
+---
+description: 提供在向 AI 開發代理（如 Lovable、v0、Cursor）發送提示前，應避免的反模式與常見陷阱。
+---
+# 反模式與常見陷阱 — HeadPress Frontend Dev
 
-Load this before sending broad prompts to Lovable, v0, Replit, Cursor, or another coding agent.
+在向 Lovable、v0、Replit、Cursor 或其他開發代理發送廣泛提示前，請先載入此文件。
 
 > 範例使用 `example.com`；實際使用時替換為部署的真實網域。
 
@@ -27,7 +30,7 @@ Do not replace the active frontend stack, router, rendering mode, or package man
 ## Common Pitfalls（HeadPress 特有）
 
 - 未查 `openapi.json` 就假設 `/headpress/api/v1` endpoint 存在或回傳特定欄位。
-- HeadPress 已有 `/route/{path}`、`/page/{path}` 或 `/collection` 時，仍從 component 直連 `/wp/v2/posts`。
+- HeadPress 已有 `/route?path={current_path}`、`/page/{path}` 或 `/collection` 時，仍從 component 直連 `/wp/v2/posts`。
 - 以為 `data-contract.md` 列的欄位就是全部；實際 schema 以 `openapi.json` 為準。
 - 設計 mock data 為方便 UI 的物件，未對齊 `/headpress/api/v1` response 形狀，導致 API 切換後破版。
 - 假設 `title`、`content`、`excerpt` 是純字串；WordPress 使用 `*.rendered` HTML 欄位。

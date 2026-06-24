@@ -1,6 +1,9 @@
-# Scene: Homepage — HeadPress Frontend Dev
+---
+description: 關於網站首頁或首頁區塊的前端建置與修改場景規範。
+---
+# 場景：首頁 — HeadPress Frontend Dev
 
-Use this when building or changing the site homepage or homepage sections.
+在建置或修改網站首頁或首頁區塊時，請使用此場景規範。
 
 > 範例使用 `example.com`；實際使用時替換為部署的真實網域。
 

@@ -1,6 +1,9 @@
-# Frontend Builder Collaboration Protocol — HeadPress Frontend Dev
+---
+description: 定義前端開發者、AI 代理與各個無頭 CMS 平台之間的協作邊界與責任歸屬。
+---
+# 前端建置協作規範 — HeadPress Frontend Dev
 
-Primary agreement:
+主要協定：
 
 Use the active project's collaboration document when present, commonly:
 
@@ -10,7 +13,7 @@ docs/frontend-collaboration.md
 docs/ai-builder-prompts.md
 ```
 
-If the project repo is available, read the relevant file directly before changing code. This reference is a compact operational summary for this skill.
+如果專案原始碼庫可用，請在修改程式碼前直接閱讀相關檔案。本參考文件為此技能的精簡操作摘要。
 
 ## Ownership
 
