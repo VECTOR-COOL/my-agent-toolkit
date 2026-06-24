@@ -1,20 +1,23 @@
-# Scene: CMS Content Pages — HeadPress Frontend Dev
+---
+description: 關於靜態頁面（如關於我們、服務、聯絡方式等）的前端建置與修改場景規範。
+---
+# 場景：CMS 靜態內頁 — HeadPress Frontend Dev
 
-Use this when building or changing static CMS-backed pages such as About, Services, Contact, FAQ, policy pages, or landing pages.
+在建置或修改由 CMS 支援的靜態頁面（如關於我們、服務項目、聯絡資訊、常見問題、政策頁面或著陸頁）時，請使用此場景規範。
 
 > 範例使用 `example.com`；實際使用時替換為部署的真實網域。
 
 ## Data
 
-**優先** 透過 `/route/{path}` 取得（查 `openapi.json` 確認 response schema）：
+**優先** 透過 `/route?path={current_path}` 取得（查 `openapi.json` 確認 response schema）：
 
 ```text
-GET /route/about
+GET /route?path=/about
 GET /route/services
 GET /route/contact
 ```
 
-若此頁其實是 WordPress post 或 Custom Post Type detail，也一樣用 `/route/{path}`，讓 HeadPress 回傳 `route.template`、`route.view`、`entity` 與 `seo`：
+若此頁其實是 WordPress post 或 Custom Post Type detail，也一樣用 `/route?path={current_path}`，讓 HeadPress 回傳 `route.template`、`route.view`、`entity` 與 `seo`：
 
 ```text
 GET /route/{post-slug}                 # 一般 post detail，依實際 frontend path
@@ -28,7 +31,7 @@ If a page requires structured sections that WordPress core pages cannot represen
 
 ## Field Mapping
 
-欄位對應（以 `openapi.json` 的 `/route/{path}` response 為準）：
+欄位對應（以 `openapi.json` 的 `/route?path={current_path}` response 為準）：
 
 | UI need | Composition API / WordPress REST field |
 | --- | --- |
@@ -53,5 +56,5 @@ Pages do not have normal post `categories` or `tags` unless the backend intentio
 - Do not infer page taxonomy support without checking CMS registration.
 - Do not copy WordPress admin URLs into frontend canonical links.
 - Do not store important CMS content only in frontend constants.
-- Do not use `/wp/v2/pages` when `/route/{path}` is available.
+- Do not use `/wp/v2/pages` when `/route?path={current_path}` is available.
 - Confirm any field used exists in `openapi.json` before building against it.

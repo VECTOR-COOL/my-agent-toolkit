@@ -1,6 +1,9 @@
-# Official Documentation — HeadPress Frontend Dev
+---
+description: 強調優先參考官方文件，以確認平台或 API 行為的準則。
+---
+# 官方文件指引 — HeadPress Frontend Dev
 
-Use official docs first for platform/API behavior. Verify current docs before making platform-specific claims about deployment, SSR, SEO, env vars, or default frameworks.
+請優先使用官方文件以確認平台或 API 的行為。在對部署、SSR、SEO、環境變數或預設框架做出特定平台的主張之前，請先驗證當前的文件。
 
 ## HeadPress API Schema（最優先）
 

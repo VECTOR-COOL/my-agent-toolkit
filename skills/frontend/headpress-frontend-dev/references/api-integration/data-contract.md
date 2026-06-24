@@ -1,3 +1,6 @@
+---
+description: 說明前端如何消費 HeadPress Composition API，包含路由解析、資料模型映射與前端網址改寫規則。
+---
 # HeadPress Composition API Data Contract
 
 本文件說明前端如何消費 HeadPress Composition API（public base：`/headpress/api/v1`；REST namespace：`headpress/api/v1`）。
@@ -65,7 +68,7 @@ themes/headpress/docs/prd/openapi.example.json
 # 主流程
 GET /site
 GET /route
-GET /route/{path}
+GET /route?path={current_path}
 GET /route?path=/about/team
 
 # supported alternatives（既有整合可用，新整合優先 /route）
@@ -99,7 +102,7 @@ GET /health
 | 全站 layout / App Shell | `GET /site` | site identity、menus、SEO defaults、social links、meta |
 | 首頁 | `GET /route?include=all` | 解析 WordPress front page；比 `/front-page` 更適合新整合 |
 | 一般公開路由 | `GET /route?path={current_path}&include=all` | 解析 page、post、CPT、archive、redirect、404；AI builder / SDK 優先 |
-| 手寫測試公開路由 | `GET /route/{path}` | 完全受支援；人工測試可讀性較好 |
+| 手寫測試公開路由 | `GET /route?path={current_path}` | 完全受支援；人工測試可讀性較好 |
 | header/footer 選單 | `GET /menus`、`GET /menus/{slug}`、`GET /menus/locations` | 保留 WordPress menu hierarchy |
 | 最新文章 / CPT 列表 | `GET /collection?type={post_type}` 或 `GET /content/{post_type}` | 含 pagination；卡片資料仍需 mapper |
 | taxonomy filter / archive | `GET /taxonomies`、`GET /taxonomy/{taxonomy}`、`GET /collection?taxonomy={taxonomy}&term={slug}` | 先探索 taxonomy，再查 collection |
@@ -161,7 +164,7 @@ route loader / server function
 ```text
 # 一般 post single，依實際 frontend path 傳入
 GET /route/{post-slug}
-GET /route/blog/{post-slug}
+GET /route?path=/blog/{post-slug}
 
 # Custom Post Type single
 GET /route/{post_type}/{post-slug}
@@ -221,7 +224,7 @@ GET /collection?type=project&taxonomy=project_category&term=featured
 GET /content/{post_type}/{identifier}
 ```
 
-`identifier` 可為 ID 或 slug。回應保留 WordPress-shaped `title.rendered`、`content.rendered`、`excerpt.rendered`。公開頁面渲染仍優先 `/route/{path}`。
+`identifier` 可為 ID 或 slug。回應保留 WordPress-shaped `title.rendered`、`content.rendered`、`excerpt.rendered`。公開頁面渲染仍優先 `/route?path={current_path}`。
 
 若只知道 WordPress ID、不知道 post type，可用：
 
@@ -300,7 +303,7 @@ Components 不得：
 - 直接呼叫 `fetch("https://example.com/...")` 或任何 CMS URL
 - 直接 import mock fixtures
 - 假設 openapi.json 未定義的後端欄位
-- 在 HeadPress 已有 `/route/{path}`、`/page/{path}` 或 `/collection` 時，繞過 service layer 直連 `/wp/v2/`
+- 在 HeadPress 已有 `/route?path={current_path}`、`/page/{path}` 或 `/collection` 時，繞過 service layer 直連 `/wp/v2/`
 - 在 SSR/SSG/pre-render 可用時，從 client-only effects 取得主要內容
 
 ## Schema Change Protocol
@@ -324,7 +327,7 @@ Components 不得：
 - Fetcher 必須捕捉 HTTP status、WordPress REST error body、timeout、network failure、invalid JSON、CORS/auth 失敗、rate limit 與 server/maintenance errors。
 - Service layer 必須把錯誤正規化成 typed states：`error`、`notFound`、`unauthorized`、`forbidden`、`rateLimited`、`timeout`、`unavailable`。
 - Dynamic slug routes 在 API 返回零筆 published items 時，必須回傳框架級 404/not-found。
-- `/route/{path}` 的 `route.status = 404` 必須對應框架級 404；`/sitemap` 失敗不得 publish 失效 URL。
+- `/route?path={current_path}` 的 `route.status = 404` 必須對應框架級 404；`/sitemap` 失敗不得 publish 失效 URL。
 - 缺 `_embedded`、缺 media、空 ACF 欄位、`null` rendered 欄位、unpublished/private content 必須在 mapper 或 service code 處理，不可讓 UI components 直接面對。
 - Production fallback 絕不能靜默用 mock 替換失敗的 API 內容；改顯示受控 degraded/error state。
 
@@ -335,5 +338,5 @@ Components 不得：
 - 讀 pagination headers：`X-WP-Total`、`X-WP-TotalPages`；不要從當前 response 長度推算總頁數。
 - 確認 custom post type 的 `show_in_rest` 和 `rest_base` 設定，再建立對應 route。
 - `rendered` 欄位是 HTML；card excerpt/meta description 要 strip HTML，不可直接用原始值。
-- 列表／archive 優先 `GET /route/{path}` 或 `/collection`；勿預設改打 `/wp/v2/posts`。
+- 列表／archive 優先 `GET /route?path={current_path}` 或 `/collection`；勿預設改打 `/wp/v2/posts`。
 - 簡單 post type 列表可用 `/content/{post_type}`；複雜條件才用 `POST /collection`，且只傳 OpenAPI 允許的 safe subset。

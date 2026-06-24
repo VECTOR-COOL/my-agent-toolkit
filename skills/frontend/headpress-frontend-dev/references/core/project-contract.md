@@ -1,4 +1,7 @@
-# Project Contract — HeadPress Frontend Dev
+---
+description: 定義前端專案的基礎契約，包含網域設定、平台架構與資料來源配置。
+---
+# 專案基礎契約 — HeadPress Frontend Dev
 
 本文件為每個使用 HeadPress 主題的專案建立基本契約。使用時填入實際值。
 

@@ -1,3 +1,6 @@
+---
+description: 從零開始建立 HeadPress 前端應用的標準流程與核心指引。
+---
 # Getting Started: 從零建立 HeadPress 前端
 
 本章節指引 AI Agent 使用 HeadPress Composition API 建立前端網站。請先理解：後端是 **WordPress Headless CMS**，HeadPress 是啟用在 WordPress 上的父主題，提供 public read-only Composition API。前端可以使用 WordPress 的內容邏輯，但資料入口預設是 `/headpress/api/v1`，不是 component 直接打 `/wp/v2`。
@@ -101,8 +104,8 @@ GET /route?path=/blog/post-slug&include=all
 GET /route?path=/project/demo-case&include=all
 
 # 手寫前端或人工測試也可用
-GET /route/about
-GET /route/blog/post-slug
+GET /route?path=/about
+GET /route?path=/blog/post-slug
 ```
 
 Route loader 必須處理：

@@ -1,51 +1,61 @@
-# Reference Index — HeadPress Frontend Dev
+---
+description: HeadPress 前端開發 AI Agents 核心索引指南。
+---
 
-先載入此檔案，再只載入當前任務需要的 reference。
+# HeadPress Frontend Dev — Reference Routing
 
-> 所有網域範例使用 `example.com`；實際使用時替換為部署的真實網域。
+身為 AI Agent，當你在進行 HeadPress 前端開發任務時，**絕對不要一次讀取所有的 reference 檔案**。請根據使用者指令的關鍵字與情境意圖，挑選並讀取最相關的小檔案。
 
-## HeadPress 關鍵文件路徑
+這份指南已經過「去重與分類」，並使用前沿設計系統與現代化 Web 架構進行組織。
 
-| 資源 | 路徑 |
-|------|------|
-| **OpenAPI Schema（唯一 canonical）** | `themes/headpress/docs/prd/openapi.json` |
-| API 混合架構 PRD | `themes/headpress/docs/prd/混合型HeadlessAPI架構PRD.md` |
-| PHP OOP 骨架與型別規範 | `themes/headpress/docs/prd/PHP-OOP骨架與型別規範.md` |
-| API 一致化計畫 | `themes/headpress/docs/prd/API一致化參考與逐檔計畫.md` |
-| WP 欄位保留條件 | `themes/headpress/docs/prd/WP欄位保留與顯示條件PRD.md` |
-| Deprecation 政策 | `themes/headpress/docs/standards/deprecation-policy.md` |
-| 後端 REST 驗證腳本 | `scripts/wp-rest-check.mjs` |
-| Swagger UI 啟動腳本 | `scripts/open-api-ui.ps1` |
+## 意圖命中索引 (Intent Routing Index)
 
-## 任務對照表
+請比對你的任務，並**僅讀取**符合條件的檔案：
 
-| 任務 | 讀取 |
-| --- | --- |
-| 從零開始建立 HeadPress 前端、App Shell、route loader、template mapping、SEO | `getting-started.md` |
-| 確認 HeadPress API endpoints、response schema、欄位定義與 endpoint 選擇 | `themes/headpress/docs/prd/openapi.json` + `data-contract.md` |
-| 確認專案身分、domain、環境名稱、平台與 source-of-truth 邊界 | `project-contract.md` |
-| 避免 AI-builder/Git 覆寫衝突，或決定變更 owner | `collaboration-protocol.md` |
-| 對齊 UI 需求、Composition API 欄位、mock shape 或 service-layer contract | `data-contract.md` |
-| 取得 WordPress post、Page 或 Custom Post Type 單篇 / 列表 | `data-contract.md` + `wordpress-data-structure-policy.md`；文章 UI 另讀 `scenes-news.md` |
-| 確認 WordPress-backed data 必須遵守 WordPress REST API 結構與 mapper 邊界 | `wordpress-data-structure-policy.md` |
-| 規劃或修補 API error、timeout、auth、CORS、not found、empty data | `data-contract.md`、`frontend-seo-deployment.md` |
-| 處理 SSR/SSG/pre-render SEO、custom domain、publish、sitemap、robots | `frontend-seo-deployment.md` |
-| prompt AI builder 前需要 negative prompts、anti-patterns 或 pitfall checks | `anti-prompts-pitfalls.md` |
-| 需要官方前端平台、WordPress 或 TanStack 連結 | `official-docs.md` |
-| 建立或調整首頁 / landing sections | `scenes-home.md` |
-| 建立或調整 news lists、article detail pages、categories 或 tags | `scenes-news.md` |
-| 建立或調整 CMS-backed static pages | `scenes-content-page.md` |
+### 🎯 1. 專案核心與協作規則 (Core)
+*如果任務涉及專案初始化、合約確認、與人類開發者的協作、或是想知道常見的雷區：*
+- [x] **架構速覽與 Headless 心智模型**：讀取 `core/architecture-mindset.md`
+- [x] **從零開始建立或了解環境/平台設定**：讀取 `core/getting-started.md`
+- [x] **確認網域、API URL 與前端邊界**：讀取 `core/project-contract.md`
+- [x] **避免覆寫、決定誰負責什麼**：讀取 `core/collaboration-protocol.md`
+- [x] **核心原則與高風險禁止事項**：讀取 `core/core-principles-guardrails.md`
+- [x] **撰寫 Prompt 給其他 Builder，或需要避開陷阱**：讀取 `core/anti-prompts-pitfalls.md`
+- [x] **交給 AI Builder 的 Prompt 範例與檢查表**：讀取 `core/ai-builder-prompts.md`
+- [x] **需要官方文件連結**：讀取 `core/official-docs.md`
 
-## 新增 Scene Rules
+### 🎨 2. 設計系統與 UI 規範 (Design System)
+*如果任務是開發 UI 元件、寫 CSS、調整排版、確保無障礙或改善效能：*
+- [x] **顏色、字體、間距 (Design Tokens)**：讀取 `design-system/foundations.md`
+- [x] **RWD 裝置尺寸與排版 (大螢幕/小螢幕/平板/手機)**：讀取 `design-system/responsive-breakpoints.md`
+- [x] **元件開發與層次劃分 (Atomic Design, 狀態機)**：讀取 `design-system/components-guidelines.md`
+- [x] **導覽選單 (Primary Navigation) 多層級與行為**：讀取 `design-system/navigation-menu.md`
+- [x] **無障礙存取 (a11y, 鍵盤導覽, ARIA, 對比度)**：讀取 `design-system/accessibility-a11y.md`
+- [x] **渲染效能 (CLS, 圖片最佳化, Bundle Size)**：讀取 `design-system/performance.md`
 
-每個 UI scenario 建立一個新的 `scenes-*.md` 檔案。每個 scene 只聚焦：
+### 🔌 3. API 串接與資料模型 (API Integration)
+*如果任務是打 API、對齊 Schema、或將 WordPress payload 轉為 ViewModel：*
+- [x] **確認 HeadPress API endpoints 與 Response Schema**：首先讀取 `../themes/headpress/docs/prd/openapi.json`
+- [x] **如何對齊 Schema 與渲染契約**：讀取 `api-integration/schema-alignment.md`
+- [x] **處理 Service Layer、Mappers、Error/Timeout fallback**：讀取 `api-integration/data-contract.md`
+- [x] **處理 WordPress 特有的內容邏輯 (CPT, Taxonomy, HTML 處理)**：讀取 `api-integration/wordpress-data-structure-policy.md`
+- [x] **WordPress REST API 常見爆點與錯誤處理**：讀取 `api-integration/common-pitfalls.md`
 
-- route/page purpose
-- expected data service（對應哪個 `/headpress/api/v1` endpoint，優先於 `/wp/v2/`）
-- WordPress REST fields（查 openapi.json）
-- SEO requirements
-- UI states
-- error handling
-- forbidden shortcuts
+### 🌍 4. 搜尋引擎最佳化與部署 (SEO)
+*如果任務涉及 Meta Tags, Canonical URL, JSON-LD Schema, Sitemap 或部署環境：*
+- [x] **處理 SSR/SSG、Head 標籤注入、路由跳轉**：讀取 `seo/frontend-seo-deployment.md`
+- [x] **網址映射與過濾（CMS 轉 Frontend）**：讀取 `seo/url-mapping.md`
 
-不要在這裡複製全域 WordPress schemas。請連回 `data-contract.md`、`openapi.json` 與 `.agents/skills/wordpress-rest-api-development`。
+### 🖼️ 5. 具體頁面場景 (Scenes)
+*如果你正在實作特定的頁面，需要知道該頁面的資料入口與 UI 特性：*
+- [x] **實作「首頁 (Home)」或 Landing Sections**：讀取 `scenes/scenes-home.md`
+- [x] **實作「最新消息 / 文章列表 / 單篇文章」**：讀取 `scenes/scenes-news.md`
+- [x] **實作「靜態內容頁 (如：關於我們)」**：讀取 `scenes/scenes-content-page.md`
+- [x] **其他常見情境 (如：新增列表頁、從 Mock 切換 API、媒體缺圖處理)**：讀取 `scenes/common-scenarios.md`
+
+---
+
+## Agent 操作守則
+
+1. **先定位，後讀取**：遇到模糊需求時，先利用此索引定位該讀哪個子目錄的檔案，善用 `view_file` 工具。
+2. **單一職責**：如果發現檔案開始變得「超級大」，主動將其拆分並利用 Markdown 的 `[Link](file.md)` 功能進行內部引用。
+3. **不要猜測資料結構**：若需要串接 API，永遠以 `openapi.json` 為唯一真理，並遵循 `api-integration/data-contract.md` 實作。

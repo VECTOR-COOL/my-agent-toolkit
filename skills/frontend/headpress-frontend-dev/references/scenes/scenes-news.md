@@ -1,6 +1,9 @@
-# Scene: News And Articles — HeadPress Frontend Dev
+---
+description: 關於最新消息列表、文章內頁、分類與標籤等 UI 的前端建置與修改場景規範。
+---
+# 場景：最新消息與文章 — HeadPress Frontend Dev
 
-Use this when building or changing news listing, article detail, category, tag, archive, or related-post UI.
+在建置或修改最新消息列表、文章內頁、分類、標籤、彙整或相關文章等 UI 時，請使用此場景規範。
 
 > 範例使用 `example.com`；實際使用時替換為部署的真實網域。
 
@@ -20,10 +23,10 @@ Common route patterns（以 active project 的 route naming 為準）：
 **優先** `/headpress/api/v1`（查 `openapi.json` 確認欄位與 response schema）：
 
 ```text
-GET /route/blog                   → post type archive（若 route 如此設計）
-GET /route/blog/{slug}            → 文章 detail
+GET /route?path=/blog                   → post type archive（若 route 如此設計）
+GET /route?path=/blog/{slug}            → 文章 detail
 GET /route/{post-slug}            → 文章 detail（若 frontend route 沒有 blog prefix）
-GET /route/category/{slug}        → 分類 archive
+GET /route?path=/category/{slug}        → 分類 archive
 GET /collection?type=post&page={page}  → 列表（進階端點，若 openapi 有定義）
 GET /taxonomy/category?slug={slug}     → 分類 meta（若 openapi 有定義）
 ```
@@ -49,7 +52,7 @@ X-WP-TotalPages
 
 ## Field Mapping
 
-欄位對應（完整形狀以 `openapi.json` 的 `/route/{path}` 與 `/collection` response 為準）：
+欄位對應（完整形狀以 `openapi.json` 的 `/route?path={current_path}` 與 `/collection` response 為準）：
 
 | UI need | Composition API / WordPress REST field |
 | --- | --- |
@@ -67,7 +70,7 @@ X-WP-TotalPages
 
 Article detail pages should use:
 
-- 頂層 `seo`（HeadPress `/route/{path}`）
+- 頂層 `seo`（HeadPress `/route?path={current_path}`）
 - Fallback：`entity.title.rendered` 作為 `<title>`，stripped `entity.excerpt.rendered` 作為 `<meta description>`
 - Canonical：`${VITE_SITE_URL}/news/{slug}` 或 active route pattern
 - `og:type=article`
@@ -79,5 +82,5 @@ Article detail pages should use:
 - Do not use a plain string title model unless it is explicitly a view model created by the service layer.
 - Do not fetch article data inside the component only; use route loader + headpressClient.
 - Do not assume category/tag index positions in `_embedded["wp:term"]` unless the service layer has guarded the shape.
-- Do not default to `/wp/v2/posts` when `/route/{path}` or `/collection` covers the scenario.
+- Do not default to `/wp/v2/posts` when `/route?path={current_path}` or `/collection` covers the scenario.
 - Confirm any endpoint used exists in `openapi.json` before building against it.
