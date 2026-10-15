@@ -1,0 +1,4 @@
+interface:
+  display_name: "Open Standard Plugin Creator"
+  short_description: "建立與驗證可攜式 Agent Plugins package"
+  default_prompt: "使用 $my-agent-plugin-creator 依 Agent Plugins 開放標準建立最小可攜 plugin，並把 client-specific 設定隔離為 adapter。"
