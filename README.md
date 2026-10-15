@@ -2,25 +2,30 @@
 
 > VECTOR LTD 可攜式 Agent Skills 套件庫
 
-[![version](https://img.shields.io/badge/version-1.0.0-blue)]()
+[![version](https://img.shields.io/badge/version-1.1.0-blue)]()
 [![GitHub](https://img.shields.io/badge/GitHub-VECTOR--COOL-blue)](https://github.com/VECTOR-COOL/my-agent-toolkit)
 [![Website](https://img.shields.io/badge/Website-vector.cool-blue)](https://vector.cool)
 
 ## 簡介
 
-集中管理供 AI 助理使用的前端、WordPress Headless、REST API 與 Lovable 遷移等 **Agent Skills**。各技能以 `SKILL.md` 為入口，搭配 `references/`、`examples/`、`scripts/` 或 `agents/` 等輔助資料。
+集中管理供 AI 助理使用的 **Agent Skills**。各技能以 `SKILL.md` 為入口，搭配 `references/`、`examples/`、`scripts/` 或 `agents/` 等輔助資料。第三方可攜技能與組織自建技能分開存放。
 
 本 repo 是技能文件庫，不是可直接執行的應用程式；根目錄不維護 app runtime、package manager 設定或 build pipeline。
 
-## 技能一覽
+## 技能目錄
 
-| Skill | 入口 | 用途 |
+| 類型 | 路徑 | 說明 |
 |------|------|------|
-| `frontend-development` | [SKILL.md](./skills/frontend/frontend-development/SKILL.md) | 通用前端 app、網站、dashboard、工具與 AI builder 專案規劃 |
-| `frontend-wordpress-headless-project` | [SKILL.md](./skills/frontend/frontend-wordpress-headless-project/SKILL.md) | WordPress Headless 前端專案、SEO、資料契約與部署協作 |
-| `wordpress-rest-api-development` | [SKILL.md](./skills/backend/wordpress-rest-api-development/SKILL.md) | WordPress REST API schema、mock fixtures、TypeScript 型別與 service layer |
-| `wordpress-rest-api-admin-development` | [SKILL.md](./skills/backend/wordpress-rest-api-admin-development/SKILL.md) | 透過認證 REST API 管理 WordPress 後端配置、權限、custom endpoints 與 dry-run manifest |
-| `lovable-legacy-to-ssr-migration` | [SKILL.md](./skills/lovable/lovable-legacy-to-ssr-migration/SKILL.md) | 舊 Lovable React/Vite SPA 遷移至 TanStack Start SSR |
+| 第三方 skills | [`skills/README.md`](./skills/README.md) | 依 design、React、mobile、browser、Cloudflare、workflow、GitHub、security、WordPress 分類的 27 個可攜 skills。 |
+| 自建 skills | [`my-skills/`](./my-skills/) | 組織維護的 PRD、Notion、Mem0 記憶、前端、WordPress Headless、REST API 與 Lovable 遷移技能。 |
+
+### 自建 Workflow Skills
+
+| 技能 | 說明 | 納入版本 |
+|------|------|----------|
+| [`my-create-PRD`](./my-skills/workflow/my-create-prd/SKILL.md) | 透過主動多輪需求訪談，建立足以讓所有 Agent 理解、實作與驗收的繁體中文 PRD。 | v1.1.0 |
+| [`my notion`](./my-skills/workflow/my-notion/SKILL.md) | 在 Codex 與 ChatGPT Web 操作 Notion，設計、建立、查詢與維護適合人機協作及 RAG 擷取的資料結構。 | v1.1.0 |
+| [`my-mem0-memory`](./my-skills/workflow/my-mem0-memory/SKILL.md) | 透過 Composio 安全搜尋、寫入與管理 Mem0 私人／團隊外部記憶。 | v1.1.0 |
 
 ## 快速開始
 

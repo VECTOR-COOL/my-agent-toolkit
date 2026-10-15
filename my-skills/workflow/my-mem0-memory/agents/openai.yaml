@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mem0 外部記憶管理"
+  short_description: "透過 Composio 安全搜尋、寫入與管理 Mem0 外部記憶"
+  default_prompt: "使用 $my-mem0-memory 適時搜尋私人或團隊記憶，並安全管理 Mem0。"
