@@ -22,9 +22,9 @@
 - DB：[Agent 記憶庫](https://app.notion.com/p/74fc3fcecfc04102a62b75c314bcd132)
 - Data source：`collection://b32ed069-fadc-4cf3-9c64-4a2e5a8255e7`
 
-**查**：`狀態=有效` 且 `AI 可用` → 再依 `scope`／`類別`／`關鍵字` 過濾；命中後讀 `目前值`；禁整庫拉。不要用 user 或 Mem0 的 agent 來拆開。
+**查**：`狀態=有效` 且 `AI 可用`，再依目前客戶端的 `scope`／`user_id`／`agent_id` 過濾，並可一併讀 `scope=global` 且 `user_id` 為空的列。命中後讀 `目前值`。禁整庫拉。
 
-**寫**（同隔離範圍以 `記憶鍵`／`隔離鍵` 去重，更新勿重複新增）：
+**寫**（同隔離鍵更新，不重複新增）：
 
 | 必填／常用 | 說明 |
 |------------|------|
@@ -32,11 +32,16 @@
 | 記憶鍵 | 穩定語意鍵 |
 | 目前值 | 簡短有效事實 |
 | 層級 | 永久用 `profile` |
-| scope | 沿用庫內既有值；不確定用 `global` |
+| scope | 對應 Mem0 範圍：`private`、`global`、`general`。舊值 `agent`、`conversation` 不要再新寫 |
+| user_id | 對應 Mem0。私人與全域留空。一般才填：Grok Bot `xiaoan`、ChatGPT `gpt`、Cursor `cursor` |
+| agent_id | 對應 Mem0。只有 Grok Bot 一般記憶填該 bot UUID。其餘留空 |
+| agent_name | 有 `agent_id` 才填顯示名 |
 | 狀態 | 預設 `有效`；過時→`已過時`／`封存` |
 | AI 可用 | 允許 Agent 使用時勾選 |
 | 來源 | 優先 `使用者明示`／`使用者確認`；`AI 推定` 須標待確認 |
-| 隔離鍵 | `scope\|記憶鍵`。不要用 user 或 Mem0 的 agent 拆開 |
+| 隔離鍵 | `scope\|user_id\|agent_id\|記憶鍵`。空的身份留空段 |
+
+既有列的隔離鍵仍是 `user_id|agent_id|記憶鍵`（全域常見 `xiaoan||記憶鍵`，且 `user_id` 填了 xiaoan）。去重時新鍵找不到，就認這把舊鍵並更新那一筆，不要另開。這次不改寫既有列。
 
 敏感度高於「一般」時謹慎寫入。工具細節 → [`$my-notion`](../../my-notion/SKILL.md)。
 

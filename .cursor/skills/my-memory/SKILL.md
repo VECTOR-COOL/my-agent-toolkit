@@ -41,7 +41,7 @@ graph TD
 
 ## 身份
 
-只用於 Mem0。永久記憶不套這張表。
+短期 Mem0 用這張表。整理進永久時，把同一組 `scope`、`user_id`、`agent_id` 抄進 Agent 記憶庫。私人與全域這兩欄留空。
 
 | 範圍 | 庫 | 誰 | 怎麼帶 |
 |------|----|----|--------|
@@ -71,7 +71,7 @@ graph TD
 ## 讀取方法
 
 1. 先定種類。
-2. 永久：Agent 記憶庫，`狀態=有效` 且 `AI 可用`，再用關鍵字。不整庫拉。
+2. 永久：Agent 記憶庫，`狀態=有效` 且 `AI 可用`，再依目前客戶端的 `scope`／`user_id`／`agent_id` 過濾。不整庫拉。欄位對應見 [backends.md](references/backends.md)。
 3. 中期：打開索引指到的檔。不要把索引當全文。
 4. 短期：Composio 用別名選帳，語意搜尋優先。私人不帶 user。全域不帶 user、不帶 agent；排除不了帶身份的紀錄就停下來問。一般一定帶該客戶端身份。實際採用後，依 [`my-memory-consolidate`](../my-memory-consolidate/SKILL.md) 更新 `read_count`；達閥值才整理。
 5. 沒有工具，或 MCP 連不上、要重新登入、呼叫失敗：先說哪個後端、什麼失敗。不要貼 token 或金鑰。不要改讀別種來充數。

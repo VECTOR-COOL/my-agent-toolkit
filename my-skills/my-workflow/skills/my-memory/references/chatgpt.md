@@ -10,7 +10,7 @@
 
 ## 外部後端
 
-- 先判斷短、中、永久。永久寫 Agent 記憶庫，不套 `user_id=gpt`。沒有 Notion 工具就回報。
+- 先判斷短、中、永久。永久寫 Agent 記憶庫，整理時 `scope=general`、`user_id=gpt`、`agent_id` 留空。沒有 Notion 工具就回報。
 - 短期私人：別名 `私人記憶`，不帶 user。
 - 短期全域：別名 `團隊記憶`，不帶 user、不帶 agent。搜尋若不能排除帶了身份的紀錄，先停下來問，不要把整庫當全域。
 - 短期一般：別名 `團隊記憶`，一定帶 `user_id=gpt`，所有 session 共用。不設 `agent_id`，不要用 Grok Bot 的 agent，也不要省略身份去讀。
