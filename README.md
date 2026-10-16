@@ -32,7 +32,7 @@
 | [`my-create-PRD`](./my-skills/my-workflow/skills/my-create-prd/SKILL.md) | 透過主動多輪需求訪談，建立足以讓所有 Agent 理解、實作與驗收的繁體中文 PRD。 | v1.2.0 |
 | [`my notion`](./my-skills/my-workflow/skills/my-notion/SKILL.md) | 在 Codex 與 ChatGPT Web 操作 Notion，設計、建立、查詢與維護適合人機協作及 RAG 擷取的資料結構。 | v1.2.0 |
 | [`my-memory`](./my-skills/my-workflow/skills/my-memory/SKILL.md) | 分流使用 Agent 記憶庫、Notion Memory 與 Mem0 讀寫外部記憶。 | v1.2.0 |
-| [`my-memory-consolidate`](./my-skills/my-workflow/skills/my-memory-consolidate/SKILL.md) | 查 Mem0 時去重、升中期並加權；權重達到 3 升長期；低權重且存放滿 30 天則遺忘。 | v1.4.0 |
+| [`my-memory-consolidate`](./my-skills/my-workflow/skills/my-memory-consolidate/SKILL.md) | 寫入不另搜；查 Mem0 的那一次命中去重、升中期並加權；權重達到 3 升長期；低權重且存放滿 30 天則遺忘。 | v1.4.0 |
 | [`my-review`](./my-skills/my-workflow/skills/my-review/SKILL.md) | 以專案／架構視角嚴格審查計畫與實作，拉回目標並收尾更新文件。 | v1.2.0 |
 | [`my-codebase-clear`](./my-skills/my-workflow/skills/my-codebase-clear/SKILL.md) | 掃描可清理檔案、review candidates，經同意後安全刪除並收尾。 | v1.2.0 |
 | [`my-codebase-init`](./my-skills/my-workflow/skills/my-codebase-init/SKILL.md) | 從 project-templates 初始化專案並建立 VECTOR-COOL 私有 repo。 | v1.2.0 |

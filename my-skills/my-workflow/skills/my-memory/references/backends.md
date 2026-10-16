@@ -49,7 +49,7 @@
 
 **流程**：語意搜尋優先 → 只用不猜的正式工具／參數 → 不靜默切 scope。
 
-**寫改刪**：先搜去重 → 單一耐久事實 → 驗證；改刪前顯示並取得同意。推測不得當使用者事實。
+**寫改刪**：短期新增用 `infer=true`，由 Mem0 擋完全相同的句子。這一則對話已有同一事實的 id 就更新，否則直接新增，不要為去重再搜一次。單一耐久事實，寫完要驗證。改刪前顯示並取得同意。推測不得當使用者事實。語意去重、加權與遺忘只發生在查到 Mem0 的那一次，見 [`my-memory-consolidate`](../../my-memory-consolidate/SKILL.md)。
 
 **整理計數**（滾動流程見 [`my-memory-consolidate`](../../my-memory-consolidate/SKILL.md)）：
 
@@ -57,4 +57,5 @@
 - `metadata.tier`：`short` 或 `mid`
 - 存放時間用記憶的 `created_at`。沒有就不遺忘
 - 用該筆記憶 id 更新 metadata。新增工具若沒有 metadata 欄，寫入成功後再更新，不要另開一筆
+- 查詢只打一次，並帶回 id、正文、身份、`created_at`、metadata。重複筆在保留筆更新成功後批次刪除。只刪列出的 id
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "記憶整理"
   short_description: "查 Mem0 時去重加權，升長期或依條件遺忘"
-  default_prompt: "使用 $my-memory-consolidate 處理這次查到的 Mem0 記憶：去重、升中期、權重加 1。權重達到 3 才問要不要升長期。低權重且存放滿 30 天則列入遺忘，同意後才刪。"
+  default_prompt: "使用 $my-memory-consolidate。寫入用 infer=true，不要為去重再搜。只處理這次搜尋命中：去重、升中期、權重加 1。權重達到 3 才問升長期。低權重且存放滿 30 天列入遺忘，同意後才批次刪除列出的 id。"

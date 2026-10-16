@@ -19,7 +19,7 @@ skills:
     when: 記住／回想偏好、決策或查詢歷史脈絡
     keywords: [記住, 回想, 偏好, 決策, 記憶, 永久記憶, Mem0, 歷史紀錄, 個人習慣, 查詢記憶, 記一下]
   - name: my-memory-consolidate
-    when: 查到 Mem0 短期記憶時去重、升中期並加權；權重達到 3 升長期；低權重且存放滿 30 天則遺忘
+    when: 查到 Mem0 時用該次命中去重、升中期並加權；權重達到 3 升長期；低權重且存放滿 30 天則遺忘。寫入不另搜
     keywords: [記憶整理, 整理記憶, 升長期, 中期, 去重, 合併, 閥值, 權重, 遺忘, 刪短期, consolidate]
   - name: my-notion
     when: 操作 Notion 知識庫、資料庫、頁面與 View
