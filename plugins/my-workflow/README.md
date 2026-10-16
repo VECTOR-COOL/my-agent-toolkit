@@ -41,8 +41,11 @@ Cursor（要會自動更新的那種）：
 6. 若這台沒有 Teams／Enterprise，或你開不了 Dashboard，停下來告訴我卡在哪，不要改裝別的方法。
 
 Codex 或 ChatGPT 桌面：
-執行 codex plugin marketplace add https://github.com/VECTOR-COOL/my-agent-toolkit.git --ref develop --sparse plugins/my-workflow
-只取 plugins/my-workflow。然後在 /plugins 安裝 my-workflow。
+先跑 codex plugin marketplace --help。沒有這條指令就停下來，請我升級 Codex。不要改走複製或家目錄連結。
+有的話執行：
+codex plugin marketplace add https://github.com/VECTOR-COOL/my-agent-toolkit.git --ref develop --sparse .agents/plugins --sparse plugins/my-workflow
+市集根是倉庫根，不是 plugins/my-workflow。清單在倉庫根 .agents/plugins/marketplace.json，只列這一個 plugin。兩段都要；只取子目錄會報 marketplace root does not contain a supported manifest。
+然後在 /plugins 安裝 my-workflow。
 
 Grok Bot：
 不要跑 grok plugin install。那是 Grok Build 的命令列，不是 Grok Bot。
@@ -91,11 +94,13 @@ repo 要先推上 `develop`，而且帳號要能讀這個私有 repo。下面兩
 
 ### Codex 與 ChatGPT 桌面
 
+先確認有 `codex plugin marketplace`。沒有就先升級 Codex。
+
 ```text
-codex plugin marketplace add https://github.com/VECTOR-COOL/my-agent-toolkit.git --ref develop --sparse plugins/my-workflow
+codex plugin marketplace add https://github.com/VECTOR-COOL/my-agent-toolkit.git --ref develop --sparse .agents/plugins --sparse plugins/my-workflow
 ```
 
-只取 `plugins/my-workflow`。清單在這個目錄的 `.agents/plugins/marketplace.json`。然後在 `/plugins` 或桌面的 Plugins 安裝 `my-workflow`。
+市集根是倉庫根。清單在倉庫根 [`.agents/plugins/marketplace.json`](../../.agents/plugins/marketplace.json)，只列 `my-workflow`。`--sparse` 只少抓檔，不會把 `plugins/my-workflow` 變成市集根，所以兩段都要。然後在 `/plugins` 或桌面的 Plugins 安裝 `my-workflow`。
 
 這個不會自動更新。要更新時執行：
 

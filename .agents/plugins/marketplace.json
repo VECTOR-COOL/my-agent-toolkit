@@ -8,7 +8,7 @@
       "name": "my-workflow",
       "source": {
         "source": "local",
-        "path": "./"
+        "path": "./plugins/my-workflow"
       },
       "policy": {
         "installation": "AVAILABLE",
