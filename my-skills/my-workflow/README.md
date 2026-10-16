@@ -1,6 +1,6 @@
 # my-workflow
 
-私人工作流，採 [Agent Skills](https://agentskills.io) 規範。不上架公開市集。版本見 [`pack.yaml`](pack.yaml)，目前 `1.4.0`。
+私人工作流，採 [Agent Skills](https://agentskills.io) 規範。不上架公開市集。版本見 [`pack.yaml`](pack.yaml)，目前 `1.5.0`。
 
 本目錄就是可安裝的 skill。入口是根目錄 [`SKILL.md`](SKILL.md)。選哪個功能見 [`references/index.yaml`](references/index.yaml)。`gh skill` 認的是這一層。
 
@@ -75,7 +75,7 @@ node my-skills/my-workflow/scripts/export-cursor-skills.mjs <目標專案> --for
 | 路由入口 | 新對話、未知需求分流、全域導航 | `my-workflow` |
 | 常駐規則 | 開發規範、工程準則、溝通與記憶規則 | `my-rules` |
 | 記憶管理 | 偏好決策記憶、跨階段狀態存取 | `my-memory` |
-| 記憶整理 | 高權重短期記憶達閥值後先去重合併，再升永久並刪除短期 | `my-memory-consolidate` |
+| 記憶整理 | 寫入不另搜；查 Mem0 的那一次命中去重、升中期並加權；權重到 3 升長期；低權重且滿 30 天必須刪除 | `my-memory-consolidate` |
 | 知識庫管理 | Notion API、頁面與資料庫自動化同步 | `my-notion` |
 | 技術文件 | 規格書、技術手冊、架構決策 ADR 撰寫 | `my-docs` |
 | 需求規劃 | 產品需求訪談、PRD 規格收斂撰寫 | `my-create-prd` |

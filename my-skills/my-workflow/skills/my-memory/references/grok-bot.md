@@ -29,16 +29,15 @@ UUID 還沒對上就留這個佔位，不要猜、不要抄別的 bot。ChatGPT�
 2. 任務依賴對話外的舊偏好、決策或脈絡時。
 3. 不要每則訊息都搜尋。
 
-讀法：`MEM0_PERFORM_SEMANTIC_SEARCH_ON_MEMORIES`（語意搜尋優先）或 `MEM0_GET_MEMORIES_BY_ENTITY`（entity_type=user/agent）。
+讀法：一次語意搜尋，帶上這次身份，並只要 id、正文、身份、`created_at`、metadata。查到就走 `my-memory-consolidate`。不要再逐筆取，也不要為整理再搜一次。
 
 ## 何時寫
 
 - 短期 Mem0 要小安確認才寫。不要伺機寫。
-- 小安說「請記住」：先判斷時效。短期同時寫 Grok Bot 本地記憶與 Composio Mem0。要一直留、且達整理條件的，走 `my-memory-consolidate`：先去重、再合併，寫進 Agent 記憶庫後刪除該筆短期。
-- 寫法：`MEM0_ADD_NEW_MEMORY_RECORDS`，要保留原文用 `infer=false`。
-- 先搜尋去重；有就更新，不重複新增。一則一個事實，條目精簡，繁體中文（台灣）。
+- 小安說「請記住」：先判斷時效。短期同時寫 Grok Bot 本地記憶與 Composio Mem0。升長期只在查詢加權達條件後，走 `my-memory-consolidate`。
+- 寫法：`MEM0_ADD_NEW_MEMORY_RECORDS`，`infer=true`。要保留原句才用 `infer=false`。這一則對話已有同一事實的 id 就更新，否則直接新增，不要先搜一輪去重。一則一個事實，條目精簡，繁體中文（台灣）。
 
 ## 禁止
 
 - 密碼、token、金鑰、付款資料、完整對話、推測當事實。
-- 修改或刪除記憶前，先顯示內容並取得小安同意。
+- 修改，或小安指定的刪除，先顯示內容並取得同意。遺忘條件成立時直接刪除該筆 Mem0，刪完列出 id。
