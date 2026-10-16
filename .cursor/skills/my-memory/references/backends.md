@@ -22,7 +22,7 @@
 - DB：[Agent 記憶庫](https://app.notion.com/p/74fc3fcecfc04102a62b75c314bcd132)
 - Data source：`collection://b32ed069-fadc-4cf3-9c64-4a2e5a8255e7`
 
-**查**：`狀態=有效` 且 `AI 可用`，再依目前客戶端的 `scope`／`user_id`／`agent_id` 過濾，並可一併讀 `scope=global` 且 `user_id` 為空的列。命中後讀 `目前值`。禁整庫拉。
+**查**：這是查記憶的第一步。`狀態=有效` 且 `AI 可用`，再依目前客戶端的 `scope`／`user_id`／`agent_id` 過濾，並可一併讀 `scope=global` 且 `user_id` 為空的列。命中後讀 `目前值`。禁整庫拉。這裡已答得了，就不要再查 Mem0。
 
 **寫**：欄位與允許值只用 [schemas.md](schemas.md)。從短期整理進來時，先照 [`my-memory-consolidate`](../../my-memory-consolidate/SKILL.md) 去重並合併，再更新同一隔離鍵，不重複新增。去重先對新鍵 `scope|user_id|agent_id|記憶鍵`，沒有再對舊鍵 `user_id|agent_id|記憶鍵`。對到就更新那一筆。這次不改寫既有列。
 
@@ -36,7 +36,7 @@
 
 ## Mem0
 
-**讀**：照上面的讀取時機與方法。問題自足或禁止時不搜。
+**讀**：永久記憶查完仍不足，才讀這裡。問題自足或禁止時不搜。
 
 **通路（依序）**：
 1. **Composio**：搜尋 `mem0` toolkit；ACTIVE 時用別名 `私人記憶`／`團隊記憶` 選帳，勿硬編碼 ID。

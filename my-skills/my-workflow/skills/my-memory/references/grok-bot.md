@@ -25,7 +25,7 @@ UUID 還沒對上就留這個佔位，不要猜、不要抄別的 bot。ChatGPT�
 
 ## 何時讀
 
-1. 新 chat 開啟，或閒置一陣子後重開：先讀全域（不帶 user、不帶 agent）、私人（不帶 user）、自己的一般 Mem0（`user_id=xiaoan` 加自己的 UUID）。讀全域若不能排除帶了 user 或 agent 的紀錄，先停下來問。永久原則改讀 Agent 記憶庫。
+1. 新 chat 開啟，或閒置一陣子後重開：先讀 Agent 記憶庫的永久記憶。永久沒有，再讀 Mem0 全域（不帶 user、不帶 agent）、私人（不帶 user）、自己的一般（`user_id=xiaoan` 加自己的 UUID）。讀全域若不能排除帶了 user 或 agent 的紀錄，先停下來問。
 2. 任務依賴對話外的舊偏好、決策或脈絡時。
 3. 不要每則訊息都搜尋。
 
