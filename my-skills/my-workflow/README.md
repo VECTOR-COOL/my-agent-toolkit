@@ -75,7 +75,7 @@ node my-skills/my-workflow/scripts/export-cursor-skills.mjs <目標專案> --for
 | 路由入口 | 新對話、未知需求分流、全域導航 | `my-workflow` |
 | 常駐規則 | 開發規範、工程準則、溝通與記憶規則 | `my-rules` |
 | 記憶管理 | 偏好決策記憶、跨階段狀態存取 | `my-memory` |
-| 記憶整理 | 高權重短期記憶達閥值後先去重合併，再升永久並刪除短期 | `my-memory-consolidate` |
+| 記憶整理 | 查 Mem0 時去重、升中期並加權；權重到 3 升長期；低權重且滿 30 天則遺忘 | `my-memory-consolidate` |
 | 知識庫管理 | Notion API、頁面與資料庫自動化同步 | `my-notion` |
 | 技術文件 | 規格書、技術手冊、架構決策 ADR 撰寫 | `my-docs` |
 | 需求規劃 | 產品需求訪談、PRD 規格收斂撰寫 | `my-create-prd` |

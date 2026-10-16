@@ -51,10 +51,10 @@
 
 **寫改刪**：先搜去重 → 單一耐久事實 → 驗證；改刪前顯示並取得同意。推測不得當使用者事實。
 
-**整理計數**（要不要升永久見 [`my-memory-consolidate`](../../my-memory-consolidate/SKILL.md)）：
+**整理計數**（滾動流程見 [`my-memory-consolidate`](../../my-memory-consolidate/SKILL.md)）：
 
-- `metadata.weight`：`high` 或 `normal`
-- `metadata.read_count`：整數，只在有目的採用時加 1
-- 搜尋相似度不是這兩個欄位
+- `metadata.weight`：整數。沒有或舊值 `normal` 當 `1`，舊值 `high` 當 `3`
+- `metadata.tier`：`short` 或 `mid`
+- 存放時間用記憶的 `created_at`。沒有就不遺忘
 - 用該筆記憶 id 更新 metadata。新增工具若沒有 metadata 欄，寫入成功後再更新，不要另開一筆
 

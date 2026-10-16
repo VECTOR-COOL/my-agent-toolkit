@@ -1,4 +1,4 @@
 interface:
   display_name: "記憶整理"
-  short_description: "高權重短期記憶先去重合併，再升永久並刪除短期"
-  default_prompt: "使用 $my-memory-consolidate 判斷 Mem0 短期記憶要不要升永久。先去重、再合併，同意後才寫入 Agent 記憶庫並刪除短期。"
+  short_description: "查 Mem0 時去重加權，升長期或依條件遺忘"
+  default_prompt: "使用 $my-memory-consolidate 處理這次查到的 Mem0 記憶：去重、升中期、權重加 1。權重達到 3 才問要不要升長期。低權重且存放滿 30 天則列入遺忘，同意後才刪。"

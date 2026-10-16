@@ -14,15 +14,18 @@
 | `memory` | 文字 | 記憶正文 |
 | `user_id` | 文字或沒有 | 沒有就當這筆不帶 user |
 | `agent_id` | 文字或沒有 | 沒有就當這筆不帶 agent |
-| `metadata` | 物件 | 沒有或 `{}` 時，`weight` 當 `normal`，`read_count` 當 `0` |
-| `categories` | 文字陣列 | 平台自己加的分類。不是權重，也不當讀取次數 |
+| `created_at` | 時間 | 存放起點。沒有就不做遺忘 |
+| `metadata` | 物件 | 沒有或 `{}` 時，`weight` 當 `1`，`tier` 當 `short` |
+| `categories` | 文字陣列 | 平台自己加的分類。不是權重，也不當層級 |
 
 `metadata` 只使用這兩個鍵：
 
 | 鍵 | 值 |
 |----|----|
-| `weight` | `high` 或 `normal` |
-| `read_count` | 整數，從 0 起 |
+| `weight` | 整數。沒有、或舊值 `normal`，當 `1`。舊值 `high` 當 `3` |
+| `tier` | `short` 或 `mid`。沒有就當 `short`。長期不留在 Mem0 |
+
+舊的 `read_count` 不要再加。加權與遺忘的閥值見 [`my-memory-consolidate`](../../my-memory-consolidate/SKILL.md)。
 
 新增若工具沒有 `metadata` 欄，先寫正文，再用該筆 `id` 更新 `metadata`。不要為了塞 metadata 另開一筆。
 
