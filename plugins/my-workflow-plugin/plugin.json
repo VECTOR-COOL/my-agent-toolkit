@@ -1,9 +1,0 @@
-{
-  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-  "name": "my-workflow-plugin",
-  "version": "0.1.0",
-  "description": "常用工作流、按需載入規則與跨裝置記憶指引",
-  "author": {
-    "name": "VECTOR LTD"
-  }
-}

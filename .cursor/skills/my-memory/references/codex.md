@@ -10,9 +10,10 @@
 
 ## 外部後端
 
-- 要跨裝置、或給 Grok Bot／Cursor／ChatGPT 看：Composio Mem0，`user_id=xiaoan`。不用 `agent_id=grok-bot`，也不要新造 codex agent。沒有既有實體就只用 `user_id`。
-- 別名 `私人記憶`／`團隊記憶`，勿硬編碼 ID。跨空間先問。
-- 可索引的長期原則：Agent 記憶庫。沒有 Notion 工具就回報。
+- 先判斷短、中、永久。永久寫 Agent 記憶庫。沒有 Notion 工具就回報。
+- 短期私人走別名 `私人記憶`，不帶 user。短期全域走 `團隊記憶`，不帶 user、不帶 agent。排除不了帶身份的紀錄就先問，不要把整庫當全域。
+- 短期一般尚未定義 Codex 的 `user_id`。先問，不要仿 `gpt`／`cursor`，不要按 session 換，也不要設 `agent_id`。
+- 勿硬編碼 ID。私人與團隊跨庫先問。短期沒有 Mem0 就回報，不要改寫進永久庫。
 - 使用者說「請記住」：本機記憶不會進 ChatGPT。跨裝置要另寫 Mem0 或 Agent 記憶庫，先說寫去哪。
 
 ## 何時讀

@@ -3,7 +3,7 @@ name: my-review
 description: 以專案管理員與系統架構師視角，嚴格審查計畫、實作與文件是否偏離目標。用於 my-review、計畫 review、拉回目標、任務收尾檢查，或要求補充計畫／更新 SPEC／docs／rules／skill 時。
 ---
 
-> 已遷至 plugins/my-workflow-plugin/skills/my-review/，勿再改此副本。
+> 已遷至 plugins/my-workflow/skills/my-review/，勿再改此副本。
 
 # my-review
 

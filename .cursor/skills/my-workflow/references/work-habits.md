@@ -17,9 +17,10 @@
 
 ## 記憶
 
-- 主後端：Agent 記憶庫（Notion）。細節見 `my-memory`。
-- 個人跨客戶端：Cursor Notion Memory。
-- 語意快查：Mem0，且僅在其他後端不足時。
+- 先判斷短、中、永久。細節見 `my-memory`。
+- 永久記憶是 Notion 的 Agent 記憶庫。
+- 短期私人走 `私人記憶`，不帶 user。短期全域走 `團隊記憶`，不帶 user。
+- 短期一般只有 Grok Bot 分 agent 與 user。ChatGPT 用 `user_id=gpt`，Cursor 用 `user_id=cursor`，各自所有 session 共用。
 - 讀之前要有目的。寫入要使用者確認。禁止密碼、Token、金鑰。
 
 ## Git

@@ -3,7 +3,7 @@ name: my-create-prd
 description: "以繁體中文建立、補完、重寫或審查產品需求文件（PRD），透過主動且可持續多輪的需求訪談，釐清需求、原則、目的、目標、必要事項與禁止事項，直到內容足以讓產品、設計、工程、測試及其他 Agent 一致理解與執行。適用於新產品、功能、專案規格、既有 PRD 補強、需求模糊或跨 Agent 交接。"
 ---
 
-> 已遷至 plugins/my-workflow-plugin/skills/my-create-prd/，勿再改此副本。
+> 已遷至 plugins/my-workflow/skills/my-create-prd/，勿再改此副本。
 
 # my-create-PRD
 

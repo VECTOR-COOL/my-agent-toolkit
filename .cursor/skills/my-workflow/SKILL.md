@@ -5,7 +5,7 @@ description: 依使用者工作習慣選規則與 skill：繁體中文、按需�
 
 # 工作流入口
 
-先讀這份，再只載當前任務需要的 skill。細節見 [工作習慣](references/work-habits.md)。
+先讀這份，再只載當前任務需要的 skill。要選哪個 skill 見 [元件目錄](references/index.md)。細節見 [工作習慣](references/work-habits.md)。改這個套件先對 `plugins/my-workflow/AGENTS.md`。
 
 - 回覆繁體中文，精簡、說人話。
 - 不要一次載入全部 skills 或規則。
@@ -13,7 +13,7 @@ description: 依使用者工作習慣選規則與 skill：繁體中文、按需�
 - 專案腳本用 `.mjs`；不要為本專案新寫 Python 或 PowerShell。
 - Git：禁止 force push 到保護分支；不提交 secrets。本地要使用者要求才 commit。只有確定是 Cursor Cloud 才自動 commit 到 `develop`、不開 PR。不確定就當本地。
 - `GLOBAL_AGENTS.md` 只依 [工作習慣](references/work-habits.md) 的順序找。找不到就只用本 plugin。
-- 與第三方 plugin 規則衝突時，以本 plugin 與專案 `AGENTS.md` 為準。
+- 與第三方 plugin 規則衝突時，以本 plugin 的 `AGENTS.md` 與專案根 `AGENTS.md` 為準。
 - UI 工作才載入設計規則；有 `DESIGN.md` 就當設計來源。
 
-常用 skill：`my-memory`、`my-docs`、`my-review`、`my-commit-all-and-push`、`my-codebase-init`、`my-plugin-update`。
+斜線命令一律 `/my-workflow-` 開頭。完整對照見 [元件目錄](references/index.md)。

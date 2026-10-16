@@ -3,7 +3,7 @@ name: my-memory
 description: 依時效與對象選用 Agent 記憶庫（Notion）、Cursor Notion Memory 或 Mem0 讀寫外部記憶。用於記住／回想／管理偏好與決策，或任務依賴對話外脈絡時；須有明確讀取目的，寫入須確認、去重，禁止憑證。
 ---
 
-> 已遷至 plugins/my-workflow-plugin/skills/my-memory/，勿再改此副本。
+> 已遷至 plugins/my-workflow/skills/my-memory/，勿再改此副本。
 
 # 外部記憶管理
 

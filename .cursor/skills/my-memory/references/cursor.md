@@ -4,20 +4,20 @@
 
 ## 後端
 
-IDE 與 Cloud 用同一套，依主 skill 選一個主後端：
+先判斷短、中、永久。IDE 與 Cloud 的記憶放同一處：
 
 | 後端 | 何時用 | 範圍 |
 |------|--------|------|
-| Agent 記憶庫 | 長期、可索引的偏好與原則 | `user_id=xiaoan`；全域 `agent_id` 留空 |
-| Cursor Notion Memory | 個人、跨客戶端 | `notion-memory-search`；先讀 `notion://docs/memory` |
-| Mem0 | 上面不夠時的語意快查 | `user_id=xiaoan`；不要用 `agent_id=grok-bot` |
-
-Mem0 別名 `私人記憶`／`團隊記憶`，勿硬編碼 ID。跨空間先問。
+| Mem0 `私人記憶` | 短期私人事務 | 不帶 user；不設 `agent_id` |
+| Mem0 `團隊記憶` | 短期全域 | 不帶 user、不帶 agent。排除不了帶身份的紀錄就先問 |
+| Mem0 `團隊記憶` | 短期一般 | 一定帶 `user_id=cursor`；IDE 與 Cloud 所有 session 共用；不設 `agent_id` |
+| Agent 記憶庫 | 永久記憶 | 不套 Mem0 的 user 或 agent |
+| Cursor Notion Memory | Notion 個人摘要，不是永久記憶 | `notion-memory-search`；先讀 `notion://docs/memory` |
 
 ## IDE 與 Cloud
 
-- 記憶放哪裡相同。差在 skill 怎麼到：IDE 用本機 plugin 連結；Cloud 讀該 repo 匯出的 `.cursor/skills`。
-- Cloud 讀不到家目錄，也不讀 `~/.codex/memories`。不要把本機檔當 Cloud 的記憶。
+- skill 怎麼到不一樣：IDE 用本機 plugin 連結；Cloud 讀該 repo 匯出的 `.cursor/skills`。
+- Cloud 要自己接上 Notion／Composio。家目錄的連結帶不過去，也讀不到 `~/.codex/memories`。不要把本機檔當 Cloud 的記憶。
 
 ## 何時讀
 
