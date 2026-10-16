@@ -22,7 +22,9 @@
 
 ### 自建 Workflow Skills
 
-以 [`plugins/my-workflow-plugin`](./plugins/my-workflow-plugin/) 為準。`my-skills/workflow/` 同名檔是副本。
+以 [`plugins/my-workflow-plugin`](./plugins/my-workflow-plugin/) 為準。`my-skills/workflow/` 同名檔是副本，勿再改。新的 workflow skill 放 plugin，不要加回 `my-skills/workflow/`。
+
+`.cursor/skills/` 與 `.cursor/rules/` 由 plugin 匯出，供 Cursor Cloud 使用，勿手改。
 
 | 技能 | 說明 | 納入版本 |
 |------|------|----------|
