@@ -13,7 +13,7 @@
 
 ## 範圍
 
-先判斷短、中、永久（見主 skill）。只有短期 Mem0 才用下表。
+先判斷短、中、永久（見主 skill）。短期 Mem0 用下表。整理進永久時抄同一組身份：一般是 `scope=general`、`user_id=xiaoan`、`agent_id` 為該 bot UUID；私人與全域兩欄留空，`scope` 分別是 `private`、`global`。
 
 | 範圍 | 庫與身份 | 放什麼 |
 |------|----------|--------|
@@ -25,7 +25,7 @@ UUID 還沒對上就留這個佔位，不要猜、不要抄別的 bot。ChatGPT�
 
 ## 何時讀
 
-1. 新 chat 開啟，或閒置一陣子後重開：先讀全域（不帶 user、不帶 agent）、私人（不帶 user）、自己的一般 Mem0（`user_id=xiaoan` 加自己的 UUID）。讀全域若不能排除帶了 user 或 agent 的紀錄，先停下來問。永久原則改讀 Agent 記憶庫。
+1. 新 chat 開啟，或閒置一陣子後重開：先讀 Agent 記憶庫的永久記憶。永久沒有，再讀 Mem0 全域（不帶 user、不帶 agent）、私人（不帶 user）、自己的一般（`user_id=xiaoan` 加自己的 UUID）。讀全域若不能排除帶了 user 或 agent 的紀錄，先停下來問。
 2. 任務依賴對話外的舊偏好、決策或脈絡時。
 3. 不要每則訊息都搜尋。
 
@@ -34,7 +34,7 @@ UUID 還沒對上就留這個佔位，不要猜、不要抄別的 bot。ChatGPT�
 ## 何時寫
 
 - 短期 Mem0 要小安確認才寫。不要伺機寫。
-- 小安說「請記住」：先判斷時效。短期同時寫 Grok Bot 本地記憶與 Composio Mem0。要一直留的寫 Agent 記憶庫，Mem0 舊筆改為 `已過時`。
+- 小安說「請記住」：先判斷時效。短期同時寫 Grok Bot 本地記憶與 Composio Mem0。要一直留、且達整理條件的，走 `my-memory-consolidate`：先去重、再合併，寫進 Agent 記憶庫後刪除該筆短期。
 - 寫法：`MEM0_ADD_NEW_MEMORY_RECORDS`，要保留原文用 `infer=false`。
 - 先搜尋去重；有就更新，不重複新增。一則一個事實，條目精簡，繁體中文（台灣）。
 

@@ -11,7 +11,7 @@
 | Mem0 `私人記憶` | 短期私人事務 | 不帶 user；不設 `agent_id` |
 | Mem0 `團隊記憶` | 短期全域 | 不帶 user、不帶 agent。排除不了帶身份的紀錄就先問 |
 | Mem0 `團隊記憶` | 短期一般 | 一定帶 `user_id=cursor`；IDE 與 Cloud 所有 session 共用；不設 `agent_id` |
-| Agent 記憶庫 | 永久記憶 | 不套 Mem0 的 user 或 agent |
+| Agent 記憶庫 | 永久記憶 | 整理時 `scope=general`、`user_id=cursor`、`agent_id` 留空 |
 | Cursor Notion Memory | Notion 個人摘要，不是永久記憶 | `notion-memory-search`；先讀 `notion://docs/memory` |
 
 ## IDE 與 Cloud
@@ -22,7 +22,8 @@
 ## 何時讀
 
 1. 有明確目的：回想、或任務依賴對話外的舊偏好。
-2. 不要每則訊息都搜尋。
+2. 先查 Agent 記憶庫的永久記憶。不夠再查 Mem0。
+3. 不要每則訊息都搜尋。
 
 ## 何時寫
 
