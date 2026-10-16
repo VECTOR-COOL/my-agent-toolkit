@@ -3,7 +3,7 @@
 # version 與 pack.yaml、toolkit project.json 同一個號。
 # keywords 是使用者會說的詞，用來提高命中。不要把整段說明抄進來。
 
-version: 1.4.0
+version: 1.5.0
 
 skills:
   - name: my-workflow
@@ -19,8 +19,8 @@ skills:
     when: 記住／回想偏好、決策或查詢歷史脈絡
     keywords: [記住, 回想, 偏好, 決策, 記憶, 永久記憶, Mem0, 歷史紀錄, 個人習慣, 查詢記憶, 記一下]
   - name: my-memory-consolidate
-    when: 短期記憶權重為 high 且有目的讀取達閥值，要先去重合併再蒸餾進永久記憶，並刪除該筆短期
-    keywords: [記憶整理, 整理記憶, 升永久, 去重, 合併, 閥值, 權重, 刪短期, 讀取次數, consolidate]
+    when: 查到 Mem0 時用該次命中去重、升中期並加權；權重達到 3 升長期；低權重且存放滿 30 天必須刪除。寫入不另搜
+    keywords: [記憶整理, 整理記憶, 升長期, 中期, 去重, 合併, 閥值, 權重, 遺忘, 刪短期, consolidate]
   - name: my-notion
     when: 操作 Notion 知識庫、資料庫、頁面與 View
     keywords: [Notion, 資料庫, 知識庫, 頁面, View, notion kb, 資料結構]
