@@ -1,15 +1,15 @@
 # my-workflow
 
-私人工作流，採 [Agent Skills](https://agentskills.io) 規範。不上架公開市集。版本見 [`pack.yaml`](pack.yaml)，目前 `1.3.2`。
+私人工作流，採 [Agent Skills](https://agentskills.io) 規範。不上架公開市集。版本見 [`pack.yaml`](pack.yaml)，目前 `1.3.3`。
 
 本目錄就是可安裝的 skill。入口是根目錄 [`SKILL.md`](SKILL.md)。選哪個功能見 [`references/index.yaml`](references/index.yaml)。`gh skill` 認的是這一層。
 
 來源網址：
-https://github.com/VECTOR-COOL/my-agent-toolkit/tree/develop/my-skills/my-workflow
+https://github.com/VECTOR-COOL/my-agent-toolkit/tree/main/my-skills/my-workflow
 
 ```mermaid
 graph TD
-  src["GitHub 網址 (develop/my-skills/my-workflow)"] --> install["安裝獨立 skill: my-workflow"]
+  src["GitHub 網址 (main/my-skills/my-workflow)"] --> install["安裝獨立 skill: my-workflow"]
   install --> hosts["Cursor、Codex、Cloud Agent 等"]
   src --> export["匯出脚本 (目標專案 .cursor/skills)"]
 ```
@@ -29,17 +29,22 @@ graph TD
 
 ## 安裝與更新 prompt
 
-貼給任何 AI 助理，直接以 GitHub 網址安裝：
+安裝網址是：
+
+https://github.com/VECTOR-COOL/my-agent-toolkit/tree/main/my-skills/my-workflow
+
+提示詞（貼給任何 AI 助理）：
 
 ```text
-請安裝／更新我的私人 skill my-workflow（來源為 GitHub 網址）：
-https://github.com/VECTOR-COOL/my-agent-toolkit/tree/develop/my-skills/my-workflow
+請安裝／更新我的私人 skill my-workflow。
+安裝網址是：
+https://github.com/VECTOR-COOL/my-agent-toolkit/tree/main/my-skills/my-workflow
 
 注意：
-1. 這個 my-workflow 本身就是一個獨立的 skill，請直接以該網址安裝這一個 skill。
-2. 嚴禁進入內部目錄查找子 skill 逐一安裝。
-3. 已安裝則執行更新。
-4. 不要複製到家目錄、不要改動來源 repo 本身。
+1. 這個網址就是一個獨立 skill，直接安裝這一個。
+2. 不要進去找子 skill 逐一安裝。
+3. 已安裝就更新。
+4. 不要複製到家目錄，不要改來源 repo。
 ```
 
 ## 安裝與更新要點

@@ -1,6 +1,6 @@
 # my-workflow — 維護準則
 
-> **版本**：`1.3.2`（[`pack.yaml`](pack.yaml)）  
+> **版本**：`1.3.3`（[`pack.yaml`](pack.yaml)）  
 > 須與 toolkit [`project.json`](../../project.json)、入口 [`index.yaml`](references/index.yaml) 同一個號。  
 
 > 之後加 skill、改脚本，**先對這份**。安裝／更新步驟見 [`README.md`](README.md)。元件表見 [`references/index.yaml`](references/index.yaml)。
@@ -59,7 +59,7 @@ graph TD
 
 步驟以 [`README.md`](README.md) 為準。這個 `my-workflow` 本身就是一個獨立的 skill，來源為 GitHub 網址：
 
-https://github.com/VECTOR-COOL/my-agent-toolkit/tree/develop/my-skills/my-workflow
+https://github.com/VECTOR-COOL/my-agent-toolkit/tree/main/my-skills/my-workflow
 
 - 直接以該 GitHub 網址安裝與更新這一個獨立 skill。
 - 嚴禁進入內部目錄查找子 skill 逐一安裝。
