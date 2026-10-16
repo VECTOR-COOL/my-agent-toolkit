@@ -1,13 +1,14 @@
 ---
 name: my-workflow
-description: 依使用者的工作習慣，從索引挑出任務所需的單一 skill 並載入。用於新對話開始、不確定該用哪個 skill、需要套用偏好，或跨裝置工作流時。
+description: 工作流入口。每次先載 my-rules（通用規則）與 my-memory（記住、回想、偏好、決策），再讀 references/index.yaml，依 when 或 keywords 只載對上的那一個 skill。用於規則、記憶、Notion、文件規格、介面設計、審查、產品需求、提交推送、Cursor Cloud Agent、清理或初始化專案、升級、平行分工、更新 skills，或不確定該用哪個 skill 時。
 ---
 
 # 工作流入口
 
-通用規則（語言、Git、MCP 失敗回報、腳本、憑證）在 `my-rules`，每個任務先載它。再依 [元件目錄](references/index.yaml) 的 `when` 或 `keywords`，只載需要的那一個 skill，不要一次全載。細節見 [工作習慣](references/work-habits.md)。
+先做這三步，不要一次讀完整套件：
 
-- 有明確目的才用 `my-memory`；寫入要確認。
-- Cursor Cloud Agent 相關：載 `my-cursor-cloud-agent`。介面工作才載 `my-ui-ux`。
+1. 讀 `skills/my-rules/SKILL.md`。每個任務都要。
+2. 讀 `skills/my-memory/SKILL.md`。記住、回想、偏好、決策、歷史脈絡時，優先於其他 skill。沒有這類目的就不要查記憶。
+3. 讀 [索引](references/index.yaml)。用 `when` 或 `keywords` 對上後，只載那一個 skill。
 
-改這個套件先對 `my-skills/my-workflow/AGENTS.md`，安裝見 `README.md`。Cursor 斜線用 skill 名，例如 `/my-workflow`。
+改這個套件先對 `AGENTS.md`。Cursor 斜線用 `/my-workflow`。

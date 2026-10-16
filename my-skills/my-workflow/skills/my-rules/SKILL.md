@@ -5,7 +5,7 @@ description: "每個任務都適用的通用規則：回覆語言與篇幅、可
 
 # 通用規則
 
-每個任務都套用。細節與例外見 [工作習慣](../my-workflow/references/work-habits.md)。
+每個任務都套用。本檔就是規則全文。
 
 ## 回覆
 
@@ -33,6 +33,7 @@ description: "每個任務都適用的通用規則：回覆語言與篇幅、可
   - 合併進 `main`／`master`、`develop` 用 `--no-ff`。
   - 發版（release、tag、版本）前先讀專案的發版流程文件並逐步核對，不憑記憶執行。
   - 本地要使用者要求才 commit；不確定是不是雲端就當本地；禁止掃系統來猜環境。
+  - Cursor Cloud Agent、建立雲端工作環境、開／續／查／停雲端對話：載 `my-cursor-cloud-agent`，不要先開網頁。交付方式以那份為準。
   - commit 訊息用 Conventional Commits：`type(scope): subject`。type 為 `feat`、`fix`、`docs`、`style`、`refactor`、`perf`、`test`、`build`、`ci`、`chore`、`revert`。標題用祈使句、不超過 50 字元、不加句號；內文說 what 與 why；破壞性變更加 `!` 或 `BREAKING CHANGE:`。
 
 ## 品質
@@ -105,17 +106,19 @@ description: "每個任務都適用的通用規則：回覆語言與篇幅、可
 
 ## 失敗回報
 
-Skill 依賴的 MCP 連不上、要重新登入或呼叫失敗時，先說：哪個 skill、哪條連線、什麼原因。不要假裝完成，不要默默改走別的後端。非必要的輔助連線（記憶、Linear）失敗時，警告後繼續其餘任務，不中斷。
+Skill 依賴的 MCP 連不上時，先說：哪個 skill、哪條連線（例如 Notion、Composio Mem0）、是沒接上、要重新登入，還是呼叫報錯。不要貼 token、金鑰，或含憑證的錯誤全文。不要假裝完成，不要默默改走別的後端；改走備用之前先說原本那條失敗。能做的繼續，並說明哪一步沒做。非必要的輔助連線（記憶、Linear）失敗時，警告後繼續其餘任務，不中斷。
 
 ## 腳本
 
-- 專案新腳本用 `.mjs`，不要新寫 PowerShell 或 Python。只限專案自己的程式，既有第三方不改。
+- 專案新腳本用 `.mjs`。PowerShell 容易卡住，不要新寫 PowerShell 或 Python。只限專案自己的程式，既有第三方與第三方套件不改。
+- 優先用 Node 內建 API。沒有具體需要時不加 npm 套件。
 - 會改檔的腳本要有 `--help`、非零失敗碼，預設不覆寫既有檔。
 
 ## 載入
 
-- 只載當前任務需要的 skill，選擇依 [元件目錄](../my-workflow/references/index.yaml)。
-- 同一對話已讀過的檔不重複讀；超過約 200 行的檔先讀摘要或索引。
+- 入口會先讀本檔，再讀 [索引](../../references/index.yaml)。只載 `when` 或 `keywords` 對上的那一個 skill。
+- 記住、回想、偏好、決策、歷史脈絡：優先讀 `my-memory`，不要自己猜後端。
+- 同一對話已讀過的檔不重複讀。超過約 200 行的檔先讀摘要或索引。啟動時不要讀完整套件。
 - README 是給人看的，不主動讀，除非任務需要或使用者指定。
-- `GLOBAL_AGENTS.md` 只依 `AI_ASSISTANTS_HOME`／`GLOBAL_AGENTS_PATH` → 工作區 `ai_assistants.yaml` → 工作區內同名檔的順序找，找不到就略過，禁止掃磁碟。
+- 介面任務才載 `my-ui-ux`。有 `DESIGN.md` 就沿用，不要另發明一套顏色與間距。
 - 與第三方 plugin 規則衝突時，以專案根 `AGENTS.md` 為準。

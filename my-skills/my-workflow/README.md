@@ -1,6 +1,6 @@
 # my-workflow
 
-私人工作流，採 [Agent Skills](https://agentskills.io) 規範。不上架公開市集。版本見 [`pack.yaml`](pack.yaml)，目前 `1.3.1`。
+私人工作流，採 [Agent Skills](https://agentskills.io) 規範。不上架公開市集。版本見 [`pack.yaml`](pack.yaml)，目前 `1.3.2`。
 
 本目錄就是可安裝的 skill。入口是根目錄 [`SKILL.md`](SKILL.md)。選哪個功能見 [`references/index.yaml`](references/index.yaml)。`gh skill` 認的是這一層。
 
@@ -107,5 +107,4 @@ node my-skills/my-workflow/scripts/export-cursor-skills.mjs <目標專案> --for
 - Cursor Cloud Agent、建立雲端工作環境、開／續／查／停雲端對話：載 `my-cursor-cloud-agent`。
 - 第三方 plugin 規則與本檔或專案根 `AGENTS.md` 衝突時，以後者為準。
 - 介面工作才載 `my-ui-ux`。有 `DESIGN.md` 就當設計來源。
-- `GLOBAL_AGENTS.md` 只依序找：`AI_ASSISTANTS_HOME`／`GLOBAL_AGENTS_PATH` → 工作區 `ai_assistants.yaml` 若有路徑 → 工作區內檔名剛好是 `GLOBAL_AGENTS.md`。禁止掃磁碟、禁止把 `D:\...` 當必要路徑。找不到就只用本套件。
 - 路徑大小寫與 repo 實際目錄一致。

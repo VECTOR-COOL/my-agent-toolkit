@@ -1,6 +1,6 @@
 # my-workflow — 維護準則
 
-> **版本**：`1.3.1`（[`pack.yaml`](pack.yaml)）  
+> **版本**：`1.3.2`（[`pack.yaml`](pack.yaml)）  
 > 須與 toolkit [`project.json`](../../project.json)、入口 [`index.yaml`](references/index.yaml) 同一個號。  
 
 > 之後加 skill、改脚本，**先對這份**。安裝／更新步驟見 [`README.md`](README.md)。元件表見 [`references/index.yaml`](references/index.yaml)。
@@ -41,7 +41,7 @@ graph TD
 
 - Skills 靠 `description` 按需載入。不要要求每次讀完整 `my-workflow` skill。
 - Cursor 斜線用 skill 名，例如 `/my-workflow`。skill 可攜名維持 `my-*`，不要為了斜線去改目錄名。
-- 不再用 plugin `rules/*.mdc` 或 `/my-workflow-*` 命令。短習慣在入口 `SKILL.md` 與 [`work-habits.md`](references/work-habits.md)。
+- 不再用 plugin `rules/*.mdc` 或 `/my-workflow-*` 命令。通用規則在 [`my-rules`](skills/my-rules/SKILL.md)。入口先載索引。
 
 ## 各環境
 
@@ -84,7 +84,7 @@ https://github.com/VECTOR-COOL/my-agent-toolkit/tree/develop/my-skills/my-workfl
 
 ## 行為
 
-通用規則（語言、安全、MCP 失敗回報、腳本、載入）寫在常駐 skill [`my-rules`](skills/my-rules/SKILL.md)，細節與例外在 [`work-habits.md`](references/work-habits.md)。改規則先改 `my-rules`，再同步細節；入口 `SKILL.md` 不重複規則。
+通用規則在常駐 skill [`my-rules`](skills/my-rules/SKILL.md)。入口先載 `my-rules`，記憶相關優先載 `my-memory`，再依索引載一個 skill。入口 `SKILL.md` 不重複規則。
 
 - 只載當前任務需要的 skill。
 - 第三方 plugin 規則與本檔或專案根 `AGENTS.md` 衝突時，以後者為準。

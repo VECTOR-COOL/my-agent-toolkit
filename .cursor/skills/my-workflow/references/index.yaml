@@ -1,9 +1,9 @@
-# 只讀 when 或 keywords 對得上的那一筆，再載該 skill。不要一次全載。
+# 入口先載 my-rules；記憶相關再載 my-memory。然後只讀 when 或 keywords 對得上的那一筆。不要一次全載。
 # 記憶：依客戶端只讀 my-memory/references/ 對應那一份。
 # version 與 pack.yaml、toolkit project.json 同一個號。
 # keywords 是使用者會說的詞，用來提高命中。不要把整段說明抄進來。
 
-version: 1.3.1
+version: 1.3.2
 
 skills:
   - name: my-workflow
