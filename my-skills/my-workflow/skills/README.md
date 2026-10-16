@@ -1,5 +1,5 @@
 # skills
 
-每個資料夾一份 `SKILL.md`，這才是 Agent Skills 單位。上傳或匯入時用這一層，不要上傳上一層集合根。
+這裡是入口 skill 按索引載入的內容。安裝用上一層：那個資料夾根目錄有 `SKILL.md`。
 
-先裝入口 [`my-workflow`](my-workflow/SKILL.md)。其餘用到再裝。清單在 [`my-workflow/references/index.yaml`](my-workflow/references/index.yaml)。安裝步驟見 [上一層 README](../README.md)。
+不要把這裡每個資料夾分開裝。清單在 [`../references/index.yaml`](../references/index.yaml)。

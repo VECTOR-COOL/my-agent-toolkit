@@ -1,8 +1,8 @@
 # my-workflow
 
-私人工作流，採 [Agent Skills](https://agentskills.io) 規範。不上架公開市集。版本見 [`pack.yaml`](pack.yaml)，目前 `1.3.0`。
+私人工作流，採 [Agent Skills](https://agentskills.io) 規範。不上架公開市集。版本見 [`pack.yaml`](pack.yaml)，目前 `1.3.1`。
 
-本 `my-workflow` 本身就是一個獨立的 skill，**不可進入內部目錄查找子 skill 逐一安裝**。入口是 [`skills/my-workflow/SKILL.md`](skills/my-workflow/SKILL.md)。選哪個功能見 [`skills/my-workflow/references/index.yaml`](skills/my-workflow/references/index.yaml)。
+本目錄就是可安裝的 skill。入口是根目錄 [`SKILL.md`](SKILL.md)。選哪個功能見 [`references/index.yaml`](references/index.yaml)。`gh skill` 認的是這一層。
 
 來源網址：
 https://github.com/VECTOR-COOL/my-agent-toolkit/tree/develop/my-skills/my-workflow
@@ -83,7 +83,7 @@ node my-skills/my-workflow/scripts/export-cursor-skills.mjs <目標專案> --for
 | 版本升級 | 依賴套件安全升級計畫、斷裂變更與相容性評估 | `my-upgrade-plan` |
 | 套件維護 | 檢查與更新 `gh skill` 安裝的工作流套件 | `my-skill-update` |
 
-完整關鍵字與觸發對照見 [元件目錄](skills/my-workflow/references/index.yaml)。Cursor 斜線指令直接用 Skill 名稱。
+完整關鍵字與觸發對照見 [元件目錄](references/index.yaml)。Cursor 斜線指令直接用 Skill 名稱。
 
 ## 記憶
 

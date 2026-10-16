@@ -1,9 +1,9 @@
 # my-workflow — 維護準則
 
-> **版本**：`1.3.0`（[`pack.yaml`](pack.yaml)）  
-> 須與 toolkit [`project.json`](../../project.json)、入口 [`index.yaml`](skills/my-workflow/references/index.yaml) 同一個號。  
+> **版本**：`1.3.1`（[`pack.yaml`](pack.yaml)）  
+> 須與 toolkit [`project.json`](../../project.json)、入口 [`index.yaml`](references/index.yaml) 同一個號。  
 
-> 之後加 skill、改脚本，**先對這份**。安裝／更新步驟見 [`README.md`](README.md)。元件表見 [`skills/my-workflow/references/index.yaml`](skills/my-workflow/references/index.yaml)。
+> 之後加 skill、改脚本，**先對這份**。安裝／更新步驟見 [`README.md`](README.md)。元件表見 [`references/index.yaml`](references/index.yaml)。
 
 私人工作流。不上架。不複製到家目錄。
 
@@ -18,8 +18,7 @@ graph TD
 
 ## 規格
 
-- Agent Skills：每個 `skills/<name>/SKILL.md`。`name` 必須與資料夾名一致。
-- 集合根不要放 `SKILL.md`，也不要另造規格外的總索引 skill。否則 ChatGPT／Grok 上傳外層時只看見一個空殼。入口是 `skills/my-workflow/SKILL.md`。瀏覽說明用 [`skills/README.md`](skills/README.md)；選哪個 skill 用 [`references/index.yaml`](skills/my-workflow/references/index.yaml)。加 skill 時同步改這份 yaml，補 `when` 與 `keywords`。`keywords` 是使用者會說的詞，用來提高命中。
+- Agent Skills：套件根目錄要有 `SKILL.md`，`name` 為 `my-workflow`，與資料夾名一致。`gh skill` 只認這個網址這一層，沒有這份就會報沒有 `SKILL.md`。其餘 skill 放 `skills/<name>/`，由入口按索引讀，不要再放一份 `skills/my-workflow`。加 skill 時同步改 [`references/index.yaml`](references/index.yaml)，補 `when` 與 `keywords`。
 - 包版本寫 [`pack.yaml`](pack.yaml)。改版本時同步 `project.json` 與入口 `index.yaml`。
 - 各 `SKILL.md` 頂層不要手寫 `version`。`gh skill` 安裝時會寫 provenance；ChatGPT／Grok 看 `index.yaml` 的 `version`。要讓 `gh skill update` 看到新版，還是要打 git tag。
 - 不上架公開市集。不要對整個 repo 用 `gh skill install --all`（`skills/` 裡還有第三方 skill）。
@@ -42,7 +41,7 @@ graph TD
 
 - Skills 靠 `description` 按需載入。不要要求每次讀完整 `my-workflow` skill。
 - Cursor 斜線用 skill 名，例如 `/my-workflow`。skill 可攜名維持 `my-*`，不要為了斜線去改目錄名。
-- 不再用 plugin `rules/*.mdc` 或 `/my-workflow-*` 命令。短習慣在入口 skill 與 [`work-habits.md`](skills/my-workflow/references/work-habits.md)。
+- 不再用 plugin `rules/*.mdc` 或 `/my-workflow-*` 命令。短習慣在入口 `SKILL.md` 與 [`work-habits.md`](references/work-habits.md)。
 
 ## 各環境
 
@@ -51,7 +50,7 @@ graph TD
 | Cursor | `gh skill`、`--agent cursor` | 專案預設 scope；Cloud 同步才用 `--scope user` |
 | Codex／ChatGPT 桌面 | `gh skill`、`--agent codex` | 更新跑 `gh skill update` |
 | Grok 命令列 | `gh skill`、`--agent grok` | 裝進 `~/.grok/skills/<skill 名>/` |
-| Grok Bot 桌面 | 存成私人 skill | 一次一個 `skills/<skill 名>/` 資料夾，先存 `my-workflow` |
+| Grok Bot 桌面 | 存成私人 skill | 存有 `SKILL.md` 的套件根目錄，不要只存 `skills/` |
 | Cursor Cloud | 目標專案安裝並 commit | 沒有 `gh` 才用匯出脚本 |
 | ChatGPT 網頁 | 上傳 skill 資料夾 | 上傳的是內層（裡面有 `SKILL.md`），先傳 `my-workflow` |
 | grok.com | 不支援 | 不要寫相容 |
@@ -85,7 +84,7 @@ https://github.com/VECTOR-COOL/my-agent-toolkit/tree/develop/my-skills/my-workfl
 
 ## 行為
 
-通用規則（語言、安全、MCP 失敗回報、腳本、載入）寫在常駐 skill [`my-rules`](skills/my-rules/SKILL.md)，細節與例外在 [`work-habits.md`](skills/my-workflow/references/work-habits.md)。改規則先改 `my-rules`，再同步細節；入口 `my-workflow/SKILL.md` 不重複規則。
+通用規則（語言、安全、MCP 失敗回報、腳本、載入）寫在常駐 skill [`my-rules`](skills/my-rules/SKILL.md)，細節與例外在 [`work-habits.md`](references/work-habits.md)。改規則先改 `my-rules`，再同步細節；入口 `SKILL.md` 不重複規則。
 
 - 只載當前任務需要的 skill。
 - 第三方 plugin 規則與本檔或專案根 `AGENTS.md` 衝突時，以後者為準。

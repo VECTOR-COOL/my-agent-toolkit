@@ -49,15 +49,30 @@ function inside(root, candidate) {
 
 function collectPlan(targetRoot) {
   const plan = [];
+  const entryParts = ['SKILL.md', 'references', 'agents']
+    .map((name) => ({
+      from: path.join(packRoot, name),
+      toName: name,
+    }))
+    .filter((part) => existsSync(part.from));
+  if (entryParts.some((part) => part.toName === 'SKILL.md')) {
+    plan.push({
+      kind: 'entry',
+      to: path.join(targetRoot, '.cursor', 'skills', 'my-workflow'),
+      parts: entryParts,
+    });
+  }
   const skillsRoot = path.join(packRoot, 'skills');
   if (!existsSync(skillsRoot)) return plan;
   for (const entry of readdirSync(skillsRoot, { withFileTypes: true })) {
-    if (!entry.isDirectory()) continue;
+    if (!entry.isDirectory() || entry.name === 'my-workflow') continue;
     const skillFile = path.join(skillsRoot, entry.name, 'SKILL.md');
     if (!existsSync(skillFile)) continue;
-    const from = path.join(skillsRoot, entry.name);
-    const to = path.join(targetRoot, '.cursor', 'skills', entry.name);
-    plan.push({ from, to, kind: 'skill' });
+    plan.push({
+      kind: 'skill',
+      from: path.join(skillsRoot, entry.name),
+      to: path.join(targetRoot, '.cursor', 'skills', entry.name),
+    });
   }
   return plan;
 }
@@ -111,7 +126,13 @@ function main() {
     console.log('  ' + path.relative(targetRoot, item.to));
     if (options.dryRun) continue;
     if (exists) rmSync(item.to, { recursive: true, force: true });
-    mkdirSync(path.dirname(item.to), { recursive: true });
+    mkdirSync(item.to, { recursive: true });
+    if (item.kind === 'entry') {
+      for (const part of item.parts) {
+        cpSync(part.from, path.join(item.to, part.toName), { recursive: true });
+      }
+      continue;
+    }
     cpSync(item.from, item.to, { recursive: true });
   }
   if (skipped > 0 && !options.force) {
