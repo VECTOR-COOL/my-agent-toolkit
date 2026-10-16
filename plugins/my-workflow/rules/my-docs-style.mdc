@@ -1,8 +1,0 @@
----
-description: 文件精簡，流程圖用 graph TD
-alwaysApply: false
----
-
-文件言簡意賅。能用一句話說完就不要開長段。
-流程圖用 `graph TD`、`graph LR` 或 `graph TB`，不要用 `flowchart`。
-專有名詞第一次出現時用白話補一句。

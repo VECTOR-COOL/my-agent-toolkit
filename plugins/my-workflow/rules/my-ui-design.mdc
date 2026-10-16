@@ -1,8 +1,0 @@
----
-description: 前端與 UI 工作先沿用 DESIGN.md
-alwaysApply: false
----
-
-僅 UI／前端任務才用這條。
-專案已有 `DESIGN.md` 時沿用，不要另發明顏色、字級、間距。
-沒有設計來源時，先補設計決策再寫畫面。

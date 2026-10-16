@@ -16,7 +16,7 @@
 
 ## IDE 與 Cloud
 
-- skill 怎麼到不一樣：IDE 用本機 plugin 連結；Cloud 讀該 repo 匯出的 `.cursor/skills`。
+- skill 怎麼到不一樣：IDE 可用 `gh skill` 裝進本機；Cloud 讀該 repo 匯出的 `.cursor/skills`。
 - Cloud 要自己接上 Notion／Composio。家目錄的連結帶不過去，也讀不到 `~/.codex/memories`。不要把本機檔當 Cloud 的記憶。
 
 ## 何時讀

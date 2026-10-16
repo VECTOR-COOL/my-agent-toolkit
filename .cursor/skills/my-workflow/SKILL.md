@@ -1,19 +1,13 @@
 ---
 name: my-workflow
-description: 依使用者工作習慣選規則與 skill：繁體中文、按需載入、記憶走 my-memory、腳本用 mjs。用於新對話、不知道該用哪個 skill、要記得偏好，或跨裝置工作流時。
+description: 依使用者的工作習慣，從索引挑出任務所需的單一 skill 並載入。用於新對話開始、不確定該用哪個 skill、需要套用偏好，或跨裝置工作流時。
 ---
 
 # 工作流入口
 
-先讀這份，再只載當前任務需要的 skill。要選哪個 skill 見 [元件目錄](references/index.md)。細節見 [工作習慣](references/work-habits.md)。改這個套件先對 `plugins/my-workflow/AGENTS.md`。
+通用規則（語言、Git、MCP 失敗回報、腳本、憑證）在 `my-rules`，每個任務先載它。再依 [元件目錄](references/index.yaml) 的 `when` 或 `keywords`，只載需要的那一個 skill，不要一次全載。細節見 [工作習慣](references/work-habits.md)。
 
-- 回覆繁體中文，精簡、說人話。
-- 不要一次載入全部 skills 或規則。
-- 有明確目的才用 `my-memory`；寫入要確認；禁止憑證。
-- 專案腳本用 `.mjs`；不要為本專案新寫 Python 或 PowerShell。
-- Git：禁止 force push 到保護分支；不提交 secrets。本地要使用者要求才 commit。只有確定是 Cursor Cloud 才自動 commit 到 `develop`、不開 PR。不確定就當本地。
-- `GLOBAL_AGENTS.md` 只依 [工作習慣](references/work-habits.md) 的順序找。找不到就只用本 plugin。
-- 與第三方 plugin 規則衝突時，以本 plugin 的 `AGENTS.md` 與專案根 `AGENTS.md` 為準。
-- UI 工作才載入設計規則；有 `DESIGN.md` 就當設計來源。
+- 有明確目的才用 `my-memory`；寫入要確認。
+- Cursor Cloud Agent 相關：載 `my-cursor-cloud-agent`。介面工作才載 `my-ui-ux`。
 
-斜線命令一律 `/my-workflow-` 開頭。完整對照見 [元件目錄](references/index.md)。
+改這個套件先對 `my-skills/my-workflow/AGENTS.md`，安裝見 `README.md`。Cursor 斜線用 skill 名，例如 `/my-workflow`。

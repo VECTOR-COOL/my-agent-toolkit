@@ -1,4 +1,4 @@
 interface:
   display_name: "my-review"
-  short_description: "嚴格審查計畫與實作，拉回目標並收尾更新文件"
-  default_prompt: "使用 $my-review 嚴格審查目前任務是否偏離目標，必要時拉回計畫並補齊文件。"
+  short_description: "審查計畫架構、程式碼與安全，驗收與收尾"
+  default_prompt: "使用 $my-review 審查計畫或程式碼變更，檢查是否偏離目標與安全性漏洞。"

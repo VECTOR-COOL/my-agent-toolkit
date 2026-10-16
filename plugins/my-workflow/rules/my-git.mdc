@@ -1,9 +1,0 @@
----
-description: 本地與 Cursor Cloud 的 commit、push 與 PR 界線
-alwaysApply: false
----
-
-禁止 force push 到 `main`、`develop`、`release/*`。不提交 secrets。
-本地：使用者要求才 commit。
-Cursor Cloud：完成後 commit 到 `develop`，除非使用者要求否則不開 PR。
-不確定是不是 Cloud 就當本地，不要自動 commit。

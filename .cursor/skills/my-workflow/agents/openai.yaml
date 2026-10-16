@@ -1,0 +1,4 @@
+interface:
+  display_name: "my-workflow"
+  short_description: "依工作習慣載入對應 skill"
+  default_prompt: "使用 $my-workflow 依索引選出這次任務需要的 skill。"

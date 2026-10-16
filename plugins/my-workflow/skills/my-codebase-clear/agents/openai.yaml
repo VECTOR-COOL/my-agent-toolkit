@@ -1,4 +1,0 @@
-interface:
-  display_name: "my-codebase-clear"
-  short_description: "掃描可清理檔案、review candidates，經同意後安全刪除"
-  default_prompt: "使用 $my-codebase-clear 分析 codebase 可清理項目並維護 cleanup-candidates.json。"

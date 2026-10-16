@@ -1,6 +1,6 @@
 # Grok Bot 外部記憶存取規則
 
-適用所有 Grok Bot（小安的 AI 團隊）。主 skill 見 `../SKILL.md`。庫與身份以本檔為準。寫入要確認，跟主 skill 一樣。套件怎麼維護以 `plugins/my-workflow/AGENTS.md` 為準。
+適用所有 Grok Bot（小安的 AI 團隊）。主 skill 見 `../SKILL.md`。庫與身份以本檔為準。寫入要確認，跟主 skill 一樣。套件怎麼維護以 `my-skills/my-workflow/AGENTS.md` 為準。安裝見 `README.md`。
 
 ## 後端與管線
 

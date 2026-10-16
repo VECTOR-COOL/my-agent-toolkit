@@ -1,0 +1,4 @@
+interface:
+  display_name: "my-ui-ux"
+  short_description: "介面設計：案例研究到 DESIGN.md"
+  default_prompt: "使用 $my-ui-ux 先做案例研究與視覺方向，再寫 DESIGN.md。"
