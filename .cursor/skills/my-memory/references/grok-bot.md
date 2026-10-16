@@ -34,7 +34,7 @@ UUID 還沒對上就留這個佔位，不要猜、不要抄別的 bot。ChatGPT�
 ## 何時寫
 
 - 短期 Mem0 要小安確認才寫。不要伺機寫。
-- 小安說「請記住」：先判斷時效。短期同時寫 Grok Bot 本地記憶與 Composio Mem0。要一直留、且達整理條件的，走 `my-memory-consolidate`：寫進 Agent 記憶庫後刪除該筆短期。
+- 小安說「請記住」：先判斷時效。短期同時寫 Grok Bot 本地記憶與 Composio Mem0。要一直留、且達整理條件的，走 `my-memory-consolidate`：先去重、再合併，寫進 Agent 記憶庫後刪除該筆短期。
 - 寫法：`MEM0_ADD_NEW_MEMORY_RECORDS`，要保留原文用 `infer=false`。
 - 先搜尋去重；有就更新，不重複新增。一則一個事實，條目精簡，繁體中文（台灣）。
 

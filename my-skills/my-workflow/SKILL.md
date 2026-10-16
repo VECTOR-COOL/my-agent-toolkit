@@ -30,7 +30,7 @@ graph TD
 1. **`skills/my-rules/SKILL.md`** — 每個任務都要，內容不重複在這裡。
 2. **`skills/my-memory/SKILL.md`** — 僅在「記住、回想、偏好、決策、歷史脈絡」時，且優先於其他子 skill。
 3. **[`references/index.yaml`](references/index.yaml)** — 用 `when` 或 `keywords` 對上**一筆**後，只載 `skills/<name>/SKILL.md`。
-4. 短期記憶要不要升永久，改載 `skills/my-memory-consolidate/SKILL.md`，不要在 `my-memory` 裡重做那套判斷。
+4. 短期記憶要不要升永久，改載 `skills/my-memory-consolidate/SKILL.md`。寫入前的去重與合併以那份為準。
 
 同一對話已讀過的檔不必重讀。超過約 200 行的檔先讀摘要或索引，不要一次載整包。
 
