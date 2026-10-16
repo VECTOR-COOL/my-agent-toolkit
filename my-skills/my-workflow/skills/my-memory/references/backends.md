@@ -49,7 +49,7 @@
 
 **流程**：語意搜尋優先 → 只用不猜的正式工具／參數 → 不靜默切 scope。
 
-**寫改刪**：短期新增用 `infer=true`，由 Mem0 擋完全相同的句子。這一則對話已有同一事實的 id 就更新，否則直接新增，不要為去重再搜一次。單一耐久事實，寫完要驗證。改刪前顯示並取得同意。推測不得當使用者事實。語意去重、加權與遺忘只發生在查到 Mem0 的那一次，見 [`my-memory-consolidate`](../../my-memory-consolidate/SKILL.md)。
+**寫改刪**：短期新增用 `infer=true`，由 Mem0 擋完全相同的句子。這一則對話已有同一事實的 id 就更新，否則直接新增，不要為去重再搜一次。單一耐久事實，寫完要驗證。使用者指定的改或刪，先顯示並取得同意。遺忘例外：權重小於等於 1 且存放滿 30 天，查到就刪除該筆。推測不得當使用者事實。語意去重、加權與遺忘只發生在查到 Mem0 的那一次，見 [`my-memory-consolidate`](../../my-memory-consolidate/SKILL.md)。
 
 **整理計數**（滾動流程見 [`my-memory-consolidate`](../../my-memory-consolidate/SKILL.md)）：
 

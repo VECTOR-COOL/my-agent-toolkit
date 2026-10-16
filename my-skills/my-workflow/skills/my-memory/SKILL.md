@@ -1,6 +1,6 @@
 ---
 name: my-memory
-description: 先判斷短、中、永久。查記憶先查 Notion 長期記憶，不夠再查 Mem0 一次。查到的命中依 my-memory-consolidate 去重、升中期並加權；權重到 3 升長期，低權重且存放滿 30 天則遺忘。寫入用 infer，不為去重另搜。私人與全域不帶 user；一般 Mem0 只有 Grok Bot 分 agent 與 user。ChatGPT 與 Cursor 各用一個共用 user_id。寫入與刪除須確認，禁止憑證。
+description: 先判斷短、中、永久。查記憶先查 Notion 長期記憶，不夠再查 Mem0 一次。查到的命中依 my-memory-consolidate 去重、升中期並加權；權重到 3 升長期。低權重且存放滿 30 天必須刪除該筆 Mem0。寫入用 infer，不為去重另搜。私人與全域不帶 user；一般 Mem0 只有 Grok Bot 分 agent 與 user。ChatGPT 與 Cursor 各用一個共用 user_id。升長期與指定改刪須確認，禁止憑證。
 ---
 
 # 外部記憶管理
@@ -35,7 +35,7 @@ graph TD
 | **中期** | 查詢時已去重，`tier=mid`，權重未滿 3 | 合併後的一句 | 仍在 Mem0 |
 | **永久** | 權重大於等於 3，已蒸餾、要一直留 | 穩定原則與事實 | Notion 的 Agent 記憶庫 |
 
-會過期或還在改 → 先留短期。查到短期就依 [`my-memory-consolidate`](../my-memory-consolidate/SKILL.md) 去重、升中期並加權。權重大於等於 3 才升永久。權重小於等於 1 且存放滿 30 天則遺忘。憑證與未去敏的內容不寫永久。技能與文件的指向放知識庫或 repo，不放進這條滾動。
+會過期或還在改 → 先留短期。查到短期就依 [`my-memory-consolidate`](../my-memory-consolidate/SKILL.md) 去重、升中期並加權。權重大於等於 3 才升永久。權重小於等於 1 且存放滿 30 天必須刪除該筆 Mem0。憑證與未去敏的內容不寫永久。技能與文件的指向放知識庫或 repo，不放進這條滾動。
 
 同一件事只留一處。
 
@@ -73,14 +73,14 @@ graph TD
 查記憶先查永久。永久已經答得了，就不要再查短期。
 
 1. 永久：Agent 記憶庫，`狀態=有效` 且 `AI 可用`，再依目前客戶端的 `scope`／`user_id`／`agent_id` 過濾，並可一併讀 `scope=global` 且 `user_id` 為空的列。不整庫拉。欄位名見 [schemas.md](references/schemas.md)。
-2. 短期與中期：只有永久沒有，或這筆明確是還在改的任務脈絡，才查 Mem0，而且只查一次。Composio 用別名選帳，語意搜尋優先。私人不帶 user。全域不帶 user、不帶 agent；排除不了帶身份的紀錄就停下來問。一般一定帶該客戶端身份。用這一次命中立刻依 [`my-memory-consolidate`](../my-memory-consolidate/SKILL.md) 去重、加權、升中期。不要為整理再搜或逐筆補讀。權重夠了再問要不要升長期，該遺忘的先列入清單。
+2. 短期與中期：只有永久沒有，或這筆明確是還在改的任務脈絡，才查 Mem0，而且只查一次。Composio 用別名選帳，語意搜尋優先。私人不帶 user。全域不帶 user、不帶 agent；排除不了帶身份的紀錄就停下來問。一般一定帶該客戶端身份。用這一次命中立刻依 [`my-memory-consolidate`](../my-memory-consolidate/SKILL.md) 去重、加權、升中期。不要為整理再搜或逐筆補讀。權重夠了再問要不要升長期。該遺忘的立刻刪除。
 3. 沒有工具，或 MCP 連不上、要重新登入、呼叫失敗：先說哪個後端、什麼失敗。不要貼 token 或金鑰。不要改讀別種來充數。
 
 ## 寫入時機
 
 - 使用者說記住，或指定種類，才寫。先說寫進哪一種。
-- 寫入短期用 `infer=true`。這一則對話已有同一事實的 id 就更新，否則直接新增，不要先搜一輪去重。改或刪之前先顯示並取得同意。
-- 查到 Mem0、或權重已滿、或要遺忘：走 `my-memory-consolidate`。升長期成功後才刪除對應 Mem0。遺忘與升長期都先顯示，同意後才刪列出的 id。
+- 寫入短期用 `infer=true`。這一則對話已有同一事實的 id 就更新，否則直接新增，不要先搜一輪去重。使用者指定的改或刪，先顯示並取得同意。
+- 查到 Mem0、或權重已滿、或要遺忘：走 `my-memory-consolidate`。升長期先顯示，同意且寫入成功後才刪除對應 Mem0。遺忘條件成立就刪除該筆，刪完列出 id。
 - 不要伺機寫。同一件事不要同時留在兩種。
 - 禁存完整對話、閒聊、推測、密碼、Token、金鑰、付款資料。失敗如實說，勿補造。
 

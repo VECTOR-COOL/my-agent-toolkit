@@ -20,7 +20,7 @@
 
 一次搜尋就帶回 `id`、`memory`、`user_id`、`agent_id`、`created_at`、`metadata`。不要為了補這些欄再取單筆。搜尋分數不是權重。
 
-`expiration_date` 不是 `metadata` 的鍵。只有工具 schema 有這個欄、而且事實有明確結束日時才寫，格式 `YYYY-MM-DD`。到期後搜尋會隱藏該筆，資料還在。這不是遺忘。
+不要寫 `expiration_date`。它只讓搜尋隱藏，資料仍佔儲存，也會讓這筆以後查不到、因而刪不掉。遺忘是刪除該筆 Mem0。
 
 `metadata` 只使用這兩個鍵：
 
