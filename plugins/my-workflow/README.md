@@ -17,7 +17,7 @@ graph TD
   GH --> Grok["Grok Bot"]
   Cursor --> Auto["打開 Auto Refresh 就自動更新"]
   Codex --> Up["codex plugin marketplace upgrade"]
-  Grok --> GrokUp["預設開新對話會更新"]
+  Grok --> Hold["沒有子目錄安裝指令，先停"]
 ```
 
 斜線命令一律 `my-workflow-` 開頭，例如 `/my-workflow-update`、`/my-workflow-docs`。入口 skill 仍是 `my-workflow`。
@@ -45,8 +45,8 @@ Codex 或 ChatGPT 桌面：
 只取 plugins/my-workflow。然後在 /plugins 安裝 my-workflow。
 
 Grok Bot：
-執行 grok plugin install VECTOR-COOL/my-agent-toolkit#plugins/my-workflow --trust
-只取 plugins/my-workflow。預設開新對話會更新。
+不要跑 grok plugin install。那是 Grok Build 的命令列，不是 Grok Bot。
+Grok Bot 沒有從 GitHub 子目錄安裝 plugin 的指令。停下來說明，不要改走別的方法，也不要叫人先裝 Grok Build。
 
 不要處理 Cursor Cloud、ChatGPT 網頁、grok.com。
 不要 commit，不要改 plugin 內容。
@@ -65,7 +65,7 @@ https://github.com/VECTOR-COOL/my-agent-toolkit/tree/develop/plugins/my-workflow
 
 1. Cursor 若已用團隊市集且 Auto Refresh 開著：不要 pull、不要重裝。告訴我推上 develop 後重開視窗就會更新。
 2. Codex 或 ChatGPT 桌面：執行 codex plugin marketplace upgrade。沒有這條市集就先說，不要改走別的安裝。
-3. Grok Bot：預設開新對話會更新。使用者要求手動更新時才跑 grok plugin update my-workflow。
+3. Grok Bot：不要跑 grok plugin update。那是 Grok Build。Grok Bot 沒有這條更新，停下來說明。
 4. Cursor Cloud：在 plugin 目錄執行
    node scripts/export-cursor-skills.mjs <目標專案> --force
    然後只在該目標專案 commit。目標專案沒指定就停下來問。
@@ -76,7 +76,7 @@ https://github.com/VECTOR-COOL/my-agent-toolkit/tree/develop/plugins/my-workflow
 
 ## 安裝
 
-repo 要先推上 `develop`，而且帳號要能讀這個私有 repo。下面三種裝法都還沒在這台機器跑過。
+repo 要先推上 `develop`，而且帳號要能讀這個私有 repo。下面兩種裝法都還沒在這台機器跑過。
 
 ### Cursor
 
@@ -95,7 +95,7 @@ repo 要先推上 `develop`，而且帳號要能讀這個私有 repo。下面三
 codex plugin marketplace add https://github.com/VECTOR-COOL/my-agent-toolkit.git --ref develop --sparse plugins/my-workflow
 ```
 
-只取 `plugins/my-workflow`。然後在 `/plugins` 或桌面的 Plugins 安裝 `my-workflow`。
+只取 `plugins/my-workflow`。清單在這個目錄的 `.agents/plugins/marketplace.json`。然後在 `/plugins` 或桌面的 Plugins 安裝 `my-workflow`。
 
 這個不會自動更新。要更新時執行：
 
@@ -105,17 +105,9 @@ codex plugin marketplace upgrade
 
 ### Grok Bot
 
-```text
-grok plugin install VECTOR-COOL/my-agent-toolkit#plugins/my-workflow --trust
-```
+Grok Bot 有記憶規則，在 `skills/my-memory/references/grok-bot.md`。
 
-`#plugins/my-workflow` 只取 plugin 目錄。預設開新對話會更新。要手動更新：
-
-```text
-grok plugin update my-workflow
-```
-
-這條還沒在這台機器跑過。`grok.com` 網頁不能裝。
+它沒有從 GitHub 子目錄安裝 plugin 的指令。`grok plugin install` 是 Grok Build 的命令列，這台也沒有 `grok` 指令。不要改走別的方法，也不要先裝 Grok Build 來裝這個 plugin。
 
 ### 不能用這條 GitHub 連結的
 
@@ -131,7 +123,7 @@ grok plugin update my-workflow
 |------|------|
 | Cursor 團隊市集，已開 Auto Refresh | 自動。推上 `develop` 後重開視窗 |
 | Codex／ChatGPT 桌面 | `codex plugin marketplace upgrade` |
-| Grok Bot | 預設開新對話會更新。手動用 `grok plugin update my-workflow` |
+| Grok Bot | 沒有這條安裝與更新。不要用 `grok plugin` |
 | Cursor Cloud | 再跑下面的匯出並 commit |
 | ChatGPT 網頁、grok.com | 不走這條 GitHub 更新 |
 
