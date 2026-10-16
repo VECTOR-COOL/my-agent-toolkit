@@ -1,6 +1,6 @@
 ---
 name: my-memory
-description: 先判斷短、中、永久。短期走 Mem0，永久走 Notion 的 Agent 記憶庫。私人與全域不帶 user；一般 Mem0 只有 Grok Bot 分 agent 與 user。ChatGPT 與 Cursor 各用一個共用 user_id。寫入須確認，禁止憑證。
+description: 先判斷短、中、永久。查記憶先查 Notion Agent 記憶庫的永久記憶，不夠再查 Mem0 短期。私人與全域不帶 user；一般 Mem0 只有 Grok Bot 分 agent 與 user。ChatGPT 與 Cursor 各用一個共用 user_id。寫入須確認，禁止憑證。權重 high 且有目的讀取達閥值時改載 my-memory-consolidate。
 ---
 
 # 外部記憶管理
@@ -37,11 +37,11 @@ graph TD
 
 會過期或還在改 → 短期。只留指向 → 中期。要一直留 → 永久。憑證與未去敏的內容不寫中期、永久。
 
-同一件事只留一處。短期反覆命中、要一直留：寫進 Agent 記憶庫，Mem0 那筆改為 `已過時`。
+同一件事只留一處。短期且 `weight=high`、有目的讀取達閥值：載 [`my-memory-consolidate`](../my-memory-consolidate/SKILL.md)，先去重、再合併，才寫進永久，然後刪除對應短期。未達閥值或權重不是 high，不要升永久。
 
 ## 身份
 
-只用於 Mem0。永久記憶不套這張表。
+短期 Mem0 用這張表。整理進永久時，把同一組 `scope`、`user_id`、`agent_id` 抄進 Agent 記憶庫。私人與全域這兩欄留空。
 
 | 範圍 | 庫 | 誰 | 怎麼帶 |
 |------|----|----|--------|
@@ -60,7 +60,7 @@ graph TD
 
 ## 後端細節
 
-選後端、Agent 記憶庫（Notion）欄位、Cursor Notion Memory、Mem0 通路與寫改刪流程：見 [backends.md](references/backends.md)。選**一個主後端**；跨後端須先說明；同一事實勿無計畫寫入多處。
+選後端、讀寫流程見 [backends.md](references/backends.md)。欄位名、型別、選項與隔離鍵格式見 [schemas.md](references/schemas.md)。寫入前先讀格式，不要自創欄位或選項。選**一個主後端**；跨後端須先說明；同一事實勿無計畫寫入多處。
 
 ## 讀取時機
 
@@ -70,17 +70,18 @@ graph TD
 
 ## 讀取方法
 
-1. 先定種類。
-2. 永久：Agent 記憶庫，`狀態=有效` 且 `AI 可用`，再用關鍵字。不整庫拉。
+查記憶先查永久。永久已經答得了，就不要再查短期。
+
+1. 永久：Agent 記憶庫，`狀態=有效` 且 `AI 可用`，再依目前客戶端的 `scope`／`user_id`／`agent_id` 過濾，並可一併讀 `scope=global` 且 `user_id` 為空的列。不整庫拉。欄位名見 [schemas.md](references/schemas.md)。
+2. 短期：只有永久沒有，或這筆明確是還在改的任務脈絡，才查 Mem0。Composio 用別名選帳，語意搜尋優先。私人不帶 user。全域不帶 user、不帶 agent；排除不了帶身份的紀錄就停下來問。一般一定帶該客戶端身份。實際採用後，依 [`my-memory-consolidate`](../my-memory-consolidate/SKILL.md) 更新 `read_count`；達閥值才整理。
 3. 中期：打開索引指到的檔。不要把索引當全文。
-4. 短期：Composio 用別名選帳，語意搜尋優先。私人不帶 user。全域不帶 user、不帶 agent；排除不了帶身份的紀錄就停下來問。一般一定帶該客戶端身份。
-5. 沒有工具，或 MCP 連不上、要重新登入、呼叫失敗：先說哪個後端、什麼失敗。不要貼 token 或金鑰。不要改讀別種來充數。
+4. 沒有工具，或 MCP 連不上、要重新登入、呼叫失敗：先說哪個後端、什麼失敗。不要貼 token 或金鑰。不要改讀別種來充數。
 
 ## 寫入時機
 
 - 使用者說記住，或指定種類，才寫。先說寫進哪一種。
 - 先搜尋去重；有就更新。改或刪之前先顯示並取得同意。
-- 短期反覆命中、要一直留：寫進永久，Mem0 那筆改 `已過時`。
+- 短期高權重且讀取達閥值：走 `my-memory-consolidate`。先去重、再合併，才寫永久；寫成後刪除對應短期。不要改標 `已過時` 留在 Mem0。
 - 不要伺機寫。同一件事不要同時留在兩種。
 - 禁存完整對話、閒聊、推測、密碼、Token、金鑰、付款資料。失敗如實說，勿補造。
 

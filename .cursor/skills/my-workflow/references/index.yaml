@@ -3,7 +3,7 @@
 # version 與 pack.yaml、toolkit project.json 同一個號。
 # keywords 是使用者會說的詞，用來提高命中。不要把整段說明抄進來。
 
-version: 1.3.3
+version: 1.4.0
 
 skills:
   - name: my-workflow
@@ -11,13 +11,16 @@ skills:
     keywords: [my-workflow, 不知道用哪個 skill, 工作習慣, 入口, 怎麼做, 選 skill]
   - name: my-rules
     when: 每個任務開始時（常駐通用規則）
-    keywords: [規則, 通用規則, 規範, 守則, 語言, Git 安全, MCP 失敗, 腳本, 產物清理, 可信度]
+    keywords: [規則, 通用規則, 規範, 守則, 語言, Git 安全, MCP 失敗, Composio, 工具, 腳本, 產物清理, 可信度]
   - name: my-skill-update
     when: 檢查或更新本套件已安裝的 skills
     keywords: [更新, 檢查更新, gh skill, 套件版本, update skills, 升級技能]
   - name: my-memory
     when: 記住／回想偏好、決策或查詢歷史脈絡
-    keywords: [記住, 回想, 偏好, 決策, 記憶, Mem0, 歷史紀錄, 個人習慣, 查詢記憶, 記一下]
+    keywords: [記住, 回想, 偏好, 決策, 記憶, 永久記憶, Mem0, 歷史紀錄, 個人習慣, 查詢記憶, 記一下]
+  - name: my-memory-consolidate
+    when: 短期記憶權重為 high 且有目的讀取達閥值，要先去重合併再蒸餾進永久記憶，並刪除該筆短期
+    keywords: [記憶整理, 整理記憶, 升永久, 去重, 合併, 閥值, 權重, 刪短期, 讀取次數, consolidate]
   - name: my-notion
     when: 操作 Notion 知識庫、資料庫、頁面與 View
     keywords: [Notion, 資料庫, 知識庫, 頁面, View, notion kb, 資料結構]
