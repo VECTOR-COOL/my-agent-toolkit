@@ -1,6 +1,6 @@
 # 記憶後端細節
 
-主流程與判斷規則在 [SKILL.md](../SKILL.md)。這份只在實際讀寫後端時才讀。
+主流程與判斷規則在 [SKILL.md](../SKILL.md)。欄位格式在 [schemas.md](schemas.md)。這份只在實際讀寫後端時才讀。
 
 ## 選後端
 
@@ -24,24 +24,7 @@
 
 **查**：`狀態=有效` 且 `AI 可用`，再依目前客戶端的 `scope`／`user_id`／`agent_id` 過濾，並可一併讀 `scope=global` 且 `user_id` 為空的列。命中後讀 `目前值`。禁整庫拉。
 
-**寫**（從短期整理進來時，先照 [`my-memory-consolidate`](../../my-memory-consolidate/SKILL.md) 去重並合併，再按下表更新同一隔離鍵，不重複新增）：
-
-| 必填／常用 | 說明 |
-|------------|------|
-| 記憶 | 標題 |
-| 記憶鍵 | 穩定語意鍵 |
-| 目前值 | 簡短有效事實 |
-| 層級 | 永久用 `profile` |
-| scope | 對應 Mem0 範圍：`private`、`global`、`general`。舊值 `agent`、`conversation` 不要再新寫 |
-| user_id | 對應 Mem0。私人與全域留空。一般才填：Grok Bot `xiaoan`、ChatGPT `gpt`、Cursor `cursor` |
-| agent_id | 對應 Mem0。只有 Grok Bot 一般記憶填該 bot UUID。其餘留空 |
-| agent_name | 有 `agent_id` 才填顯示名 |
-| 狀態 | 預設 `有效`；過時→`已過時`／`封存` |
-| AI 可用 | 允許 Agent 使用時勾選 |
-| 來源 | 優先 `使用者明示`／`使用者確認`；`AI 推定` 須標待確認 |
-| 隔離鍵 | `scope\|user_id\|agent_id\|記憶鍵`。空的身份留空段 |
-
-既有列的隔離鍵仍是 `user_id|agent_id|記憶鍵`（全域常見 `xiaoan||記憶鍵`，且 `user_id` 填了 xiaoan）。去重時新鍵找不到，就認這把舊鍵並更新那一筆，不要另開。這次不改寫既有列。
+**寫**：欄位與允許值只用 [schemas.md](schemas.md)。從短期整理進來時，先照 [`my-memory-consolidate`](../../my-memory-consolidate/SKILL.md) 去重並合併，再更新同一隔離鍵，不重複新增。去重先對新鍵 `scope|user_id|agent_id|記憶鍵`，沒有再對舊鍵 `user_id|agent_id|記憶鍵`。對到就更新那一筆。這次不改寫既有列。
 
 敏感度高於「一般」時謹慎寫入。工具細節 → [`$my-notion`](../../my-notion/SKILL.md)。
 

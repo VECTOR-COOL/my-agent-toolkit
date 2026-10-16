@@ -60,7 +60,7 @@ graph TD
 
 ## 後端細節
 
-選後端、Agent 記憶庫（Notion）欄位、Cursor Notion Memory、Mem0 通路與寫改刪流程：見 [backends.md](references/backends.md)。選**一個主後端**；跨後端須先說明；同一事實勿無計畫寫入多處。
+選後端、讀寫流程見 [backends.md](references/backends.md)。欄位名、型別、選項與隔離鍵格式見 [schemas.md](references/schemas.md)。寫入前先讀格式，不要自創欄位或選項。選**一個主後端**；跨後端須先說明；同一事實勿無計畫寫入多處。
 
 ## 讀取時機
 
@@ -71,7 +71,7 @@ graph TD
 ## 讀取方法
 
 1. 先定種類。
-2. 永久：Agent 記憶庫，`狀態=有效` 且 `AI 可用`，再依目前客戶端的 `scope`／`user_id`／`agent_id` 過濾。不整庫拉。欄位對應見 [backends.md](references/backends.md)。
+2. 永久：Agent 記憶庫，`狀態=有效` 且 `AI 可用`，再依目前客戶端的 `scope`／`user_id`／`agent_id` 過濾。不整庫拉。欄位名見 [schemas.md](references/schemas.md)。
 3. 中期：打開索引指到的檔。不要把索引當全文。
 4. 短期：Composio 用別名選帳，語意搜尋優先。私人不帶 user。全域不帶 user、不帶 agent；排除不了帶身份的紀錄就停下來問。一般一定帶該客戶端身份。實際採用後，依 [`my-memory-consolidate`](../my-memory-consolidate/SKILL.md) 更新 `read_count`；達閥值才整理。
 5. 沒有工具，或 MCP 連不上、要重新登入、呼叫失敗：先說哪個後端、什麼失敗。不要貼 token 或金鑰。不要改讀別種來充數。

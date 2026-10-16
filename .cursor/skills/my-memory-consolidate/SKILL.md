@@ -5,7 +5,7 @@ description: 判斷短期記憶要不要整理進永久記憶。達條件後先�
 
 # 記憶整理
 
-只做**要不要升永久**的判斷。身份、確認、去重與後端讀寫以 [`my-memory`](../my-memory/SKILL.md) 與 [backends.md](../my-memory/references/backends.md) 為準。
+只做**要不要升永久**的判斷。身份、確認、去重與後端讀寫以 [`my-memory`](../my-memory/SKILL.md) 與 [backends.md](../my-memory/references/backends.md) 為準。欄位格式以 [schemas.md](../my-memory/references/schemas.md) 為準，不要自創欄位或選項。
 
 ```mermaid
 graph TD
