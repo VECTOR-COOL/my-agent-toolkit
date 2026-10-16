@@ -2,7 +2,7 @@
 name: my-agent-plugin-creator
 description: 依 Agent Plugins 開放標準建立、更新、遷移或驗證可攜式 AI agent plugin，組合 Agent Skills 與 MCP servers，並隔離 OpenAI、Codex、Cursor、Claude Code 等 client-specific 設定。用於 plugin scaffold、plugin.json、mcp.json、skills packaging、相容性轉換或發布前封裝檢查；不適用於 WordPress 或一般應用框架的 plugin 開發。
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
   agent-plugins-spec: "1.0.0"
 ---
 
@@ -27,6 +27,20 @@ metadata:
 - Skill 格式以 `https://agentskills.io/specification` 為準。
 - 規格本文與 machine-readable schema 衝突時，以規格本文為準。
 - Client 文件只決定 namespaced extension、安裝與 marketplace 行為，不得改寫 portable core。
+- 目標包含 Cursor 時，另讀 [Cursor Plugin adapter](references/cursor-plugin.md)。
+- 目標包含 OpenAI／Codex 時，另讀 [OpenAI／Codex adapter](references/openai-codex-adapter.md)。
+
+## 先選交付目標
+
+| 需求 | 主要產物 | 相容性邊界 |
+| --- | --- | --- |
+| 跨 client 可攜 | root `plugin.json`、`skills/`、`mcp.json` | Agent Plugins v1 portable core |
+| Cursor rules／agents／commands／hooks | portable core + `.cursor-plugin/plugin.json` 與 Cursor 元件 | Cursor-specific adapter |
+| OpenAI／Codex presentation、apps、hooks 或 marketplace | portable core + `extensions.com.openai`，必要時 compatibility files | OpenAI-specific adapter |
+
+- 使用者只說「plugin」時，先從 portable core 開始；不要同時產生所有 client 格式。
+- 規則、agents、commands、hooks、marketplace metadata 與安裝流程不是 Agent Plugins v1 portable components。
+- Client adapter 應增加能力，不得成為唯一 package identity，也不得讓 portable core 依賴該 client 才能解析。
 
 ## 版本與合規邊界
 
@@ -50,8 +64,9 @@ metadata:
 
 1. 找出目標 plugin root、repo 規則、現有 manifest、skills、MCP 設定及未提交變更。
 2. 確認 plugin 的單一明確目的與預期使用情境。
-3. 選擇最小形態：skills only、MCP only，或 skills + MCP。
-4. 只在結果會明顯改變 package identity、權限、安全或相容性時提問；其餘採最小且可逆的預設。
+3. 選擇最小形態：skills only、MCP only，或 skills + MCP；再決定是否需要單一 client adapter。
+4. 明確記錄 target：`portable`、`cursor` 或 `openai`。同時支援多個 client 時，各 adapter 分別驗證。
+5. 只在結果會明顯改變 package identity、權限、安全或相容性時提問；其餘採最小且可逆的預設。
 
 ### 2. 建立 portable core
 
@@ -70,6 +85,14 @@ plugin-name/
 - MCP 設定只放在 root `mcp.json`，schema 版本必須與 `plugin.json` 對齊。
 - 不建立空目錄、空 config、範例 placeholder 或未使用資產。
 
+新 package 可用內建 scaffold 建立可審查的最小骨架：
+
+```powershell
+node scripts/scaffold-agent-plugin.mjs <plugin-root> --name <plugin-name> --skill <skill-name> --dry-run
+```
+
+先使用 `--dry-run`。實際建立後必須替換 scaffold 的 `TODO`；validator 會把未完成 placeholder 視為錯誤。
+
 ### 3. 設計 Agent Skills
 
 - 每個 skill 對應可辨識的使用者目標；`description` 同時說明能力與觸發時機。
@@ -85,25 +108,34 @@ plugin-name/
 - `stdio.command` 是單一 executable token，不是 shell command；參數分別放入 `args`。
 - Package path 必須留在 plugin root；runtime data 應使用 client 提供的 `PLUGIN_DATA`。
 - 禁止把 token、API key、cookie、密碼或私人 header 寫入 `plugin.json`、`mcp.json`、skills、scripts 或範例。Portable v1 的認證與秘密保存由 client 管理。
+- `${PLUGIN_ROOT}` 與 `${PLUGIN_DATA}` 是 Agent Plugins placeholders；Cursor 不展開這兩個名稱。需要 Cursor runtime 時，保留 portable `mcp.json`，另做使用 `${CURSOR_PLUGIN_ROOT}` 的 Cursor adapter，不可用搜尋取代破壞其他 clients。
 
 ### 5. 隔離 client adapter
 
-- Portable manifest 的 client-specific data 只能放在 `extensions.<reverse-domain-namespace>`。
-- Client-specific files 放在與 namespace 同名的 root directory。
+- Portable manifest 只有在 target client 文件明確定義 namespace 與 shape 時，才把 client-specific data 放入 `extensions.<reverse-domain-namespace>`；不要自行發明 extension 契約。
+- Client-specific files 依該 client 官方 layout 放置；Agent Plugins v1 只規範 extension directory 與 namespace 的關係，不代表所有 client 都使用這個機制。
 - 只有使用者指定 target client，或交付必須依賴該 client 時才新增 adapter。
 - OpenAI/Codex 相容 metadata 放在 `extensions.com.openai`；legacy `.codex-plugin/plugin.json` 僅在明確需要 compatibility fallback 時建立，且不可取代 root `plugin.json`。
+- Cursor 的 `.cursor-plugin/plugin.json` 可宣告 skills、MCP、rules、agents、commands、hooks 與 variables；這些額外元件仍是 Cursor adapter，不是 portable core。Cursor 的 Skill `paths` frontmatter 也是 client extension，不可寫進聲稱純 Agent Skills 相容的版本。
 - Marketplace、安裝、啟用、workspace publication 與 directory submission 不屬於 portable standard；沒有明確要求時不要執行。
 
 ### 6. 驗證
 
 完成前至少執行：
 
-1. 解析所有 JSON，確認 schema identifier、版本對齊、closed fields 與名稱限制。
-2. 驗證每個 `SKILL.md` 的 frontmatter、名稱與目錄一致性；有 `skills-ref` 或受信任 validator 時使用它。
-3. 確認固定元件位置、所有 plugin-relative path、symlink／junction 實際解析結果都留在 plugin root。
-4. 掃描明顯 secrets、placeholder、空元件與未被引用的 client config。
-5. 若新增 scripts，實際執行其 help、dry-run 或最小安全案例；若設定 MCP，只在已授權且安全時啟動連線測試。
-6. 在 Git repo 內檢查 `git diff --check` 與 scoped diff，確保未覆寫無關變更。
+1. 先執行本技能的 deterministic validator：
+
+   ```powershell
+   node scripts/validate-agent-plugin.mjs <plugin-root> --target portable
+   ```
+
+   Cursor 或 OpenAI／Codex adapter 分別改用 `--target cursor` 或 `--target openai`。這是本技能維護的檢查器，不是官方 certification。
+2. 解析所有 JSON，確認 schema identifier、版本對齊、closed fields 與名稱限制。
+3. 驗證每個 `SKILL.md` 的 frontmatter、名稱與目錄一致性；有 `skills-ref` 或受信任 validator 時再交叉檢查。Windows 遇到非 ASCII 路徑或內容時，以 UTF-8 mode 執行（例如設定 `PYTHONUTF8=1` 或 `python -X utf8`）。
+4. 確認固定元件位置、所有 plugin-relative path、symlink／junction 實際解析結果都留在 plugin root。
+5. 掃描明顯 secrets、placeholder、空元件與未被引用的 client config。
+6. 若新增 scripts，實際執行其 help、dry-run 或最小安全案例；若設定 MCP，只在已授權且安全時啟動連線測試。
+7. 在 Git repo 內檢查 `git diff --check` 與 scoped diff，確保未覆寫無關變更。
 
 若缺少 validator、runtime、credentials 或 target client，明確標示「未驗證」，不要把靜態檢查寫成 runtime 相容證明。
 

@@ -87,6 +87,8 @@ graph TD
 
 **空間**：私人＝個人；團隊＝共享（可索引優先 Agent 記憶庫）。跨空間先問。
 
+**身份**：至少要帶 `user_id`、`agent_id` 或 `run_id`。人固定 `user_id=xiaoan`。各客戶端怎麼分開見下方檔案；對不上既有實體就先問，不要新造 agent id。
+
 **流程**：語意搜尋優先 → 只用不猜的正式工具／參數 → 不靜默切 scope。
 
 **寫改刪**：先搜去重 → 單一耐久事實 → 驗證；改刪前顯示並取得同意。推測不得當使用者事實。
@@ -97,3 +99,14 @@ graph TD
 - 無結果：查詢範圍 + 請補充或指定後端  
 - 寫入：內容、後端、新增或更新  
 - 未用記憶：一般不必宣告  
+
+## 依客戶端
+
+只讀當前環境那一份。內建記憶跟 Mem0 不是同一套。
+
+| 環境 | 檔 |
+|------|-----|
+| Grok Bot | [grok-bot.md](references/grok-bot.md) |
+| ChatGPT 網頁與 App | [chatgpt.md](references/chatgpt.md) |
+| Codex | [codex.md](references/codex.md) |
+| Cursor IDE 與 Cloud | [cursor.md](references/cursor.md) |

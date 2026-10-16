@@ -9,6 +9,7 @@
 - MCP schema：<https://agent-plugins.org/schemas/1.0.0/mcp.schema.json>
 - Agent Skills：<https://agentskills.io/specification>
 - OpenAI packaging adapter：<https://developers.openai.com/plugins/build/plugins>
+- Cursor plugin adapter：<https://cursor.com/docs/plugins/reference>
 
 Agent Plugins v1.0.0 是 vendor-neutral 的 portability floor。它標準化 package identity、Agent Skills 與 MCP server configuration；distribution、installation、permissions、marketplace、hooks 與 client UI 不屬於 portable core。
 
@@ -130,9 +131,12 @@ Portable placeholders：
 ```
 
 - Client-specific manifest data 放入 `extensions`。
-- Client-specific files 放入與 namespace 完全相同的 root directory。
+- 只有 client 官方文件已定義 namespace 與 shape 時，才加入對應的 `extensions` data；不要自行發明契約。
+- Agent Plugins extension files 放入與 namespace 完全相同的 root directory；若 client 另有官方 layout，將它視為獨立 adapter。
 - Extensions 不會變成 portable components；未知 namespace 可由其他 clients 忽略。
 - OpenAI-specific presentation、registered app mapping、onboarding 與 hooks 使用 `extensions.com.openai`。`.codex-plugin/plugin.json` 是 compatibility fallback，不是 portable manifest。
+- OpenAI 文件另允許 MCP server entry 內的 `extensions.com.openai.auth`；Agent Plugins v1.0.0 MCP schema 本身仍是 closed schema。使用這項能力時應標示為 OpenAI target extension，不可宣稱該 `mcp.json` 通過 strict portable schema。
+- Cursor 使用 `.cursor-plugin/plugin.json` 描述 skills、MCP、rules、agents、commands、hooks 與 variables。Cursor 不展開 Agent Plugins 的 `${PLUGIN_ROOT}`／`${PLUGIN_DATA}`，其 adapter 使用 `${CURSOR_PLUGIN_ROOT}`。
 - `.claude-plugin/plugin.json`、legacy Copilot manifest、marketplace catalogs 與 client config 都是 adapter／distribution layer，不能取代 root portable manifest。
 
 ## Legacy migration mapping
@@ -142,7 +146,7 @@ Portable placeholders：
 | `.codex-plugin/plugin.json` 或 `.claude-plugin/plugin.json` 作為唯一 identity | 建立 root `plugin.json`；保留 legacy file 只作明確需要的 fallback |
 | Manifest 內自訂 `skills` path | 將 skills 移至固定 `skills/<name>/SKILL.md`，移除 portable manifest 的 path field |
 | `.mcp.json` | 轉為 root `mcp.json`，為每個 server 明確加入 `type`，並核對 schema |
-| Root-level hooks、commands、agents、LSP config | 放入 client namespace；v1 不將它們視為 portable components |
+| Root-level hooks、commands、agents、LSP config | 依 target client 官方 adapter layout 遷移；沒有已定義契約時保留並標示 unsupported，不可自行發明 namespace |
 | Manifest 內 secrets 或 credential headers | 移除並改由 client-managed authentication／secret storage 提供 |
 
 遷移時先保存原行為清單，再逐項標成 portable、client extension 或不支援。不要為通過 schema 而悄悄刪除仍有使用者價值的 legacy 行為。
@@ -157,6 +161,8 @@ Portable placeholders：
 | Filesystem | 固定位置類型正確、real path 不逸出 plugin root |
 | Security | 無 secrets；command、URL、headers、scripts 與 permissions 經人工檢視 |
 | Runtime | 在 target client 實際安裝／載入；MCP 連線與工具呼叫依授權測試 |
+
+本技能提供 `scripts/validate-agent-plugin.mjs` 做 deterministic preflight；它不是官方 certification。Cursor 目標使用 `--target cursor`，OpenAI／Codex 目標使用 `--target openai`。Agent Skills 官方參考 validator `skills-ref` 僅覆蓋 skill frontmatter，不取代 plugin 與 MCP 驗證；Windows 非 ASCII 內容應以 UTF-8 mode 執行。
 
 Schema validation 只能證明結構；只有 target client runtime test 才能證明實際相容。發布到 marketplace 或 directory 還需要各 client 的額外 metadata、政策與審查。
 
