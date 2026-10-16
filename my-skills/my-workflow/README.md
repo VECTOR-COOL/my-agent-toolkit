@@ -1,6 +1,6 @@
 # my-workflow
 
-私人工作流，採 [Agent Skills](https://agentskills.io) 規範。不上架公開市集。版本見 [`pack.yaml`](pack.yaml)，目前 `1.3.3`。
+私人工作流，採 [Agent Skills](https://agentskills.io) 規範。不上架公開市集。版本見 [`pack.yaml`](pack.yaml)，目前 `1.4.0`。
 
 本目錄就是可安裝的 skill。入口是根目錄 [`SKILL.md`](SKILL.md)。選哪個功能見 [`references/index.yaml`](references/index.yaml)。`gh skill` 認的是這一層。
 
