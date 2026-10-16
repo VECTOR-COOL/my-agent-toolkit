@@ -3,6 +3,8 @@ name: my-notion
 description: "在 Codex 或 ChatGPT Web 操作 Notion 工作區，先讀取與釐清既有資料，再設計、建立、查詢、更新適合人類與 AI Agent 共用及 RAG 擷取的資料庫、頁面與 View。適用於 Notion 知識庫、提示詞模板、文件與資料治理；不適用於未涉及 Notion 的一般文件工作。"
 ---
 
+> 已遷至 plugins/my-workflow-plugin/skills/my-notion/，勿再改此副本。
+
 # my notion
 
 ## 目的

@@ -1,0 +1,4 @@
+interface:
+  display_name: "my-create-PRD"
+  short_description: "透過多輪需求訪談建立完整、可執行且界線清楚的產品需求文件"
+  default_prompt: "使用 $my-create-prd 主動訪談我，整理需求並產出足以讓所有 Agent 執行的完整 PRD。"

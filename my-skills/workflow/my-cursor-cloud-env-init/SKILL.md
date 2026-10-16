@@ -3,6 +3,8 @@ name: my-cursor-cloud-env-init
 description: 建立、檢查或對齊 Cursor Cloud 環境腳本與冷啟動，預設 develop，跑測試至可本地與遠端運行，成功後 commit all & push。用於 Cursor Cloud 環境初始化、冷啟動失敗排查，或透過 API 建立／協同排除 Cloud Agent 問題時。
 ---
 
+> 已遷至 plugins/my-workflow-plugin/skills/my-cursor-cloud-env-init/，勿再改此副本。
+
 # my-cursor-cloud-env-init
 
 1. 建立、檢查或對齊 cursor cloud 環境建立腳本，確保冷啟動正常

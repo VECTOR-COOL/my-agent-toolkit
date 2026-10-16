@@ -3,6 +3,8 @@ name: my-codebase-clear
 description: 分析 codebase 可清理項目、維護 cleanup-candidates.json、經同意後安全刪除並收尾合併分支。用於程式碼清理、垃圾檔掃描、review cleanup-candidates，或使用者說執行清理時。
 ---
 
+> 已遷至 plugins/my-workflow-plugin/skills/my-codebase-clear/，勿再改此副本。
+
 # my-codebase-clear
 
 ## 清理前

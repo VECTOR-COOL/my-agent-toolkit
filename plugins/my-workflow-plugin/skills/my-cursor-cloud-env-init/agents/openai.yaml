@@ -1,0 +1,4 @@
+interface:
+  display_name: "my-cursor-cloud-env-init"
+  short_description: "對齊 Cursor Cloud 冷啟動腳本並驗證本地與遠端可運行"
+  default_prompt: "使用 $my-cursor-cloud-env-init 建立或修復 Cursor Cloud 環境直至冷啟動成功。"

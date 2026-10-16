@@ -3,6 +3,8 @@ name: my-upgrade-plan
 description: 為目前工作區／子專案擬定安全升級計畫：查現況與官網、避雷、決版、寫 task 計畫，經同意後才備份升級。用於軟體升級計畫、版本升級評估，或 Plan 模式下規劃升級時。
 ---
 
+> 已遷至 plugins/my-workflow-plugin/skills/my-upgrade-plan/，勿再改此副本。
+
 # my-upgrade-plan
 
 為**目前工作區／子專案**擬定安全升級計畫。先切 **Plan 模式**；未經使用者同意，不動遠端正式環境。

@@ -3,6 +3,8 @@ name: my-codebase-init
 description: 從專案模板初始化 codebase，比對可加入的 skill／rules／docs，建立 AGENTS.md 與 README，並在 VECTOR-COOL 建立私有 GitHub repo 與 develop 分支。用於新專案初始化、尚未版控，或要比對 project-templates 時。
 ---
 
+> 已遷至 plugins/my-workflow-plugin/skills/my-codebase-init/，勿再改此副本。
+
 # my-codebase-init
 
 ## 目錄未初始

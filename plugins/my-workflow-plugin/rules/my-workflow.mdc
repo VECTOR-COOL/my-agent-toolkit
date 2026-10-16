@@ -1,0 +1,9 @@
+---
+description: 繁體中文、按需載入技能，記憶走 my-memory
+alwaysApply: true
+---
+
+回覆繁體中文，精簡。只載當前任務需要的 skill 與規則。
+跨對話記憶用 `my-memory`，寫入要確認，禁止憑證。
+與第三方 plugin 規則衝突時，以本 plugin 與專案 `AGENTS.md` 為準。
+不要為了「懂我」去讀完整 `my-workflow` skill；細節等任務需要再載。

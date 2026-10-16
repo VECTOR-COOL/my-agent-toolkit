@@ -2,7 +2,7 @@
 
 > VECTOR LTD 可攜式 Agent Skills 套件庫
 
-[![version](https://img.shields.io/badge/version-1.1.0-blue)]()
+[![version](https://img.shields.io/badge/version-1.2.0-blue)]()
 [![GitHub](https://img.shields.io/badge/GitHub-VECTOR--COOL-blue)](https://github.com/VECTOR-COOL/my-agent-toolkit)
 [![Website](https://img.shields.io/badge/Website-vector.cool-blue)](https://vector.cool)
 
@@ -17,28 +17,33 @@
 | 類型 | 路徑 | 說明 |
 |------|------|------|
 | 第三方 skills | [`skills/README.md`](./skills/README.md) | 依 design、React、mobile、browser、Cloudflare、workflow、GitHub、security、WordPress 分類的 27 個可攜 skills。 |
-| 自建 skills | [`my-skills/`](./my-skills/) | 組織維護的 PRD、Notion、Mem0 記憶、前端、WordPress Headless、REST API 與 Lovable 遷移技能。 |
+| 自建 skills | [`my-skills/`](./my-skills/) | 前端、WordPress、其餘組織技能。workflow 那 11 個以 plugin 為準。 |
+| 私人 plugin | [`plugins/my-workflow-plugin`](./plugins/my-workflow-plugin/README.md) | 常用工作流、規則與跨裝置記憶。plugin 版本 0.1.0。 |
 
 ### 自建 Workflow Skills
 
+以 [`plugins/my-workflow-plugin`](./plugins/my-workflow-plugin/) 為準。`my-skills/workflow/` 同名檔是副本。
+
 | 技能 | 說明 | 納入版本 |
 |------|------|----------|
-| [`my-create-PRD`](./my-skills/workflow/my-create-prd/SKILL.md) | 透過主動多輪需求訪談，建立足以讓所有 Agent 理解、實作與驗收的繁體中文 PRD。 | v1.1.0 |
-| [`my notion`](./my-skills/workflow/my-notion/SKILL.md) | 在 Codex 與 ChatGPT Web 操作 Notion，設計、建立、查詢與維護適合人機協作及 RAG 擷取的資料結構。 | v1.1.0 |
-| [`my-memory`](./my-skills/workflow/my-memory/SKILL.md) | 分流使用 Agent 記憶庫、Notion Memory 與 Mem0 讀寫外部記憶。 | v1.1.0 |
-| [`my-review`](./my-skills/workflow/my-review/SKILL.md) | 以專案／架構視角嚴格審查計畫與實作，拉回目標並收尾更新文件。 | v1.1.0 |
+| [`my-workflow`](./plugins/my-workflow-plugin/skills/my-workflow/SKILL.md) | 工作習慣入口：按需載入、記憶、Git 界線。 | v1.2.0 |
+| [`my-plugin-update`](./plugins/my-workflow-plugin/skills/my-plugin-update/SKILL.md) | 檢查 plugin 是否落後遠端，並用資料夾連結更新本機安裝。 | v1.2.0 |
+| [`my-create-PRD`](./plugins/my-workflow-plugin/skills/my-create-prd/SKILL.md) | 透過主動多輪需求訪談，建立足以讓所有 Agent 理解、實作與驗收的繁體中文 PRD。 | v1.2.0 |
+| [`my notion`](./plugins/my-workflow-plugin/skills/my-notion/SKILL.md) | 在 Codex 與 ChatGPT Web 操作 Notion，設計、建立、查詢與維護適合人機協作及 RAG 擷取的資料結構。 | v1.2.0 |
+| [`my-memory`](./plugins/my-workflow-plugin/skills/my-memory/SKILL.md) | 分流使用 Agent 記憶庫、Notion Memory 與 Mem0 讀寫外部記憶。 | v1.2.0 |
+| [`my-review`](./plugins/my-workflow-plugin/skills/my-review/SKILL.md) | 以專案／架構視角嚴格審查計畫與實作，拉回目標並收尾更新文件。 | v1.2.0 |
+| [`my-codebase-clear`](./plugins/my-workflow-plugin/skills/my-codebase-clear/SKILL.md) | 掃描可清理檔案、review candidates，經同意後安全刪除並收尾。 | v1.2.0 |
+| [`my-codebase-init`](./plugins/my-workflow-plugin/skills/my-codebase-init/SKILL.md) | 從 project-templates 初始化專案並建立 VECTOR-COOL 私有 repo。 | v1.2.0 |
+| [`my-commit-all-and-push`](./plugins/my-workflow-plugin/skills/my-commit-all-and-push/SKILL.md) | 全部 commit 並 push，說明用繁體中文。 | v1.2.0 |
+| [`my-cursor-cloud-env-init`](./plugins/my-workflow-plugin/skills/my-cursor-cloud-env-init/SKILL.md) | 對齊 Cursor Cloud 冷啟動，驗證本地與遠端可運行。 | v1.2.0 |
+| [`my-docs`](./plugins/my-workflow-plugin/skills/my-docs/SKILL.md) | 建立精簡技術文件並確保 AGENTS.md／README 齊備。 | v1.2.0 |
+| [`my-subagent`](./plugins/my-workflow-plugin/skills/my-subagent/SKILL.md) | 主線調度平行 subagent 並負責驗收。 | v1.2.0 |
+| [`my-upgrade-plan`](./plugins/my-workflow-plugin/skills/my-upgrade-plan/SKILL.md) | 擬定並經同意後執行安全升級計畫。 | v1.2.0 |
 | [`my-clean-windows-storage`](./my-skills/workflow/my-clean-windows-storage/SKILL.md) | 安全掃描、分類並清理 Windows 磁碟可釋放空間（須先授權再刪）。 | v1.1.0 |
-| [`my-codebase-clear`](./my-skills/workflow/my-codebase-clear/SKILL.md) | 掃描可清理檔案、review candidates，經同意後安全刪除並收尾。 | v1.1.0 |
-| [`my-codebase-init`](./my-skills/workflow/my-codebase-init/SKILL.md) | 從 project-templates 初始化專案並建立 VECTOR-COOL 私有 repo。 | v1.1.0 |
-| [`my-commit-all-and-push`](./my-skills/workflow/my-commit-all-and-push/SKILL.md) | 全部 commit 並 push，說明用繁體中文。 | v1.1.0 |
-| [`my-cursor-cloud-env-init`](./my-skills/workflow/my-cursor-cloud-env-init/SKILL.md) | 對齊 Cursor Cloud 冷啟動，驗證本地與遠端可運行。 | v1.1.0 |
-| [`my-docs`](./my-skills/workflow/my-docs/SKILL.md) | 建立精簡技術文件並確保 AGENTS.md／README 齊備。 | v1.1.0 |
-| [`my-subagent`](./my-skills/workflow/my-subagent/SKILL.md) | 主線調度平行 subagent 並負責驗收。 | v1.1.0 |
-| [`my-upgrade-plan`](./my-skills/workflow/my-upgrade-plan/SKILL.md) | 擬定並經同意後執行安全升級計畫。 | v1.1.0 |
 
 ## 快速開始
 
-1. 複製或 submodule 本 repo 至工作區，或將 `skills/` 內單一技能連結至 Cursor skills 路徑。
+1. 複製或 submodule 本 repo 至工作區。常用工作流見 [`plugins/my-workflow-plugin/README.md`](./plugins/my-workflow-plugin/README.md)。
 2. 依任務載入對應技能的 `SKILL.md`。
 3. 只讀取當前任務需要的 `references/`、`examples/` 或 `scripts/`，避免一次載入整個技能庫。
 4. 在目標產品 repo 執行技能內的 scripts；本 repo 根目錄不提供統一執行環境。
