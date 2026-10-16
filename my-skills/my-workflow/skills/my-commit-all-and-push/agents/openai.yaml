@@ -1,0 +1,4 @@
+interface:
+  display_name: "my-commit-all-and-push"
+  short_description: "全部 commit 並 push，說明用繁體中文"
+  default_prompt: "使用 $my-commit-all-and-push 提交全部變更並推送。"

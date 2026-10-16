@@ -18,13 +18,16 @@ Thumbs.db
 .idea/
 .vscode/*
 !.vscode/extensions.json
+.cursor/plans/
 AGENTS.md
+!my-skills/my-workflow/AGENTS.md
 
 # Logs & temp
 *.log
 npm-debug.log*
 scripts/tmp/
 tmp/
+.playwright-mcp/
 
 # Test / coverage
 coverage/

@@ -1,0 +1,53 @@
+# 入口先載 my-rules；記憶相關再載 my-memory。然後只讀 when 或 keywords 對得上的那一筆。不要一次全載。
+# 記憶：依客戶端只讀 my-memory/references/ 對應那一份。
+# version 與 pack.yaml、toolkit project.json 同一個號。
+# keywords 是使用者會說的詞，用來提高命中。不要把整段說明抄進來。
+
+version: 1.3.3
+
+skills:
+  - name: my-workflow
+    when: 新對話開始、不確定該用哪個 skill 時
+    keywords: [my-workflow, 不知道用哪個 skill, 工作習慣, 入口, 怎麼做, 選 skill]
+  - name: my-rules
+    when: 每個任務開始時（常駐通用規則）
+    keywords: [規則, 通用規則, 規範, 守則, 語言, Git 安全, MCP 失敗, 腳本, 產物清理, 可信度]
+  - name: my-skill-update
+    when: 檢查或更新本套件已安裝的 skills
+    keywords: [更新, 檢查更新, gh skill, 套件版本, update skills, 升級技能]
+  - name: my-memory
+    when: 記住／回想偏好、決策或查詢歷史脈絡
+    keywords: [記住, 回想, 偏好, 決策, 記憶, Mem0, 歷史紀錄, 個人習慣, 查詢記憶, 記一下]
+  - name: my-notion
+    when: 操作 Notion 知識庫、資料庫、頁面與 View
+    keywords: [Notion, 資料庫, 知識庫, 頁面, View, notion kb, 資料結構]
+  - name: my-docs
+    when: 撰寫技術規格（SPEC）、操作指南、ADR 或檢查 AGENTS/README
+    keywords: [文件, 規格, SPEC, 操作手冊, AGENTS, README, ADR, 技術文件, API 規格, 撰寫文檔, 架構決策]
+  - name: my-ui-ux
+    when: 做網站或介面設計、定義 DESIGN.md 與視覺方向
+    keywords: [UI, UX, 新網站, 版面, 視覺, 案例, DESIGN.md, frontend-design, 前端設計, 切版, 設計系統]
+  - name: my-review
+    when: 審查計畫架構、程式碼（Code Review / PR）或驗收收尾
+    keywords: [review, 審查, code review, 程式碼審查, PR 審查, 檢查代碼, 檢查 PR, 拉回目標, 收尾, 驗收, 偏離目標]
+  - name: my-create-prd
+    when: 需求訪談、撰寫或補強產品需求文件（PRD）
+    keywords: [PRD, 產品需求, 需求訪談, 需求文件, 功能規格, 產品規格, 寫 PRD]
+  - name: my-codebase-clear
+    when: 掃描與清理專案無用檔案、快取與過期日誌
+    keywords: [清理, 垃圾檔, cleanup, 刪除, 候選, 清理專案, 清除暫存, 釋放空間, codebase-clear]
+  - name: my-codebase-init
+    when: 從模板初始化新專案骨架與建立 GitHub 私有版控
+    keywords: [初始化, 新專案, 模板, 尚未版控, GitHub, 開新專案, 建立 repo, project init]
+  - name: my-commit-all-and-push
+    when: 安全檢查變更並以 Conventional Commits 提交與推送
+    keywords: [commit, push, 提交, 推送, 全部提交, commit all, 一鍵提交, git push, 推上去, 提交變更]
+  - name: my-cursor-cloud-agent
+    when: 操作 Cursor Cloud Agent API、對齊雲端環境與冷啟動
+    keywords: [Cloud Agent, Cursor Cloud, 開雲端, 雲端對話, 冷啟動, API, 自動化, agentId, 雲端環境]
+  - name: my-subagent
+    when: 拆解大任務、派發平行 subagent 與調度驗收
+    keywords: [平行, 多線, subagent, 派發, 驗收, 多代理, 平行任務, 分工處理]
+  - name: my-upgrade-plan
+    when: 擬定軟體、框架或套件版本安全升級與備份計畫
+    keywords: [升級, 版本, 避雷, 升級計畫, upgrade, 軟體升級, 升級評估, 套件更新]
