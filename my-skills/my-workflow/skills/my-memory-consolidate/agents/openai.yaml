@@ -1,0 +1,4 @@
+interface:
+  display_name: "記憶整理"
+  short_description: "高權重短期記憶達讀取閥值後升永久並刪除短期"
+  default_prompt: "使用 $my-memory-consolidate 判斷這筆 Mem0 短期記憶要不要蒸餾進 Agent 記憶庫，成功後再刪除短期。"

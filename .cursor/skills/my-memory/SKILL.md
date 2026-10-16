@@ -1,6 +1,6 @@
 ---
 name: my-memory
-description: 先判斷短、中、永久。短期走 Mem0，永久走 Notion 的 Agent 記憶庫。私人與全域不帶 user；一般 Mem0 只有 Grok Bot 分 agent 與 user。ChatGPT 與 Cursor 各用一個共用 user_id。寫入須確認，禁止憑證。
+description: 先判斷短、中、永久。短期走 Mem0，永久走 Notion 的 Agent 記憶庫。私人與全域不帶 user；一般 Mem0 只有 Grok Bot 分 agent 與 user。ChatGPT 與 Cursor 各用一個共用 user_id。寫入須確認，禁止憑證。權重 high 且有目的讀取達閥值時改載 my-memory-consolidate。
 ---
 
 # 外部記憶管理
@@ -37,7 +37,7 @@ graph TD
 
 會過期或還在改 → 短期。只留指向 → 中期。要一直留 → 永久。憑證與未去敏的內容不寫中期、永久。
 
-同一件事只留一處。短期反覆命中、要一直留：寫進 Agent 記憶庫，Mem0 那筆改為 `已過時`。
+同一件事只留一處。短期且 `weight=high`、有目的讀取達閥值：載 [`my-memory-consolidate`](../my-memory-consolidate/SKILL.md)，蒸餾進永久後刪除該筆短期。未達閥值或權重不是 high，不要升永久。
 
 ## 身份
 
@@ -73,14 +73,14 @@ graph TD
 1. 先定種類。
 2. 永久：Agent 記憶庫，`狀態=有效` 且 `AI 可用`，再用關鍵字。不整庫拉。
 3. 中期：打開索引指到的檔。不要把索引當全文。
-4. 短期：Composio 用別名選帳，語意搜尋優先。私人不帶 user。全域不帶 user、不帶 agent；排除不了帶身份的紀錄就停下來問。一般一定帶該客戶端身份。
+4. 短期：Composio 用別名選帳，語意搜尋優先。私人不帶 user。全域不帶 user、不帶 agent；排除不了帶身份的紀錄就停下來問。一般一定帶該客戶端身份。實際採用後，依 [`my-memory-consolidate`](../my-memory-consolidate/SKILL.md) 更新 `read_count`；達閥值才整理。
 5. 沒有工具，或 MCP 連不上、要重新登入、呼叫失敗：先說哪個後端、什麼失敗。不要貼 token 或金鑰。不要改讀別種來充數。
 
 ## 寫入時機
 
 - 使用者說記住，或指定種類，才寫。先說寫進哪一種。
 - 先搜尋去重；有就更新。改或刪之前先顯示並取得同意。
-- 短期反覆命中、要一直留：寫進永久，Mem0 那筆改 `已過時`。
+- 短期高權重且讀取達閥值：走 `my-memory-consolidate`（先寫永久，成功後刪短期）。不要改標 `已過時` 留著。
 - 不要伺機寫。同一件事不要同時留在兩種。
 - 禁存完整對話、閒聊、推測、密碼、Token、金鑰、付款資料。失敗如實說，勿補造。
 

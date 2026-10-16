@@ -18,6 +18,9 @@ skills:
   - name: my-memory
     when: 記住／回想偏好、決策或查詢歷史脈絡
     keywords: [記住, 回想, 偏好, 決策, 記憶, Mem0, 歷史紀錄, 個人習慣, 查詢記憶, 記一下]
+  - name: my-memory-consolidate
+    when: 短期記憶權重為 high 且有目的讀取達閥值，要蒸餾進永久記憶並刪除該筆短期
+    keywords: [記憶整理, 整理記憶, 升永久, 閥值, 權重, 刪短期, 讀取次數, consolidate]
   - name: my-notion
     when: 操作 Notion 知識庫、資料庫、頁面與 View
     keywords: [Notion, 資料庫, 知識庫, 頁面, View, notion kb, 資料結構]
