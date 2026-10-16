@@ -2,67 +2,64 @@
 
 私人工作流，採 [Agent Skills](https://agentskills.io) 規範。不上架公開市集。版本見 [`pack.yaml`](pack.yaml)，目前 `1.3.0`。
 
-入口是 [`skills/my-workflow/SKILL.md`](skills/my-workflow/SKILL.md)。瀏覽說明見 [`skills/README.md`](skills/README.md)。選哪個 skill 見 [`skills/my-workflow/references/index.yaml`](skills/my-workflow/references/index.yaml)。集合根不要放 `SKILL.md`。
+本 `my-workflow` 本身就是一個獨立的 skill，**不可進入內部目錄查找子 skill 逐一安裝**。入口是 [`skills/my-workflow/SKILL.md`](skills/my-workflow/SKILL.md)。選哪個功能見 [`skills/my-workflow/references/index.yaml`](skills/my-workflow/references/index.yaml)。
 
+來源網址：
 https://github.com/VECTOR-COOL/my-agent-toolkit/tree/develop/my-skills/my-workflow
 
 ```mermaid
 graph TD
-  src["my-skills/my-workflow/skills"] --> gh["gh skill install 與 update"]
-  gh --> hosts["Cursor、Codex、Grok 命令列"]
-  src --> manual["ChatGPT 網頁上傳、Cloud 匯出"]
+  src["GitHub 網址 (develop/my-skills/my-workflow)"] --> install["安裝獨立 skill: my-workflow"]
+  install --> hosts["Cursor、Codex、Cloud Agent 等"]
+  src --> export["匯出脚本 (目標專案 .cursor/skills)"]
 ```
 
-安裝與更新走 [gh skill](https://cli.github.com/manual/gh_skill_install)。需要 GitHub CLI 2.90.0 以上，帳號要能讀這個私人 repo。各 app 用自己的 `--agent`。不要複製到家目錄，也不要做家目錄資料夾連結。
+直接使用 GitHub 網址安裝與更新這一個獨立 skill。**嚴禁拆解或進入目錄逐一安裝**。不要複製到家目錄，也不要改動這個 repo。
 
 ## 維護
 
 之後加 skill、改脚本，先對 [`AGENTS.md`](AGENTS.md)。安裝／更新步驟見本檔。
 
+- `my-workflow` 本身為獨立 skill。不可進去查找子 skill 逐一安裝。
 - SSOT 是 `my-skills/my-workflow/skills/<skill 名>/`。每個資料夾一份 `SKILL.md`。`name` 必須與資料夾名一致。
 - 本 toolkit 的 `.cursor/skills` 由脚本匯出，**勿手改**。不要把 `my-skills` 加進自動發現。
-- 包版本寫 `pack.yaml`。各 `SKILL.md` 頂層不要手寫 `version`。要讓 `gh skill update` 看到新版，還是要打 git tag。
-- 安裝與匯出時，每個 skill 平鋪到目標的 `.cursor/skills/<skill 名>/`。不要再包一層 `my-workflow`。
+- 包版本寫 `pack.yaml`。各 `SKILL.md` 頂層不要手寫 `version`。
 - 不帶入 WIP、`.playwright-mcp`、意外的 `scripts/*.min.js`。
 - 新的 workflow skill 放這裡。
 
 ## 安裝與更新 prompt
 
-貼給任何 app，它會自己判斷環境：
+貼給任何 AI 助理，直接以 GitHub 網址安裝：
 
 ```text
-安裝或更新我的私人 skills my-workflow，來源 https://github.com/VECTOR-COOL/my-agent-toolkit/tree/develop/my-skills/my-workflow/skills
+請安裝／更新我的私人 skill my-workflow（來源為 GitHub 網址）：
+https://github.com/VECTOR-COOL/my-agent-toolkit/tree/develop/my-skills/my-workflow
 
-能執行指令：用 gh skill（需 GitHub CLI 2.90.0 以上），--agent 填你自己（cursor、codex、grok）。
-gh skill install VECTOR-COOL/my-agent-toolkit my-skills/my-workflow/skills/my-workflow --agent <你>
-已裝就 gh skill update。其餘 skill 用到再裝。不要用 --all。Cursor Cloud 在目標專案安裝並 commit。
-不能執行指令：把上述目錄下的單一資料夾（含 SKILL.md）存成私人 skill，先存 my-workflow，更新就覆寫。
-不支援（如 grok.com）：說明不能裝。
-
-不要複製到家目錄、不要改這個 repo。做不到就停，說明卡在哪。
+注意：
+1. 這個 my-workflow 本身就是一個獨立的 skill，請直接以該網址安裝這一個 skill。
+2. 嚴禁進入內部目錄查找子 skill 逐一安裝。
+3. 已安裝則執行更新。
+4. 不要複製到家目錄、不要改動來源 repo 本身。
 ```
 
-## 安裝與更新
+## 安裝與更新要點
 
-用上面的通用 prompt，不分環境。要點：
+- **獨立 Skill 原則**：`my-workflow` 本身就是一個獨立的 skill，**不可進去查找 skill 逐一安裝**。
+- **來源網址**：直接以 GitHub 網址進行安裝或更新。
+- **權限**：帳號需具備讀取此私人 repo 的權限。
+- **避免衝突**：不要在這個 repo 裡重複安裝同一批，否則會和匯出的 `.cursor/skills` 衝突。
+- **目標專案**：目標專案可直接安裝或透過下方腳本匯出。
 
-- repo 要先推上 GitHub，帳號要能讀這個私有 repo。
-- 能執行指令：`gh skill install`／`gh skill update`，`--agent` 填該 app 自己。不能執行指令：存成或上傳單一 skill 資料夾，更新就覆寫。
-- 只裝這包：對 `my-skills/my-workflow/skills/` 底下每個含 `SKILL.md` 的資料夾各跑一次，先裝入口 `my-workflow`。不要用 `--all`，這個 repo 的 `skills/` 還有第三方 skill。
-- `gh skill` 沒有 `--ref`。未釘版時用最新 tag，沒有 tag 才用預設分支；要讓更新被看到，就打新 tag。釘版：路徑後加 `@v1.3.0` 或 `--pin v1.3.0`，釘住的不會被 update。
-- `gh skill update` 比對安裝時寫進 `SKILL.md` 的 tree SHA，不是手改版本號。
-- 不要在這個 repo 裡用 `gh skill install` 再裝同一批，否則會和匯出的 `.cursor/skills` 變成兩份。
+## 目標專案匯出腳本
 
-## 沒有 gh 時的匯出
-
-沒有 `gh` 時才用：
+需要將整包技能平鋪匯出到目標專案的 `.cursor/skills/` 時使用：
 
 ```text
 node my-skills/my-workflow/scripts/export-cursor-skills.mjs <目標專案> --dry-run
 node my-skills/my-workflow/scripts/export-cursor-skills.mjs <目標專案> --force
 ```
 
-會平鋪寫入 `<目標專案>/.cursor/skills/<skill 名>/`，不複製規則。那些檔由這個脚本產生，不要手改。改完後在該專案 commit。
+會平鋪寫入 `<目標專案>/.cursor/skills/<skill 名>/`。改完後在該目標專案 commit。
 
 本 toolkit 已匯出一份，給這個 repo 的 Cloud Agent 用。
 

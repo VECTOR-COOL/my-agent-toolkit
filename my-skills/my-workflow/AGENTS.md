@@ -58,14 +58,14 @@ graph TD
 
 ## 安裝與更新
 
-步驟以 [`README.md`](README.md) 為準。來源是這個集合，不是整個 repo：
+步驟以 [`README.md`](README.md) 為準。這個 `my-workflow` 本身就是一個獨立的 skill，來源為 GitHub 網址：
 
 https://github.com/VECTOR-COOL/my-agent-toolkit/tree/develop/my-skills/my-workflow
 
-- 貼給 app 的 prompt 按平台分開，一段只給一個平台，安裝與更新寫在一起。
-- 需要 GitHub CLI 2.90.0 以上，帳號要能讀這個私人 repo。
-- 未釘版時先拿最新 tag，沒有 tag 才用 GitHub 預設分支。要更新被看到，就要打新 tag。
-- 不要在這個 repo 裡用 `gh skill install` 再裝同一批，否則會和匯出的 `.cursor/skills` 變成兩份。
+- 直接以該 GitHub 網址安裝與更新這一個獨立 skill。
+- 嚴禁進入內部目錄查找子 skill 逐一安裝。
+- 帳號需具備讀取此私人 repo 的權限。
+- 不要在這個 repo 裡重複安裝同一批，否則會和匯出的 `.cursor/skills` 衝突。
 - 不要複製到家目錄，也不要用家目錄資料夾連結當安裝。
 
 ## 記憶
