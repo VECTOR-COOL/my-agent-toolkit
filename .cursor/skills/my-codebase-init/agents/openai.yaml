@@ -1,4 +1,0 @@
-interface:
-  display_name: "my-codebase-init"
-  short_description: "從模板初始化專案並建立 VECTOR-COOL 私有 repo"
-  default_prompt: "使用 $my-codebase-init 依 project-templates 初始化專案與版控。"

@@ -4,26 +4,44 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const rulesFile = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'rules', 'my-rules.md');
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 if (process.argv.includes('--help') || process.argv.includes('-h')) {
-  console.log('Usage: node scripts/inject-rules.mjs\n\nPrint rules/my-rules.md as SessionStart additionalContext JSON. Read-only.');
+  console.log(
+    'Usage: node scripts/inject-rules.mjs\n\n' +
+      'Print SessionStart additionalContext JSON: rules/global.md, the my-workflow router skill\n' +
+      'and references/index.yaml, so they are loaded without a slash command. Read-only.',
+  );
   process.exit(0);
 }
 
-let rules;
-try {
-  rules = readFileSync(rulesFile, 'utf8');
-} catch (error) {
-  console.error('[ERROR] Cannot read ' + rulesFile + ': ' + error.message);
-  process.exit(1);
+function read(...parts) {
+  const file = path.join(root, ...parts);
+  try {
+    return readFileSync(file, 'utf8');
+  } catch (error) {
+    console.error('[ERROR] Cannot read ' + file + ': ' + error.message);
+    process.exit(1);
+  }
 }
+
+const rules = read('rules', 'global.md').replaceAll('](../', '](' + root + '/');
+const index = read('references', 'index.yaml');
+// 入口 skill 的相對路徑在注入後沒有基準，改成 plugin 的絕對路徑
+const router = read('skills', 'my-workflow', 'SKILL.md')
+  .replace(/^---\n[\s\S]*?\n---\n\n?/, '')
+  .replaceAll('../../', root + '/')
+  .replaceAll('../', root + '/skills/');
+
+const context = [
+  'my-workflow plugin 已在對話開始載入，以下是全域規則與工作流入口，適用於本次對話的每個任務。plugin 根目錄：' + root + '（索引中 rules 的 file 路徑相對於此目錄）。',
+  rules,
+  '# 工作流入口（skill my-workflow，已載入，不必再用斜線命令）\n\n' + router,
+  '## references/index.yaml（已載入）\n\n```yaml\n' + index + '```',
+].join('\n\n');
 
 console.log(
   JSON.stringify({
-    hookSpecificOutput: {
-      hookEventName: 'SessionStart',
-      additionalContext: 'my-workflow plugin 的常駐規則如下，適用於本次對話的每個任務。\n\n' + rules,
-    },
+    hookSpecificOutput: { hookEventName: 'SessionStart', additionalContext: context },
   }),
 );

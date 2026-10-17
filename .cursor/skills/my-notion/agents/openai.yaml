@@ -1,4 +1,0 @@
-interface:
-  display_name: "my notion"
-  short_description: "在 Codex 與 ChatGPT Web 操作 RAG 友善的 Notion"
-  default_prompt: "使用 $my-notion 在 Codex 或 ChatGPT Web 讀取、設計、建立或維護符合人機協作與 RAG 原則的 Notion 資料。"

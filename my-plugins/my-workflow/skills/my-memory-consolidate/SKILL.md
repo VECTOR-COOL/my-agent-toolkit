@@ -5,6 +5,8 @@ description: 滾動整理 Mem0。寫入用 infer 讓平台擋完全相同的句�
 
 # 記憶整理
 
+規則與閥值見 [rules/consolidate.md](rules/consolidate.md)，使用本 skill 時先讀。
+
 寫入交給 Mem0 擋完全相同的句子。滾動加權只處理**這次查詢已經命中的那幾筆**。不整庫掃描，不為整理再搜一次，不逐筆補讀。身份、確認與後端讀寫以 [`my-memory`](../my-memory/SKILL.md) 與 [backends.md](../my-memory/references/backends.md) 為準。欄位以 [schemas.md](../my-memory/references/schemas.md) 為準。
 
 ```mermaid

@@ -1,4 +1,6 @@
-# 通用規則（rules/my-rules.md）由 plugin 的 SessionStart hook 常駐注入，不在索引內。記憶相關先載 my-memory。然後只讀 when 或 keywords 對得上的那一筆。不要一次全載。
+# 全域規則（rules/global.md）由 plugin 的 SessionStart hook 常駐注入，不在索引內。記憶相關先載 my-memory。然後只讀 when 或 keywords 對得上的那一筆。不要一次全載。
+# rules 區的檔案路徑相對於 plugin 根目錄；碰到 when 的情境才讀，沒碰到不讀。
+# 記憶規則在 skills/my-memory/rules/ 與 skills/my-memory-consolidate/rules/，載入該 skill 時一併讀。
 # 記憶：依客戶端只讀 my-memory/references/ 對應那一份。
 # version 與 pack.yaml、toolkit project.json 同一個號。
 # keywords 是使用者會說的詞，用來提高命中。不要把整段說明抄進來。
@@ -51,3 +53,29 @@ skills:
   - name: my-upgrade-plan
     when: 擬定軟體、框架或套件版本安全升級與備份計畫
     keywords: [升級, 版本, 避雷, 升級計畫, upgrade, 軟體升級, 升級評估, 套件更新]
+
+rules:
+  - name: git
+    file: rules/git.md
+    when: commit、push、branch、merge、rebase、發版、tag、解衝突
+    keywords: [commit, push, git, 分支, 合併, merge, rebase, 發版, release, tag, 衝突, force push]
+  - name: code-review
+    file: rules/code-review.md
+    when: 審查原始碼、變更檔案、Git Diff 或 PR
+    keywords: [review, code review, 審查, PR, diff, 程式碼審查]
+  - name: wrap-up
+    file: rules/wrap-up.md
+    when: 任務完成、審查通過、準備交付或驗收
+    keywords: [收尾, 驗收, 交付, 完成, 文件同步, E2E, 測試覆蓋]
+  - name: files-and-scripts
+    file: rules/files-and-scripts.md
+    when: 寫腳本、產生測試檔或臨時檔、編輯設定檔
+    keywords: [腳本, script, .mjs, 臨時檔, scripts/tmp, 設定檔, JSONC, 清理暫存]
+  - name: install
+    file: rules/install.md
+    when: 安裝套件、第三方 skill 或 rule
+    keywords: [安裝, install, npm, pip, brew, 套件, 第三方 skill, 授權]
+  - name: tools
+    file: rules/tools.md
+    when: 使用外部服務、App 或 MCP，或 MCP 連線失敗
+    keywords: [Composio, MCP, 外部服務, 連線失敗, 重新登入, Notion, Linear]

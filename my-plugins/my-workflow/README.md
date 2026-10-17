@@ -11,7 +11,6 @@ VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills 
 | Claude Code／Desktop Code 分頁（本機） | plugin | rules、skills、Composio MCP 皆有 |
 | Desktop 聊天／Cowork | Customize → Plugins → Add marketplace | 僅 skills、MCP；**不執行 hook，rules 不自動注入**（未驗證） |
 | Codex | plugin | 結構支援，**未驗證** |
-| Cursor／Cursor Cloud | 匯出腳本 | skills + rules |
 | ChatGPT | 手動貼規則、上傳 skill | 無 plugin 機制，無自動 rules、無 MCP |
 
 ## 安裝（手動）
@@ -38,17 +37,9 @@ enabled = true
 
 marketplace 在 [`.agents/plugins/marketplace.json`](../../.agents/plugins/marketplace.json)，適用於本 repo 內的專案。Codex 會要求信任 hooks。
 
-### Cursor（含 Cloud）
-
-```text
-node my-plugins/my-workflow/scripts/export-cursor-skills.mjs <目標專案> --force
-```
-
-寫入 `.cursor/skills/` 與 `.cursor/rules/my-rules.mdc`，再到目標專案 commit。
-
 ### ChatGPT
 
-把 [`rules/my-rules.md`](rules/my-rules.md) 貼到自訂指示，再上傳需要的 `skills/` 資料夾（先傳 `my-workflow`）。
+把 [`rules/global.md`](rules/global.md) 貼到自訂指示，再上傳需要的 `skills/` 資料夾（先傳 `my-workflow`）。
 
 ## 更新
 
@@ -56,7 +47,6 @@ node my-plugins/my-workflow/scripts/export-cursor-skills.mjs <目標專案> --fo
 |------|------|
 | Claude Code | `claude plugin marketplace update my-agent-toolkit` → `claude plugin update my-workflow@my-agent-toolkit` → 重開 |
 | Codex | 更新 repo 後重新啟用 |
-| Cursor | 重跑匯出腳本加 `--force`，再 commit |
 | ChatGPT | 重貼規則、重傳 skill |
 
 ## 內容
@@ -69,7 +59,17 @@ graph TD
   Index --> One["只載對上的一個 skill"]
 ```
 
-**常駐規則**：[`rules/my-rules.md`](rules/my-rules.md)（語言、可信度、安全、Git、Code Review、驗收、記憶時機、工具與失敗回報、腳本），由 SessionStart hook 在每次對話開始注入。
+**規則**：[`rules/global.md`](rules/global.md)（回覆、可信度、安全、品質）由 SessionStart hook 在每次對話開始注入，**連同入口 skill `my-workflow` 與 `references/index.yaml` 一併載入**，不需要斜線命令（hook 無法呼叫 Skill 工具，所以直接注入內容）。其餘規則碰到情境才讀：
+
+| 規則 | 情境 |
+|------|------|
+| [`git`](rules/git.md) | commit、push、merge、發版 |
+| [`code-review`](rules/code-review.md) | 審查程式碼或 PR |
+| [`wrap-up`](rules/wrap-up.md) | 任務收尾驗收 |
+| [`files-and-scripts`](rules/files-and-scripts.md) | 腳本、臨時檔、設定檔 |
+| [`install`](rules/install.md) | 安裝套件或第三方 skill |
+| [`tools`](rules/tools.md) | 外部服務、MCP、失敗回報 |
+| [`memory`](skills/my-memory/rules/memory.md)、[`consolidate`](skills/my-memory-consolidate/rules/consolidate.md) | 載入記憶 skill 時 |
 
 **Skills**：入口是 `my-workflow`，依 [`references/index.yaml`](references/index.yaml) 的 `when`／`keywords` 載入一個。
 

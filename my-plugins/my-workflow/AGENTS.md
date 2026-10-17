@@ -11,8 +11,8 @@
 
 **目標**
 
-1. **單一來源**：`my-plugins/my-workflow/` 是唯一 SSOT。內容只維護一份，Claude Code、Codex、Cursor 共用。
-2. **常駐規則是真 rules**：通用規則放 [`rules/my-rules.md`](rules/my-rules.md)，開新對話就生效，不靠 agent 臨時想到才載。
+1. **單一來源**：`my-plugins/my-workflow/` 是唯一 SSOT。內容只維護一份，Claude Code、Codex 共用。
+2. **常駐規則是真 rules**：全域規則放 [`rules/global.md`](rules/global.md)，開新對話就生效；其餘規則（`rules/*.md`、各 skill 的 `rules/`）在 `references/index.yaml` 的 `rules` 區登記 `when`／`keywords`，伺機載入。
 3. **Skills 按需載入**：入口 [`skills/my-workflow`](skills/my-workflow/SKILL.md) 讓 agent 依情境載入，其餘子 skill 只載對上的那一個。
 4. **Composio MCP 隨 plugin 提供**：用 OAuth 登入，連線設定寫在 plugin 內，repo 不放任何金鑰。
 5. **誠實標示驗證程度**：靜態看起來對 ≠ 已在該 app 跑過。沒實測的就標「未驗證」。
@@ -21,15 +21,12 @@
 
 ```mermaid
 graph TD
-  Rules["rules/my-rules.md"] --> Inject["scripts/inject-rules.mjs"]
+  Rules["rules/global.md"] --> Inject["scripts/inject-rules.mjs"]
   Inject --> Hook["hooks (SessionStart)"]
   Hook --> Claude["Claude Code"]
   Hook --> Codex["Codex"]
-  Rules --> Export["export-cursor-skills.mjs"]
   Skills["skills/*/SKILL.md"] --> Claude
   Skills --> Codex
-  Skills --> Export
-  Export --> Cursor[".cursor/rules 與 .cursor/skills"]
   Mcp[".mcp.json / mcp.json"] --> Claude
   Mcp --> Codex
 ```
@@ -40,19 +37,21 @@ graph TD
 | `plugin.json` | Codex 可攜 manifest；hooks 指向 `hooks/codex.json` |
 | `.mcp.json` / `mcp.json` | Composio MCP（Claude／Codex 各一份格式） |
 | `hooks/hooks.json` / `hooks/codex.json` | SessionStart 注入 rules（Claude 用 `${CLAUDE_PLUGIN_ROOT}`，Codex 用 `${PLUGIN_ROOT}`） |
-| `rules/my-rules.md` | 常駐規則全文（SSOT） |
+| `rules/global.md` | 全域規則，hook 常駐注入（SSOT） |
+| `rules/<name>.md` | 情境規則（git、code-review 等），伺機載入 |
+| `skills/<name>/rules/*.md` | 該 skill 專屬規則，載入 skill 時一併讀 |
 | `skills/<name>/SKILL.md` | 各 skill，`name` 與資料夾名一致，平鋪不巢狀 |
 | `references/index.yaml` | 入口路由索引（`when`、`keywords`） |
-| `scripts/` | `inject-rules.mjs`、`export-cursor-skills.mjs` |
+| `scripts/` | `inject-rules.mjs`（注入 rules + 入口 skill + 索引，相對路徑改為絕對路徑） |
 
-Claude Code plugin **無法提供 rules**，plugin 內的 `CLAUDE.md` 不會載入，所以改用 SessionStart hook 注入 `additionalContext`。
+Claude Code plugin **無法提供 rules**，plugin 內的 `CLAUDE.md` 不會載入，所以改用 SessionStart hook 注入 `additionalContext`。hook 不能呼叫 Skill 工具，為了「開對話就載入入口、不用斜線命令」，同一個腳本也注入入口 `SKILL.md` 與 `index.yaml`（全域規則拆小後約 4,500 字元，每次對話固定成本）。改入口或索引後不用另外同步，腳本每次直接讀檔。
 
 ## 規則
 
-- 只改 `my-plugins/my-workflow/`。`.cursor/` 由匯出腳本產生，**勿手改**。
+- 只改 `my-plugins/my-workflow/`。
 - 新 skill：建立 `skills/<name>/SKILL.md`（`name` 與資料夾名一致），在 `references/index.yaml` 補 `when`、`keywords`，並更新 README 的元件表。
 - 版本寫 `pack.yaml`，同步上面列的其他四處。各 `SKILL.md` 頂層不手寫 `version`。
-- 常駐規則寫成事實陳述（hook 注入的內容，官方建議不用命令式）；改規則只改 `rules/my-rules.md`。
+- 常駐規則寫成事實陳述（hook 注入的內容，官方建議不用命令式）；改規則只改對應的規則檔；新增規則要在 `index.yaml` 的 `rules` 區補 `when`、`keywords`。
 - skill 之間用相對連結（`../my-memory/SKILL.md`）。`rules/`、`references/` 在 plugin 根目錄，從 `skills/<name>/` 用 `../../` 指到。
 - 金鑰、token、`.env` 不進 repo。MCP 優先用 OAuth；必須用金鑰時走 `userConfig`（`sensitive: true`）或使用者端設定。
 - 專案腳本用 `.mjs`，要有 `--help`、非零失敗碼，預設不覆寫既有檔。
@@ -65,8 +64,7 @@ Claude Code plugin **無法提供 rules**，plugin 內的 `CLAUDE.md` 不會載�
 |------|-------|--------|-----|----------|
 | Claude Code | SessionStart hook | plugin | `.mcp.json` | 靜態檢查；實際安裝與 hook 注入**未驗證** |
 | Codex | SessionStart hook（`hooks/codex.json`） | plugin | `mcp.json` | **未驗證**；hook 輸出格式、OAuth（`dcr`）登入需實機確認 |
-| Cursor（含 Cloud） | `.cursor/rules/my-rules.mdc`（匯出） | `.cursor/skills`（匯出） | 使用者自設 | 匯出腳本已本機跑過 |
-| ChatGPT 網頁 | 不支援 hook；手動貼 `rules/my-rules.md` 到自訂指示 | 上傳 skill 資料夾 | — | 未驗證 |
+| ChatGPT 網頁 | 不支援 hook；手動貼 `rules/global.md` 到自訂指示 | 上傳 skill 資料夾 | — | 未驗證 |
 
 ## 驗證
 
@@ -74,17 +72,10 @@ Claude Code plugin **無法提供 rules**，plugin 內的 `CLAUDE.md` 不會載�
 
 ```text
 node my-plugins/my-workflow/scripts/inject-rules.mjs | python3 -m json.tool
-node my-plugins/my-workflow/scripts/export-cursor-skills.mjs <暫存目錄> --dry-run
 claude plugin validate ./my-plugins/my-workflow
 ```
 
 另需確認：所有 `.json` 合法、每個 `SKILL.md` 的 `name` 與資料夾一致、`index.yaml` 的 skill 名都存在、markdown 相對連結都指得到檔案。
-
-匯出到本 repo 給 Cursor Cloud 用：
-
-```text
-node my-plugins/my-workflow/scripts/export-cursor-skills.mjs . --force
-```
 
 ## 記憶
 
@@ -95,4 +86,4 @@ node my-plugins/my-workflow/scripts/export-cursor-skills.mjs . --force
 | Grok Bot（xAI App） | `grok-bot.md` |
 | ChatGPT 網頁與 App | `chatgpt.md` |
 | Codex | `codex.md` |
-| Cursor IDE 與 Cloud | `cursor.md` |
+| Cursor IDE 與 Cloud | `cursor.md`（記憶身份規則，非相容層） |

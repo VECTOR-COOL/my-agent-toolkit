@@ -1,4 +1,0 @@
-interface:
-  display_name: "my-subagent"
-  short_description: "主線調度平行 subagent 並負責驗收"
-  default_prompt: "使用 $my-subagent 以主線調度平行任務並驗收結果。"

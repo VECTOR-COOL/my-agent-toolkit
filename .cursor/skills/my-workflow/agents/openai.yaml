@@ -1,4 +1,0 @@
-interface:
-  display_name: "my-workflow"
-  short_description: "先載記憶，再依索引選 skill"
-  default_prompt: "使用 $my-workflow：先載 my-memory，再讀索引，只載這次對上的 skill。"
