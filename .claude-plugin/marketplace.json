@@ -1,0 +1,14 @@
+{
+  "name": "my-agent-toolkit",
+  "description": "VECTOR LTD 私人 plugins",
+  "owner": {
+    "name": "VECTOR LTD"
+  },
+  "plugins": [
+    {
+      "name": "my-workflow",
+      "source": "./my-plugins/my-workflow",
+      "description": "VECTOR LTD 私人工作流：常駐規則、記憶、審查、PRD、文件與提交等 skills，附 Composio MCP。"
+    }
+  ]
+}

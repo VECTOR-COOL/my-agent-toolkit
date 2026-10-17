@@ -1,4 +1,0 @@
-interface:
-  display_name: "my-rules"
-  short_description: "每個任務都適用的通用規則"
-  default_prompt: "使用 $my-rules 套用語言、Git、安全、Code Review、驗收收尾與腳本規則。"
