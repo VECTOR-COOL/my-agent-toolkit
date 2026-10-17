@@ -16,7 +16,7 @@ VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills 
 
 ## 安裝
 
-來源：https://github.com/VECTOR-COOL/my-agent-toolkit（私有，`main` 分支）。本機需能讀取該 repo（`gh auth login` 或 SSH key）。
+來源：[VECTOR-COOL/my-agent-toolkit](https://github.com/VECTOR-COOL/my-agent-toolkit)（私有，`main` 分支）。本機需能讀取該 repo（`gh auth login` 或 SSH key）。
 
 ### Claude Code ／ Claude Desktop
 
