@@ -1,0 +1,4 @@
+interface:
+  display_name: "example-hello"
+  short_description: "確認 example-plugin 已載入"
+  default_prompt: "使用 $example-hello 確認 example-plugin 是否載入。"

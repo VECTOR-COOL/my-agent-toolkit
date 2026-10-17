@@ -1,0 +1,11 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "example-plugin",
+  "version": "0.1.0",
+  "description": "範例 plugin 骨架：skill、常駐 rules、SessionStart hook，供測試多 plugin marketplace。",
+  "extensions": {
+    "com.openai": {
+      "hooks": ["./hooks/codex.json"]
+    }
+  }
+}
