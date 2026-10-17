@@ -1,6 +1,6 @@
 ---
 name: my-workflow
-description: 私人工作流的路由入口。新對話開始、任務不明確、不確定該用哪個 skill、或使用者提到工作習慣、記憶、審查、PRD、提交、文件、Notion 等工作流時載入。涉及記住／回想／偏好／決策先載 my-memory；其餘依 references/index.yaml 的 when 或 keywords 只載一個子 skill。通用規則已由 plugin 的 SessionStart hook 常駐注入，不必再載。維護準則見 AGENTS.md。
+description: 私人工作流的路由入口。新對話開始、任務不明確、不確定該用哪個 skill、或使用者提到工作習慣、記憶、審查、PRD、提交、文件、Notion 等工作流時載入。涉及記住／回想／偏好／決策，或問自己與公司的既有資訊（如公司地址）先載 my-memory；其餘依 references/index.yaml 的 when 或 keywords 只載一個子 skill。通用規則已由 plugin 的 SessionStart hook 常駐注入，不必再載。維護準則見 AGENTS.md。
 ---
 
 # 工作流入口
@@ -30,7 +30,7 @@ graph TD
 路徑相對於這份 `SKILL.md`；`rules/`、`references/` 在 plugin 根目錄。
 
 1. **全域規則** — [`rules/global.md`](../../rules/global.md)，plugin 已注入；沒有注入的客戶端（見 README）先讀這份。
-2. **[`../my-memory/SKILL.md`](../my-memory/SKILL.md)** — 僅在「記住、回想、偏好、決策、歷史脈絡」時，且優先於其他子 skill。
+2. **[`../my-memory/SKILL.md`](../my-memory/SKILL.md)** — 在「記住、回想、偏好、決策、歷史脈絡」，或使用者問自己、公司、團隊的既有資訊（公司地址、聯絡方式、偏好、先前決定）而對話裡沒有答案時，且優先於其他子 skill。
 3. **[`references/index.yaml`](../../references/index.yaml)** — 用 `when` 或 `keywords` 對上**一筆**後，只載 `../<name>/SKILL.md`。
 4. **其他規則** — `index.yaml` 的 `rules` 區：任務碰到 `when` 的情境（如 commit、Code Review、收尾、寫腳本、安裝套件、用 MCP）才讀對應檔，可與一個 skill 並行；沒碰到不讀。記憶規則在 `my-memory`、`my-memory-consolidate` 的 `rules/`，載入該 skill 時一併讀。
 5. 查到 Mem0、或要升長期、或要遺忘時，改載 `../my-memory-consolidate/SKILL.md`。寫入不另搜；去重、加權與遺忘以那份的查詢時機為準。

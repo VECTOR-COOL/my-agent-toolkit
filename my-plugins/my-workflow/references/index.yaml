@@ -5,7 +5,7 @@
 # version 與 pack.yaml、toolkit project.json 同一個號。
 # keywords 是使用者會說的詞，用來提高命中。不要把整段說明抄進來。
 
-version: 1.7.0
+version: 1.7.1
 
 skills:
   - name: my-workflow
@@ -15,8 +15,8 @@ skills:
     when: 檢查或更新本套件已安裝的 skills
     keywords: [更新, 檢查更新, gh skill, 套件版本, update skills, 升級技能]
   - name: my-memory
-    when: 記住／回想偏好、決策或查詢歷史脈絡
-    keywords: [記住, 回想, 偏好, 決策, 記憶, 永久記憶, Mem0, 歷史紀錄, 個人習慣, 查詢記憶, 記一下]
+    when: 記住／回想偏好、決策或查詢歷史脈絡；使用者問自己、公司、團隊的既有資訊而對話裡沒有答案時
+    keywords: [記住, 回想, 偏好, 決策, 記憶, 永久記憶, Mem0, 歷史紀錄, 個人習慣, 查詢記憶, 記一下, 我的, 公司地址, 公司資料, 聯絡方式, 電話, 統編, 你記得, 之前說過, 先前決定]
   - name: my-memory-consolidate
     when: 查到 Mem0 時用該次命中去重、升中期並加權；權重達到 3 升長期；低權重且存放滿 30 天必須刪除。寫入不另搜
     keywords: [記憶整理, 整理記憶, 升長期, 中期, 去重, 合併, 閥值, 權重, 遺忘, 刪短期, consolidate]

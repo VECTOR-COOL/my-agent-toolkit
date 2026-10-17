@@ -1,6 +1,6 @@
 ---
 name: my-memory
-description: 先判斷短、中、永久。查記憶先查 Notion 長期記憶，不夠再查 Mem0 一次。查到的命中依 my-memory-consolidate 去重、升中期並加權；權重到 3 升長期。低權重且存放滿 30 天必須刪除該筆 Mem0。寫入用 infer，不為去重另搜。私人與全域不帶 user；一般 Mem0 只有 Grok Bot 分 agent 與 user。ChatGPT 與 Cursor 各用一個共用 user_id。升長期與指定改刪須確認，禁止憑證。
+description: 先判斷短、中、永久。查記憶先查 Notion 長期記憶，不夠再查 Mem0 一次。查到的命中依 my-memory-consolidate 去重、升中期並加權；權重到 3 升長期。低權重且存放滿 30 天必須刪除該筆 Mem0。寫入用 infer，不為去重另搜。私人與全域不帶 user；一般 Mem0 只有 Grok Bot 分 agent 與 user。ChatGPT 與 Cursor 各用一個共用 user_id。升長期與指定改刪須確認，禁止憑證。使用者問自己、公司、團隊的既有資訊（公司地址、聯絡方式、偏好、先前決定）而對話裡沒有答案時，也先載入本 skill 查記憶。
 ---
 
 # 外部記憶管理
