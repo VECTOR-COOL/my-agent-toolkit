@@ -43,9 +43,9 @@ graph TD
 | `rules/my-rules.md` | 常駐規則全文（SSOT） |
 | `skills/<name>/SKILL.md` | 各 skill，`name` 與資料夾名一致，平鋪不巢狀 |
 | `references/index.yaml` | 入口路由索引（`when`、`keywords`） |
-| `scripts/` | `inject-rules.mjs`、`export-cursor-skills.mjs` |
+| `scripts/` | `inject-rules.mjs`（注入 rules + 入口 skill + 索引，相對路徑改為絕對路徑）、`export-cursor-skills.mjs` |
 
-Claude Code plugin **無法提供 rules**，plugin 內的 `CLAUDE.md` 不會載入，所以改用 SessionStart hook 注入 `additionalContext`。
+Claude Code plugin **無法提供 rules**，plugin 內的 `CLAUDE.md` 不會載入，所以改用 SessionStart hook 注入 `additionalContext`。hook 不能呼叫 Skill 工具，為了「開對話就載入入口、不用斜線命令」，同一個腳本也注入入口 `SKILL.md` 與 `index.yaml`（約 9,000 字元，每次對話固定成本）。改入口或索引後不用另外同步，腳本每次直接讀檔。
 
 ## 規則
 
