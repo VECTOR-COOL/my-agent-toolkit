@@ -20,9 +20,18 @@ my-workflow 的常駐規則，每個任務都套用，開對話時由 hook 注�
 - 功能變更要有自動化測試並同步規格，未經驗證不算完成。
 - 資訊不足、有疑問或不符專案慣例時暫停並詢問，不自行假設。
 
+## 記憶（查詢與寫入時機）
+
+記憶是常駐行為，不是可選項。細節規則見 [`my-memory`](../skills/my-memory/rules/memory.md) 與 [`my-memory-consolidate`](../skills/my-memory-consolidate/rules/consolidate.md)，用到記憶時必讀。
+
+- **查**：使用者要求回想，或這一步依賴對話外的舊偏好、決策，或問到本人、公司、團隊的既有資訊（地址、聯絡方式、統編、偏好、先前決定）而對話與專案檔案沒有答案時，先載入 `my-memory` 查。順序：Notion 長期記憶，不夠再查 Mem0 一次；查不到才說不知道，不直接回答「不知道」或請使用者重新提供。自己答得了就不查，不要每則訊息搜。
+- **整理**：查到 Mem0 的那一次命中，依 `my-memory-consolidate` 去重、加權；低權重且滿 30 天的當場刪除。
+- **寫**：使用者說「記住」或指定層級才寫，並先說寫進哪層；不伺機寫。升長期與使用者指定的改或刪，先顯示並取得同意。禁存完整對話、閒聊、推測，以及密碼、token、金鑰、付款資料。
+- 連不上記憶後端時，依 `rules/tools.md` 回報，不假裝查過。
+
 ## 載入其他規則與 skill
 
-- 任務碰到下列情境時，先讀對應規則再動手，沒碰到就不讀：Git 操作（`rules/git.md`）、Code Review（`rules/code-review.md`）、任務收尾（`rules/wrap-up.md`）、寫腳本／臨時檔／設定檔（`rules/files-and-scripts.md`）、安裝套件或第三方 skill（`rules/install.md`）、用外部服務或 MCP（`rules/tools.md`）。記憶規則在 `my-memory`、`my-memory-consolidate` 的 `rules/`，載入該 skill 時一併讀。
-- skill 由入口 `my-workflow` 依索引載入，只載 `when` 或 `keywords` 對上的那一個。記住、回想、偏好、決策、歷史脈絡優先讀 `my-memory`。介面任務才載 `my-ui-ux`，有 `DESIGN.md` 就沿用。
+- 任務碰到下列情境時，先讀對應規則再動手，沒碰到就不讀：Git 操作（`rules/git.md`）、Code Review（`rules/code-review.md`）、任務收尾（`rules/wrap-up.md`）、寫腳本／臨時檔／設定檔（`rules/files-and-scripts.md`）、安裝套件或第三方 skill（`rules/install.md`）、用外部服務或 MCP（`rules/tools.md`）。
+- skill 由入口 `my-workflow` 依索引載入，只載 `when` 或 `keywords` 對上的那一個。介面任務才載 `my-ui-ux`，有 `DESIGN.md` 就沿用。
 - 已讀過的檔不重複讀；超過約 200 行的先讀摘要或索引；啟動時不讀完整套件。README 給人看，除非任務需要不主動讀。
 - 與第三方 plugin 規則衝突時，以專案根 `AGENTS.md` 為準。
