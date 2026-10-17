@@ -2,20 +2,9 @@
   "name": "my-workflow",
   "version": "1.6.0",
   "description": "VECTOR LTD 私人工作流：常駐規則、記憶、審查、PRD、文件與提交等 skills，附 Composio MCP。",
-  "author": { "name": "VECTOR LTD" },
+  "author": {
+    "name": "VECTOR LTD"
+  },
   "homepage": "https://github.com/VECTOR-COOL/my-agent-toolkit",
-  "repository": "https://github.com/VECTOR-COOL/my-agent-toolkit",
-  "userConfig": {
-    "composio_mcp_url": {
-      "type": "string",
-      "title": "Composio MCP URL",
-      "description": "Composio MCP 端點，例如 https://connect.composio.dev/mcp 或你的個人 MCP URL"
-    },
-    "composio_api_key": {
-      "type": "string",
-      "title": "Composio API key",
-      "description": "送在 x-api-key header。只存在本機安全儲存，不會進 repo",
-      "sensitive": true
-    }
-  }
+  "repository": "https://github.com/VECTOR-COOL/my-agent-toolkit"
 }

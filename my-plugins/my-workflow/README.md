@@ -15,7 +15,7 @@ VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills 
 /plugin install my-workflow@my-agent-toolkit
 ```
 
-安裝時會問兩個設定：**Composio MCP URL** 與 **Composio API key**（key 存在本機安全儲存，不進 repo）。不用 Composio 可留空或之後停用該 MCP。
+Composio MCP 用 OAuth 登入，不需要 API key：安裝後在 Claude Code 輸入 `/mcp`，選 `composio` 登入授權即可。
 
 更新：`/plugin marketplace update my-agent-toolkit`，再重新安裝或更新 plugin。
 
@@ -28,7 +28,7 @@ VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills 
 enabled = true
 ```
 
-repo 內 marketplace 在 [`.agents/plugins/marketplace.json`](../../.agents/plugins/marketplace.json)。Codex 會要你檢視並信任 hooks 才會執行。Composio 的 API key 在連線時依 `x-api-key` 設定提供。
+repo 內 marketplace 在 [`.agents/plugins/marketplace.json`](../../.agents/plugins/marketplace.json)。Codex 會要你檢視並信任 hooks 才會執行。Composio MCP 用 OAuth（動態註冊）：首次使用時 Codex 會開瀏覽器請你登入授權。
 
 ### Cursor（含 Cursor Cloud）
 
@@ -77,13 +77,13 @@ graph TD
 
 完整關鍵字見 [`references/index.yaml`](references/index.yaml)。
 
-**Composio MCP**：[`.mcp.json`](.mcp.json)（Claude Code）與 [`mcp.json`](mcp.json)（Codex）。端點與 header 依 [Composio 文件](https://docs.composio.dev/docs/mcp-overview)：URL 由 Composio 產生，API key 放 `x-api-key`。
+**Composio MCP**：[`.mcp.json`](.mcp.json)（Claude Code）與 [`mcp.json`](mcp.json)（Codex）。端點是 `https://connect.composio.dev/mcp`，兩邊都用 OAuth 登入（Composio 公開 OAuth metadata，含動態註冊端點與 PKCE），repo 內沒有任何金鑰。若改用個人專屬 MCP URL 與 API key，見 [Composio 文件](https://docs.composio.dev/docs/mcp-overview)，API key 放 `x-api-key`。
 
 ## 已知限制（未驗證項目）
 
 此 plugin 的結構與 JSON 已在本機靜態檢查，下列**尚未在實際 app 跑過**：
 
-- Claude Code 實際安裝、`userConfig` 提示、SessionStart hook 注入
-- Codex 載入 plugin、hook 信任流程、`custom_header` 驗證、hook 輸出格式
+- Claude Code 實際安裝、SessionStart hook 注入
+- Codex 載入 plugin、hook 信任流程、OAuth（`dcr`）登入、hook 輸出格式
 - 私有 repo 經 marketplace 安裝
-- Composio MCP 實際連線
+- Composio MCP 經 plugin 實際 OAuth 登入並呼叫工具（端點的 OAuth metadata 已用 curl 確認存在）

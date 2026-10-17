@@ -6,7 +6,7 @@
       "url": "https://connect.composio.dev/mcp",
       "extensions": {
         "com.openai": {
-          "auth": { "type": "api_key", "headerScheme": "custom_header", "headerName": "x-api-key" }
+          "auth": { "type": "oauth", "client": { "mode": "dcr" } }
         }
       }
     }
