@@ -9,6 +9,8 @@ VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills 
 | 你用的 | 做法 | 支援程度 |
 |--------|------|----------|
 | Claude Code | 下面「請 agent 幫我裝」或手動兩行指令 | 完整：rules、skills、Composio MCP |
+| Claude Desktop Code 分頁（本機） | 與 Claude Code 共用設定，見下 | 完整 |
+| Claude Desktop 聊天／Cowork | Customize → Plugins → Add marketplace | 僅 skills 與 MCP，**不執行 hook，rules 不會自動注入**（未驗證） |
 | Codex | 啟用 plugin（見下） | 完整，但**未實機驗證** |
 | Cursor／Cursor Cloud | 匯出腳本 | skills + rules |
 | ChatGPT 網頁／App | 手動貼規則、上傳 skill | **沒有 plugin 機制**：無自動注入 rules、無 MCP 打包，只能手動 |
@@ -31,6 +33,15 @@ VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills 
 ```
 
 這幾個 `claude plugin` 子命令（`marketplace add|update`、`install`、`update`、`list`）已確認存在於 CLI。plugin 裝完後需重開 Claude Code 才會載入。
+
+### Claude Desktop
+
+Code 分頁與終端機的 Claude Code **共用同一份設定**，在終端機裝一次，Desktop 就有：
+
+1. 終端機執行下方「Claude Code 手動」的兩行指令。
+2. Desktop 的 Code 分頁：**+ → Plugins → Manage plugins** 確認 `my-workflow` 已啟用；輸入 `/` 可看到其 skills。
+
+雲端工作階段與 WSL 不載入本機 plugin。聊天／Cowork 的 plugin 由 claude.ai 帳號管理（CLI 裝的不會同步），私有 repo 需先連結 GitHub 並讓 Claude GitHub App 能讀取。
 
 ### Claude Code 手動
 
