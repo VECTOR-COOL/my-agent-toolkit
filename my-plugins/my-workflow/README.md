@@ -13,16 +13,16 @@ VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills 
 | Cursor／Cursor Cloud | 匯出腳本 | skills + rules |
 | ChatGPT 網頁／App | 手動貼規則、上傳 skill | **沒有 plugin 機制**：無自動注入 rules、無 MCP 打包，只能手動 |
 
-私有 repo：本機需先能讀取 `VECTOR-COOL/my-agent-toolkit`（`gh auth login` 或 SSH key）。
+來源：https://github.com/VECTOR-COOL/my-agent-toolkit（私有，預設分支 `main`）。本機需先能讀取這個 repo（`gh auth login` 或 SSH key）。plugin 與兩個 marketplace 檔（`.claude-plugin/marketplace.json`、`.agents/plugins/marketplace.json`）必須在 `main` 上，安裝才會抓到。
 
 ### 請 agent 幫我裝（貼給 Claude Code）
 
 ```text
 請幫我安裝／更新我的私人 plugin my-workflow。
-來源 repo：VECTOR-COOL/my-agent-toolkit（私有，用我本機的 git 憑證）。
+來源 repo：https://github.com/VECTOR-COOL/my-agent-toolkit（私有，main 分支，用我本機的 git 憑證）。
 
 步驟：
-1. 執行 claude plugin marketplace add VECTOR-COOL/my-agent-toolkit（已加過就改跑 claude plugin marketplace update my-agent-toolkit）。
+1. 執行 claude plugin marketplace add https://github.com/VECTOR-COOL/my-agent-toolkit（已加過就改跑 claude plugin marketplace update my-agent-toolkit）。
 2. 執行 claude plugin install my-workflow@my-agent-toolkit（已安裝就改跑 claude plugin update my-workflow@my-agent-toolkit）。
 3. 執行 claude plugin list，回報 my-workflow 的版本與是否啟用。
 4. 提醒我輸入 /mcp 登入 composio。
@@ -35,7 +35,7 @@ VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills 
 ### Claude Code 手動
 
 ```text
-/plugin marketplace add VECTOR-COOL/my-agent-toolkit
+/plugin marketplace add https://github.com/VECTOR-COOL/my-agent-toolkit
 /plugin install my-workflow@my-agent-toolkit
 ```
 
