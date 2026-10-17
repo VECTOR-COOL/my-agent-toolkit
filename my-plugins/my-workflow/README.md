@@ -14,32 +14,18 @@ VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills 
 | Cursor／Cursor Cloud | 匯出腳本 | skills + rules |
 | ChatGPT | 手動貼規則、上傳 skill | 無 plugin 機制，無自動 rules、無 MCP |
 
-## 安裝
+## 安裝（手動）
 
 來源：[VECTOR-COOL/my-agent-toolkit](https://github.com/VECTOR-COOL/my-agent-toolkit)（私有，`main` 分支）。本機需能讀取該 repo（`gh auth login` 或 SSH key）。
 
-### Claude Code ／ Claude Desktop
+### Claude Code ／ Desktop Code 分頁
 
 ```text
 /plugin marketplace add https://github.com/VECTOR-COOL/my-agent-toolkit
 /plugin install my-workflow@my-agent-toolkit
 ```
 
-- 終端機版：`claude plugin marketplace add <網址>`、`claude plugin install my-workflow@my-agent-toolkit`。
-- Desktop Code 分頁與終端機**共用設定**：終端機裝一次即可，在 **+ → Plugins → Manage plugins** 確認，輸入 `/` 看 skills。雲端工作階段與 WSL 不載入本機 plugin。
-- 裝完重開 Claude Code，輸入 `/mcp` 登入 `composio`（OAuth，不需 API key）。
-- 聊天／Cowork 的 plugin 由 claude.ai 帳號管理（CLI 裝的不同步），私有 repo 需連結 GitHub 並讓 Claude GitHub App 可讀取。
-
-**請 agent 代裝**（貼給 Claude Code）：
-
-```text
-請安裝／更新我的私人 plugin my-workflow，來源 repo 網址是 https://github.com/VECTOR-COOL/my-agent-toolkit ，私有，main 分支，用我本機 git 憑證。
-1. claude plugin marketplace add <網址>（已加過改 claude plugin marketplace update my-agent-toolkit）
-2. claude plugin install my-workflow@my-agent-toolkit（已安裝改 claude plugin update my-workflow@my-agent-toolkit）
-3. claude plugin list，回報版本與是否啟用
-4. 提醒我輸入 /mcp 登入 composio
-不要逐一安裝子 skill，不要複製到家目錄，不要改來源 repo。失敗就如實回報。
-```
+裝完重開，輸入 `/mcp` 登入 `composio`（OAuth）。Desktop 與終端機共用設定，裝一次即可，到 **+ → Plugins → Manage plugins** 確認。
 
 ### Codex
 
@@ -50,7 +36,7 @@ VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills 
 enabled = true
 ```
 
-marketplace 在 [`.agents/plugins/marketplace.json`](../../.agents/plugins/marketplace.json)，此設定適用於本 repo 內的專案；其他專案需先加入該 marketplace（做法未驗證）。Codex 會要求檢視並信任 hooks；Composio 首次使用會開瀏覽器 OAuth。
+marketplace 在 [`.agents/plugins/marketplace.json`](../../.agents/plugins/marketplace.json)，適用於本 repo 內的專案。Codex 會要求信任 hooks。
 
 ### Cursor（含 Cloud）
 
@@ -58,9 +44,9 @@ marketplace 在 [`.agents/plugins/marketplace.json`](../../.agents/plugins/marke
 node my-plugins/my-workflow/scripts/export-cursor-skills.mjs <目標專案> --force
 ```
 
-寫入 `<目標專案>/.cursor/skills/` 與 `.cursor/rules/my-rules.mdc`，再到目標專案 commit。先加 `--dry-run` 可預覽。
+寫入 `.cursor/skills/` 與 `.cursor/rules/my-rules.mdc`，再到目標專案 commit。
 
-### ChatGPT 與無 hook 的客戶端
+### ChatGPT
 
 把 [`rules/my-rules.md`](rules/my-rules.md) 貼到自訂指示，再上傳需要的 `skills/` 資料夾（先傳 `my-workflow`）。
 
@@ -69,11 +55,9 @@ node my-plugins/my-workflow/scripts/export-cursor-skills.mjs <目標專案> --fo
 | 環境 | 做法 |
 |------|------|
 | Claude Code | `claude plugin marketplace update my-agent-toolkit` → `claude plugin update my-workflow@my-agent-toolkit` → 重開 |
-| Codex | 更新 repo 後重新啟用；hooks 有變動需重新信任 |
+| Codex | 更新 repo 後重新啟用 |
 | Cursor | 重跑匯出腳本加 `--force`，再 commit |
 | ChatGPT | 重貼規則、重傳 skill |
-
-也可對 agent 說「請更新 my-workflow」，會載入 `my-skill-update`。
 
 ## 內容
 
