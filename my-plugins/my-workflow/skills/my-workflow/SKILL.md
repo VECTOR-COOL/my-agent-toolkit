@@ -49,8 +49,6 @@ graph TD
 
 - 不要一次載入 index 裡全部 skill。
 - 不要在入口重寫 rules 或 `my-memory` 的細節。
-- 不要改 `.cursor/skills/`（本 toolkit 由 [`scripts/export-cursor-skills.mjs`](../../scripts/export-cursor-skills.mjs) 匯出）；改 SSOT 在 `my-plugins/my-workflow/`。
-- Cursor 斜線指令：`/my-workflow`（skill 名稱，不是子目錄名）。
 
 ## 改這個套件
 

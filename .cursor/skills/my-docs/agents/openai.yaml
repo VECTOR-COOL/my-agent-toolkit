@@ -1,4 +1,0 @@
-interface:
-  display_name: "my-docs"
-  short_description: "建立精簡技術文件並確保 AGENTS.md／README 齊備"
-  default_prompt: "使用 $my-docs 補齊本專案技術文件、規格與 AGENTS.md。"

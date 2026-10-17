@@ -11,7 +11,6 @@ VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills 
 | Claude Code／Desktop Code 分頁（本機） | plugin | rules、skills、Composio MCP 皆有 |
 | Desktop 聊天／Cowork | Customize → Plugins → Add marketplace | 僅 skills、MCP；**不執行 hook，rules 不自動注入**（未驗證） |
 | Codex | plugin | 結構支援，**未驗證** |
-| Cursor／Cursor Cloud | 匯出腳本 | skills + rules |
 | ChatGPT | 手動貼規則、上傳 skill | 無 plugin 機制，無自動 rules、無 MCP |
 
 ## 安裝（手動）
@@ -38,14 +37,6 @@ enabled = true
 
 marketplace 在 [`.agents/plugins/marketplace.json`](../../.agents/plugins/marketplace.json)，適用於本 repo 內的專案。Codex 會要求信任 hooks。
 
-### Cursor（含 Cloud）
-
-```text
-node my-plugins/my-workflow/scripts/export-cursor-skills.mjs <目標專案> --force
-```
-
-寫入 `.cursor/skills/` 與 `.cursor/rules/my-rules.mdc`，再到目標專案 commit。
-
 ### ChatGPT
 
 把 [`rules/my-rules.md`](rules/my-rules.md) 貼到自訂指示，再上傳需要的 `skills/` 資料夾（先傳 `my-workflow`）。
@@ -56,7 +47,6 @@ node my-plugins/my-workflow/scripts/export-cursor-skills.mjs <目標專案> --fo
 |------|------|
 | Claude Code | `claude plugin marketplace update my-agent-toolkit` → `claude plugin update my-workflow@my-agent-toolkit` → 重開 |
 | Codex | 更新 repo 後重新啟用 |
-| Cursor | 重跑匯出腳本加 `--force`，再 commit |
 | ChatGPT | 重貼規則、重傳 skill |
 
 ## 內容

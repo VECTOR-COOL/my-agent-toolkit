@@ -1,4 +1,0 @@
-interface:
-  display_name: "外部記憶管理"
-  short_description: "Notion 知識庫、Notion Memory 與 Mem0 的分流讀寫"
-  default_prompt: "使用 $my-memory 依情境查詢或寫入 Notion 知識庫、Notion Memory 或 Mem0，並遵守確認與去重規則。"

@@ -23,7 +23,7 @@
 
 以 [`my-plugins/my-workflow`](./my-plugins/my-workflow/) 為準。新的 workflow skill 放 `my-plugins/my-workflow/skills/`。
 
-`my-plugins/my-workflow` 是 Claude Code + Codex plugin（含常駐 rules 與 Composio MCP），marketplace 在 `.claude-plugin/` 與 `.agents/plugins/`。`.cursor/` 由脚本匯出，供 Cursor Cloud 使用，勿手改。安裝與更新見 [`my-plugins/my-workflow/README.md`](./my-plugins/my-workflow/README.md)。
+`my-plugins/my-workflow` 是 Claude Code + Codex plugin（含常駐 rules 與 Composio MCP），marketplace 在 `.claude-plugin/` 與 `.agents/plugins/`。安裝與更新見 [`my-plugins/my-workflow/README.md`](./my-plugins/my-workflow/README.md)。
 
 | 技能 | 說明 | 納入版本 |
 |------|------|----------|
