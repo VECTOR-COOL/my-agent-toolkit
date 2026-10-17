@@ -1,0 +1,7 @@
+{
+  "name": "example-plugin",
+  "version": "0.1.0",
+  "description": "範例 plugin 骨架：skill、常駐 rules、SessionStart hook，供測試多 plugin marketplace。",
+  "author": { "name": "VECTOR LTD" },
+  "repository": "https://github.com/VECTOR-COOL/my-agent-toolkit"
+}
