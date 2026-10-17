@@ -20,7 +20,7 @@ Thumbs.db
 !.vscode/extensions.json
 .cursor/plans/
 AGENTS.md
-!my-skills/my-workflow/AGENTS.md
+!my-plugins/my-workflow/AGENTS.md
 
 # Logs & temp
 *.log

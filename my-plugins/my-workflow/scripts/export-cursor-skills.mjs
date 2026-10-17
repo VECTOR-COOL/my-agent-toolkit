@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -12,6 +12,7 @@ function usage() {
     '  node scripts/export-cursor-skills.mjs <target-repo> [--dry-run] [--force]',
     '',
     'Copy skills into <target-repo>/.cursor/skills/<skill-name>/',
+    'and rules/my-rules.md into <target-repo>/.cursor/rules/my-rules.mdc',
     '',
     'Options:',
     '  --dry-run   Print the file plan without writing',
@@ -19,7 +20,7 @@ function usage() {
     '  --help      Show this help',
     '',
     'Default writes new files only. Existing paths are skipped unless --force.',
-    'Does not copy rules or README. Paths must stay inside the target repo.',
+    'Does not copy README. Paths must stay inside the target repo.',
   ].join('\n');
 }
 
@@ -49,29 +50,32 @@ function inside(root, candidate) {
 
 function collectPlan(targetRoot) {
   const plan = [];
-  const entryParts = ['SKILL.md', 'references', 'agents']
-    .map((name) => ({
-      from: path.join(packRoot, name),
-      toName: name,
-    }))
-    .filter((part) => existsSync(part.from));
-  if (entryParts.some((part) => part.toName === 'SKILL.md')) {
-    plan.push({
-      kind: 'entry',
-      to: path.join(targetRoot, '.cursor', 'skills', 'my-workflow'),
-      parts: entryParts,
-    });
-  }
   const skillsRoot = path.join(packRoot, 'skills');
-  if (!existsSync(skillsRoot)) return plan;
-  for (const entry of readdirSync(skillsRoot, { withFileTypes: true })) {
-    if (!entry.isDirectory() || entry.name === 'my-workflow') continue;
-    const skillFile = path.join(skillsRoot, entry.name, 'SKILL.md');
-    if (!existsSync(skillFile)) continue;
+  if (existsSync(skillsRoot)) {
+    for (const entry of readdirSync(skillsRoot, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue;
+      const skillFile = path.join(skillsRoot, entry.name, 'SKILL.md');
+      if (!existsSync(skillFile)) continue;
+      const item = {
+        kind: 'skill',
+        from: path.join(skillsRoot, entry.name),
+        to: path.join(targetRoot, '.cursor', 'skills', entry.name),
+        extras: [],
+      };
+      // 入口 skill 的 ../../references 在匯出後要落在自己底下
+      if (entry.name === 'my-workflow') {
+        item.extras.push({ from: path.join(packRoot, 'references'), toName: 'references' });
+        item.extras.push({ from: path.join(packRoot, 'agents'), toName: 'agents' });
+      }
+      plan.push(item);
+    }
+  }
+  const rulesFile = path.join(packRoot, 'rules', 'my-rules.md');
+  if (existsSync(rulesFile)) {
     plan.push({
-      kind: 'skill',
-      from: path.join(skillsRoot, entry.name),
-      to: path.join(targetRoot, '.cursor', 'skills', entry.name),
+      kind: 'rule',
+      from: rulesFile,
+      to: path.join(targetRoot, '.cursor', 'rules', 'my-rules.mdc'),
     });
   }
   return plan;
@@ -126,14 +130,26 @@ function main() {
     console.log('  ' + path.relative(targetRoot, item.to));
     if (options.dryRun) continue;
     if (exists) rmSync(item.to, { recursive: true, force: true });
-    mkdirSync(item.to, { recursive: true });
-    if (item.kind === 'entry') {
-      for (const part of item.parts) {
-        cpSync(part.from, path.join(item.to, part.toName), { recursive: true });
-      }
+    if (item.kind === 'rule') {
+      mkdirSync(path.dirname(item.to), { recursive: true });
+      const body = readFileSync(item.from, 'utf8').replace(/\]\(\.\.\/(README\.md|references\/)/g, '](../../$1');
+      writeFileSync(item.to, '---\ndescription: my-workflow 常駐通用規則\nalwaysApply: true\n---\n\n' + body);
       continue;
     }
+    mkdirSync(item.to, { recursive: true });
     cpSync(item.from, item.to, { recursive: true });
+    for (const extra of item.extras) {
+      if (existsSync(extra.from)) cpSync(extra.from, path.join(item.to, extra.toName), { recursive: true });
+    }
+    if (item.extras.length > 0) {
+      const skillMd = path.join(item.to, 'SKILL.md');
+      const text = readFileSync(skillMd, 'utf8')
+        .replaceAll('](../../references/', '](references/')
+        .replaceAll('](../../rules/my-rules.md)', '](../../rules/my-rules.mdc)')
+        .replaceAll('](../../AGENTS.md)', '](https://github.com/VECTOR-COOL/my-agent-toolkit/blob/main/my-plugins/my-workflow/AGENTS.md)')
+        .replaceAll('](../../scripts/export-cursor-skills.mjs)', '](https://github.com/VECTOR-COOL/my-agent-toolkit/blob/main/my-plugins/my-workflow/scripts/export-cursor-skills.mjs)');
+      writeFileSync(skillMd, text);
+    }
   }
   if (skipped > 0 && !options.force) {
     console.log('Skipped ' + skipped + ' existing path(s). Use --force to replace.');

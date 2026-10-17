@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "composio": {
+      "type": "http",
+      "url": "${user_config.composio_mcp_url}",
+      "headers": { "x-api-key": "${user_config.composio_api_key}" }
+    }
+  }
+}

@@ -1,11 +1,6 @@
----
-name: my-rules
-description: "每個任務都適用的通用規則：回覆語言與篇幅、可信度（不編造）、安全（憑證、套件安裝、提示注入、Git、commit 格式）、品質、程式碼與安全審查（Code Review）、驗收收尾（SPEC/Schema/文件對齊、自動化與 E2E 測試覆蓋）、臨時產物、記憶（短中長期、讀寫時機）、使用外部工具時先看 Composio MCP 有沒有對應工具、MCP 失敗回報、專案腳本。用於任何任務開始時，不分環境。"
----
-
 # 通用規則
 
-每個任務都套用。本檔就是規則全文。
+本檔是 my-workflow plugin 的常駐規則，每個任務都套用，不分環境。Claude Code 由 SessionStart hook 注入；其他客戶端見 [`README.md`](../README.md)。
 
 ## 回覆
 
@@ -120,7 +115,7 @@ Skill 依賴的 MCP 連不上時，先說：哪個 skill、哪條連線（例如
 
 ## 載入
 
-- 入口會先讀本檔，再讀 [索引](../../references/index.yaml)。只載 `when` 或 `keywords` 對上的那一個 skill。
+- 規則在對話開始時已載入，不必再讀本檔。其餘 skill 由入口 `my-workflow` 依 [索引](../references/index.yaml) 載入，只載 `when` 或 `keywords` 對上的那一個。
 - 記住、回想、偏好、決策、歷史脈絡：優先讀 `my-memory`，不要自己猜後端。
 - 同一對話已讀過的檔不重複讀。超過約 200 行的檔先讀摘要或索引。啟動時不要讀完整套件。
 - README 是給人看的，不主動讀，除非任務需要或使用者指定。

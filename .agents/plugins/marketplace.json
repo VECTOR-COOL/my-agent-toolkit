@@ -1,0 +1,11 @@
+{
+  "name": "my-agent-toolkit",
+  "plugins": [
+    {
+      "name": "my-workflow",
+      "source": { "source": "local", "path": "./my-plugins/my-workflow" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+      "category": "Productivity"
+    }
+  ]
+}
