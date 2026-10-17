@@ -4,6 +4,15 @@ VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills 
 
 開發與維護請看 [`AGENTS.md`](AGENTS.md)。
 
+**名詞**
+
+| 名稱 | 是什麼 |
+|------|--------|
+| `my-plugins/my-workflow/`（本目錄） | **plugin 本體**，安裝的就是這個 |
+| `my-workflow` | plugin 的名稱 |
+| `my-agent-toolkit` | GitHub repo，也是 marketplace 名稱。只是放 plugin 的容器，**不是 plugin** |
+| `my-workflow@my-agent-toolkit` | 「來自 my-agent-toolkit 的 my-workflow」，安裝指令用這個寫法 |
+
 ## 快速開始
 
 | 你用的 | 做法 | 支援程度 |
@@ -15,7 +24,7 @@ VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills 
 | Cursor／Cursor Cloud | 匯出腳本 | skills + rules |
 | ChatGPT 網頁／App | 手動貼規則、上傳 skill | **沒有 plugin 機制**：無自動注入 rules、無 MCP 打包，只能手動 |
 
-來源：https://github.com/VECTOR-COOL/my-agent-toolkit（私有，預設分支 `main`）。本機需先能讀取這個 repo（`gh auth login` 或 SSH key）。plugin 與兩個 marketplace 檔（`.claude-plugin/marketplace.json`、`.agents/plugins/marketplace.json`）必須在 `main` 上，安裝才會抓到。
+來源 repo（marketplace）：https://github.com/VECTOR-COOL/my-agent-toolkit（私有，預設分支 `main`），其中 `my-plugins/my-workflow/` 才是 plugin。本機需先能讀取這個 repo（`gh auth login` 或 SSH key）。plugin 與兩個 marketplace 檔（`.claude-plugin/marketplace.json`、`.agents/plugins/marketplace.json`）必須在 `main` 上，安裝才會抓到。
 
 ### 請 agent 幫我裝（貼給 Claude Code）
 
