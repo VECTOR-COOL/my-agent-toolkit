@@ -33,7 +33,7 @@ VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills 
 **請 agent 代裝**（貼給 Claude Code）：
 
 ```text
-請安裝／更新我的私人 plugin my-workflow，來源 https://github.com/VECTOR-COOL/my-agent-toolkit（私有，main，用我本機 git 憑證）。
+請安裝／更新我的私人 plugin my-workflow，來源 repo 網址是 https://github.com/VECTOR-COOL/my-agent-toolkit ，私有，main 分支，用我本機 git 憑證。
 1. claude plugin marketplace add <網址>（已加過改 claude plugin marketplace update my-agent-toolkit）
 2. claude plugin install my-workflow@my-agent-toolkit（已安裝改 claude plugin update my-workflow@my-agent-toolkit）
 3. claude plugin list，回報版本與是否啟用
