@@ -2,7 +2,7 @@
 
 > VECTOR LTD 可攜式 Agent Skills 套件庫
 
-[![version](https://img.shields.io/badge/version-1.6.0-blue)]()
+[![version](https://img.shields.io/badge/version-1.7.0-blue)]()
 [![GitHub](https://img.shields.io/badge/GitHub-VECTOR--COOL-blue)](https://github.com/VECTOR-COOL/my-agent-toolkit)
 [![Website](https://img.shields.io/badge/Website-vector.cool-blue)](https://vector.cool)
 
