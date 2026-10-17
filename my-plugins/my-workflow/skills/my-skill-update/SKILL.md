@@ -13,5 +13,5 @@ repo：https://github.com/VECTOR-COOL/my-agent-toolkit
 
 1. Claude Code：`/plugin marketplace update my-agent-toolkit`，再更新或重新安裝 `my-workflow`。
 2. Codex：更新 repo 內的 marketplace 來源後，重新啟用 `my-workflow@my-agent-toolkit`。hooks 有變動要重新信任。
-3. ChatGPT 網頁：重新貼 `rules/my-rules.md` 並上傳需要的 skill 資料夾。
+3. ChatGPT 網頁：重新貼 `rules/global.md` 並上傳需要的 skill 資料夾。
 4. 以上流程的實機行為未全部驗證（見 README 驗證狀態），失敗時如實回報，不假裝完成。

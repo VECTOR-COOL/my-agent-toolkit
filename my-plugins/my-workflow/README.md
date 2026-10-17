@@ -39,7 +39,7 @@ marketplace 在 [`.agents/plugins/marketplace.json`](../../.agents/plugins/marke
 
 ### ChatGPT
 
-把 [`rules/my-rules.md`](rules/my-rules.md) 貼到自訂指示，再上傳需要的 `skills/` 資料夾（先傳 `my-workflow`）。
+把 [`rules/global.md`](rules/global.md) 貼到自訂指示，再上傳需要的 `skills/` 資料夾（先傳 `my-workflow`）。
 
 ## 更新
 
@@ -59,7 +59,17 @@ graph TD
   Index --> One["只載對上的一個 skill"]
 ```
 
-**常駐規則**：[`rules/my-rules.md`](rules/my-rules.md)（語言、可信度、安全、Git、Code Review、驗收、記憶時機、工具與失敗回報、腳本），由 SessionStart hook 在每次對話開始注入，**連同入口 skill `my-workflow` 與 `references/index.yaml` 一併載入**，不需要斜線命令（hook 無法呼叫 Skill 工具，所以直接注入內容）。
+**規則**：[`rules/global.md`](rules/global.md)（回覆、可信度、安全、品質）由 SessionStart hook 在每次對話開始注入，**連同入口 skill `my-workflow` 與 `references/index.yaml` 一併載入**，不需要斜線命令（hook 無法呼叫 Skill 工具，所以直接注入內容）。其餘規則碰到情境才讀：
+
+| 規則 | 情境 |
+|------|------|
+| [`git`](rules/git.md) | commit、push、merge、發版 |
+| [`code-review`](rules/code-review.md) | 審查程式碼或 PR |
+| [`wrap-up`](rules/wrap-up.md) | 任務收尾驗收 |
+| [`files-and-scripts`](rules/files-and-scripts.md) | 腳本、臨時檔、設定檔 |
+| [`install`](rules/install.md) | 安裝套件或第三方 skill |
+| [`tools`](rules/tools.md) | 外部服務、MCP、失敗回報 |
+| [`memory`](skills/my-memory/rules/memory.md)、[`consolidate`](skills/my-memory-consolidate/rules/consolidate.md) | 載入記憶 skill 時 |
 
 **Skills**：入口是 `my-workflow`，依 [`references/index.yaml`](references/index.yaml) 的 `when`／`keywords` 載入一個。
 

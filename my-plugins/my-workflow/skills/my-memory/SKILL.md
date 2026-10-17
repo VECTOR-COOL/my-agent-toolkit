@@ -5,6 +5,8 @@ description: 先判斷短、中、永久。查記憶先查 Notion 長期記憶�
 
 # 外部記憶管理
 
+規則見 [rules/memory.md](rules/memory.md)，使用本 skill 時先讀。
+
 ## 先判斷
 
 讀寫前先做完。時效決定留多久；範圍只用於 Mem0。

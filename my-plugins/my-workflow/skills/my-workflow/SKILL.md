@@ -5,17 +5,19 @@ description: 私人工作流的路由入口。新對話開始、任務不明確�
 
 # 工作流入口
 
-這份 skill **只負責分流**，不是規則全文。通用守則是常駐 rules（[`rules/my-rules.md`](../../rules/my-rules.md)），由 plugin 在對話開始時注入；維護、安裝、版本在 [`AGENTS.md`](../../AGENTS.md)。
+這份 skill **只負責分流**，不是規則全文。全域規則（[`rules/global.md`](../../rules/global.md)）由 plugin 在對話開始時注入，其餘規則伺機載入；維護、安裝、版本在 [`AGENTS.md`](../../AGENTS.md)。
 
 ```mermaid
 graph TD
-  Start[收到任務] --> Rules[常駐 rules 已注入]
+  Start[收到任務] --> Rules[全域規則已注入]
   Rules --> Mem{需要記憶?}
   Mem -->|是| Memory[載入 my-memory]
   Mem -->|否| Index[讀 references/index.yaml]
   Memory --> Index
   Index --> One[只載入一個對上的子 skill]
+  Index --> Rule[情境對上才讀該條規則]
   One --> Work[執行任務]
+  Rule --> Work
 ```
 
 ## 何時載這份
@@ -27,10 +29,11 @@ graph TD
 
 路徑相對於這份 `SKILL.md`；`rules/`、`references/` 在 plugin 根目錄。
 
-1. **常駐 rules** — [`rules/my-rules.md`](../../rules/my-rules.md)，plugin 已注入；沒有注入的客戶端（見 README）先讀這份。
+1. **全域規則** — [`rules/global.md`](../../rules/global.md)，plugin 已注入；沒有注入的客戶端（見 README）先讀這份。
 2. **[`../my-memory/SKILL.md`](../my-memory/SKILL.md)** — 僅在「記住、回想、偏好、決策、歷史脈絡」時，且優先於其他子 skill。
 3. **[`references/index.yaml`](../../references/index.yaml)** — 用 `when` 或 `keywords` 對上**一筆**後，只載 `../<name>/SKILL.md`。
-4. 查到 Mem0、或要升長期、或要遺忘時，改載 `../my-memory-consolidate/SKILL.md`。寫入不另搜；去重、加權與遺忘以那份的查詢時機為準。
+4. **其他規則** — `index.yaml` 的 `rules` 區：任務碰到 `when` 的情境（如 commit、Code Review、收尾、寫腳本、安裝套件、用 MCP）才讀對應檔，可與一個 skill 並行；沒碰到不讀。記憶規則在 `my-memory`、`my-memory-consolidate` 的 `rules/`，載入該 skill 時一併讀。
+5. 查到 Mem0、或要升長期、或要遺忘時，改載 `../my-memory-consolidate/SKILL.md`。寫入不另搜；去重、加權與遺忘以那份的查詢時機為準。
 
 同一對話已讀過的檔不必重讀。超過約 200 行的檔先讀摘要或索引，不要一次載整包。
 
@@ -47,9 +50,9 @@ graph TD
 
 ## 不要做的事
 
-- 不要一次載入 index 裡全部 skill。
+- 不要一次載入 index 裡全部 skill 或全部 rules。
 - 不要在入口重寫 rules 或 `my-memory` 的細節。
 
 ## 改這個套件
 
-先讀 [`AGENTS.md`](../../AGENTS.md)。新增子 skill 時：建立 `skills/<name>/SKILL.md`，並在 `index.yaml` 補 `when` 與 `keywords`。
+先讀 [`AGENTS.md`](../../AGENTS.md)。新增子 skill 時：建立 `skills/<name>/SKILL.md`，並在 `index.yaml` 補 `when` 與 `keywords`；新增規則時：建立 `rules/<name>.md`，並在 `index.yaml` 的 `rules` 區補 `when` 與 `keywords`。
