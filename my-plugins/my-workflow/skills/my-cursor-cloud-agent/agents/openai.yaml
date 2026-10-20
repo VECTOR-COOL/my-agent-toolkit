@@ -1,4 +1,0 @@
-interface:
-  display_name: "my-cursor-cloud-agent"
-  short_description: "操作 Cursor Cloud Agent"
-  default_prompt: "使用 $my-cursor-cloud-agent 開啟、續接或查詢雲端對話。"
