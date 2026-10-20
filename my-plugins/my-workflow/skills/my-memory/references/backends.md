@@ -11,7 +11,7 @@
 | **Agent 記憶庫** | 永久記憶 | [Agent 記憶庫](https://app.notion.com/p/74fc3fcecfc04102a62b75c314bcd132)；`collection://b32ed069-fadc-4cf3-9c64-4a2e5a8255e7` |
 | **Mem0 `私人記憶`** | 短期的私人事務 | Composio 別名，勿硬編碼 ID。不帶 user |
 | **Mem0 `團隊記憶`** | 短期的全域與一般 | 先 Composio；無則 Mem0 MCP。全域不帶 user；一般才帶身份 |
-| **Cursor Notion Memory** | Notion 個人摘要，不是永久記憶，也不是私人記憶庫 | `notion-memory-search`；先讀 `notion://docs/memory` |
+| **Notion Memory** | Notion 個人摘要，不是永久記憶，也不是私人記憶庫 | `notion-memory-search`；先讀 `notion://docs/memory` |
 
 組織知識庫（SOP、研究全文）仍走 `$my-notion` + 專案 `notion.knowledge_db`，不與 Agent 記憶庫混用。
 
@@ -28,7 +28,7 @@
 
 敏感度高於「一般」時謹慎寫入。工具細節 → [`$my-notion`](../../my-notion/SKILL.md)。
 
-## Cursor Notion Memory
+## Notion Memory
 
 1. 本對話首次使用前讀 `notion://docs/memory`。
 2. 搜尋：`notion-memory-search`；必要時 fetch About（`id: "memory"`）。

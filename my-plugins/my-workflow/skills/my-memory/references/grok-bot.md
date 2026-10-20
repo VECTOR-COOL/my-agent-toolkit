@@ -21,7 +21,7 @@
 | 全域 | `團隊記憶`，不帶 user | 重要事實、小安偏好、跨團隊規則 |
 | 一般 | `團隊記憶`。`user_id=xiaoan` 與 `agent_id=<該 bot 的 Grok Bot UUID>` | 只與該 bot 工作相關 |
 
-UUID 還沒對上就留這個佔位，不要猜、不要抄別的 bot。ChatGPT、Cursor 不要占用這個 agent。顯示名不加 UUID。私人或全域若工具硬要身份欄，先停下來問。
+UUID 還沒對上就留這個佔位，不要猜、不要抄別的 bot。ChatGPT、Claude 不要占用這個 agent。顯示名不加 UUID。私人或全域若工具硬要身份欄，先停下來問。
 
 ## 何時讀
 

@@ -1,6 +1,6 @@
 ---
 name: my-memory
-description: 先判斷短、中、永久。查記憶先查 Notion 長期記憶，不夠再查 Mem0 一次。查到的命中依 my-memory-consolidate 去重、升中期並加權；權重到 3 升長期。低權重且存放滿 30 天必須刪除該筆 Mem0。寫入用 infer，不為去重另搜。私人與全域不帶 user；一般 Mem0 只有 Grok Bot 分 agent 與 user。ChatGPT 與 Cursor 各用一個共用 user_id。升長期與指定改刪須確認，禁止憑證。使用者問自己、公司、團隊的既有資訊（公司地址、聯絡方式、偏好、先前決定）而對話裡沒有答案時，也先載入本 skill 查記憶。
+description: 先判斷短、中、永久。查記憶先查 Notion 長期記憶，不夠再查 Mem0 一次。查到的命中依 my-memory-consolidate 去重、升中期並加權；權重到 3 升長期。低權重且存放滿 30 天必須刪除該筆 Mem0。寫入用 infer，不為去重另搜。私人與全域不帶 user；一般 Mem0 只有 Grok Bot 分 agent 與 user。Claude 與 ChatGPT 各用一個共用 user_id。升長期與指定改刪須確認，禁止憑證。使用者問自己、公司、團隊的既有資訊（公司地址、聯絡方式、偏好、先前決定）而對話裡沒有答案時，也先載入本 skill 查記憶。
 ---
 
 # 外部記憶管理
@@ -26,7 +26,7 @@ graph TD
   S -->|一般| C{客戶端}
   C -->|Grok Bot| GA[xiaoan 加該 bot UUID]
   C -->|ChatGPT| GPT[user_id 為 gpt]
-  C -->|Cursor| CU[user_id 為 cursor]
+  C -->|Claude| CL[user_id 為 claude]
 ```
 
 ## 短／中／永久
@@ -51,7 +51,7 @@ graph TD
 | 全域 | `團隊記憶` | 全部 | 不帶 user |
 | 一般 | `團隊記憶` | 只有 Grok Bot | `user_id=xiaoan` 與該 bot 的 UUID。UUID 未填留佔位 |
 | 一般 | `團隊記憶` | ChatGPT | `user_id=gpt`。所有 session 共用。不設 `agent_id` |
-| 一般 | `團隊記憶` | Cursor | `user_id=cursor`。IDE 與 Cloud 所有 session 共用。不設 `agent_id` |
+| 一般 | `團隊記憶` | Claude | `user_id=claude`。Claude Code、Desktop、雲端 session 所有環境共用。不設 `agent_id` |
 
 其他客戶端的一般 Mem0 沒有 `user_id` 就先問，不要仿造，也不要按 session 換。私人或全域若工具硬要身份欄，先停下來問，不要猜。
 
@@ -100,7 +100,7 @@ graph TD
 
 | 環境 | 檔 |
 |------|-----|
+| Claude Code／Desktop／claude.ai／雲端 session | [claude.md](references/claude.md) |
 | Grok Bot | [grok-bot.md](references/grok-bot.md) |
 | ChatGPT 網頁與 App | [chatgpt.md](references/chatgpt.md) |
 | Codex | [codex.md](references/codex.md) |
-| Cursor IDE 與 Cloud | [cursor.md](references/cursor.md) |
