@@ -49,7 +49,7 @@ skills:
     keywords: [Cloud Agent, Cursor Cloud, 開雲端, 雲端對話, 冷啟動, API, 自動化, agentId, 雲端環境]
   - name: my-subagent
     when: 拆解大任務、派發平行 subagent 與調度驗收
-    keywords: [平行, 多線, subagent, 派發, 驗收, 多代理, 平行任務, 分工處理]
+    keywords: [平行, 多線, subagent, 派發, 驗收, 多代理, 平行任務, 分工處理, 分工, 開 subagent, 叫幾個 agent, 一起做, 派出去]
   - name: my-upgrade-plan
     when: 擬定軟體、框架或套件版本安全升級與備份計畫
     keywords: [升級, 版本, 避雷, 升級計畫, upgrade, 軟體升級, 升級評估, 套件更新]
