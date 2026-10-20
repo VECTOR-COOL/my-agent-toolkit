@@ -2,7 +2,7 @@
 
 > VECTOR LTD 可攜式 Agent Skills 套件庫
 
-[![version](https://img.shields.io/badge/version-1.7.2-blue)]()
+[![version](https://img.shields.io/badge/version-1.8.1-blue)]()
 [![GitHub](https://img.shields.io/badge/GitHub-VECTOR--COOL-blue)](https://github.com/VECTOR-COOL/my-agent-toolkit)
 [![Website](https://img.shields.io/badge/Website-vector.cool-blue)](https://vector.cool)
 
@@ -37,7 +37,7 @@
 | [`my-codebase-clear`](./my-plugins/my-workflow/skills/my-codebase-clear/SKILL.md) | 掃描可清理檔案、review candidates，經同意後安全刪除並收尾。 | v1.2.0 |
 | [`my-codebase-init`](./my-plugins/my-workflow/skills/my-codebase-init/SKILL.md) | 從 project-templates 初始化專案並建立 VECTOR-COOL 私有 repo。 | v1.2.0 |
 | [`my-commit-all-and-push`](./my-plugins/my-workflow/skills/my-commit-all-and-push/SKILL.md) | 全部 commit 並 push，說明用繁體中文。 | v1.2.0 |
-| [`my-cursor-cloud-agent`](./my-plugins/my-workflow/skills/my-cursor-cloud-agent/SKILL.md) | Cursor Cloud Agent 環境、對話建立與排程。 | v1.2.0 |
+| [`my-claude-cloud-agent`](./my-plugins/my-workflow/skills/my-claude-cloud-agent/SKILL.md) | Claude Code 雲端 session 環境、開啟與拉回。 | v1.2.0 |
 | [`my-docs`](./my-plugins/my-workflow/skills/my-docs/SKILL.md) | 建立精簡技術文件並確保 AGENTS.md／README 齊備。 | v1.2.0 |
 | [`my-subagent`](./my-plugins/my-workflow/skills/my-subagent/SKILL.md) | 主線調度平行 subagent 並負責驗收。 | v1.2.0 |
 | [`my-upgrade-plan`](./my-plugins/my-workflow/skills/my-upgrade-plan/SKILL.md) | 擬定並經同意後執行安全升級計畫。 | v1.2.0 |

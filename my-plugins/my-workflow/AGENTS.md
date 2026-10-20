@@ -1,6 +1,6 @@
 # my-workflow — 開發準則
 
-> **版本**：`1.7.2`（[`pack.yaml`](pack.yaml)）
+> **版本**：`1.8.1`（[`pack.yaml`](pack.yaml)）
 > 須與 [`.claude-plugin/plugin.json`](.claude-plugin/plugin.json)、[`plugin.json`](plugin.json)、[`references/index.yaml`](references/index.yaml)、toolkit [`project.json`](../../project.json) 同一個號。
 
 這份給**開發這個 plugin 的人與 Agent** 看。使用者怎麼安裝見 [`README.md`](README.md)。
@@ -83,7 +83,7 @@ claude plugin validate ./my-plugins/my-workflow
 
 | 環境 | 檔 |
 |------|-----|
+| Claude Code／Desktop／claude.ai／雲端 session | `claude.md` |
 | Grok Bot（xAI App） | `grok-bot.md` |
 | ChatGPT 網頁與 App | `chatgpt.md` |
 | Codex | `codex.md` |
-| Cursor IDE 與 Cloud | `cursor.md`（記憶身份規則，非相容層） |

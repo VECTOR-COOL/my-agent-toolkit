@@ -41,7 +41,7 @@
 | 全域 | 不帶 | 不帶 |
 | 一般 Grok Bot | `xiaoan` | 該 bot 的 UUID |
 | 一般 ChatGPT | `gpt` | 不帶 |
-| 一般 Cursor | `cursor` | 不帶 |
+| 一般 Claude | `claude` | 不帶 |
 
 工具拒絕空的 `user_id`／`agent_id` 時，停止並說明。不要改填別的 id 來冒充全域或私人。
 
@@ -78,7 +78,7 @@
 
 | 範圍 | 格式 | 例子 |
 |------|------|------|
-| 新列 | `scope\|user_id\|agent_id\|記憶鍵` | 全域 `global\|\|\|personal.communication`；Cursor `general\|cursor\|\|personal.communication`；Grok Bot `general\|xiaoan\|<uuid>\|editor.role` |
+| 新列 | `scope\|user_id\|agent_id\|記憶鍵` | 全域 `global\|\|\|personal.communication`；Claude `general\|claude\|\|personal.communication`；Grok Bot `general\|xiaoan\|<uuid>\|editor.role` |
 | 舊列 | `user_id\|agent_id\|記憶鍵` | 舊全域常見 `xiaoan\|\|personal.communication` |
 
 去重先對新格式，沒有再對舊格式。對到就更新那一頁。

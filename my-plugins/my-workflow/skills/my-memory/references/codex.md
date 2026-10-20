@@ -12,7 +12,7 @@
 
 - 先判斷短、中、永久。永久寫 Agent 記憶庫，並抄入當時的 `scope`、`user_id`、`agent_id`。沒有 Notion 工具就回報。
 - 短期私人走別名 `私人記憶`，不帶 user。短期全域走 `團隊記憶`，不帶 user、不帶 agent。排除不了帶身份的紀錄就先問，不要把整庫當全域。
-- 短期一般尚未定義 Codex 的 `user_id`。先問，不要仿 `gpt`／`cursor`，不要按 session 換，也不要設 `agent_id`。
+- 短期一般尚未定義 Codex 的 `user_id`。先問，不要仿 `gpt`／`claude`，不要按 session 換，也不要設 `agent_id`。
 - 勿硬編碼 ID。私人與團隊跨庫先問。短期沒有 Mem0 就回報，不要改寫進永久庫。
 - 使用者說「請記住」：本機記憶不會進 ChatGPT。跨裝置要另寫 Mem0 或 Agent 記憶庫，先說寫去哪。
 

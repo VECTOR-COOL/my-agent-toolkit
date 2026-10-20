@@ -1,0 +1,4 @@
+interface:
+  display_name: "my-claude-cloud-agent"
+  short_description: "操作 Claude Code 雲端 session"
+  default_prompt: "使用 $my-claude-cloud-agent 開啟、續接或拉回 Claude 雲端 session。"
