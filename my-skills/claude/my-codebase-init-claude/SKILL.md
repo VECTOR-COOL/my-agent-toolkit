@@ -52,7 +52,7 @@ Claude 雲端 session 在全新 clone 上執行，行為和本機不同：
 - 會帶過去的只有 repo 內容：`CLAUDE.md`、`.claude/settings.json`、`.claude/skills/`。所以雲端要用到的規則與 skill 必須放進 repo，不能只靠 plugin。需要全域規則時，把精簡版寫進 `AGENTS.md`。
 - 依賴安裝與冷啟動檢查用 `.claude/settings.json` 的 `SessionStart` hook。環境有 `session-start-hook` skill 就用它。
 - 通常沒有 `gh`：建立遠端 repo 改用環境提供的 GitHub MCP 工具（如 `create_repository`）。被 session 的 repo 範圍擋住就如實回報，請使用者建立 repo 或把它加進 session，不要硬做。
-- 交付沿用規則：commit 並 push 到 `develop`（或使用者指定的分支），不開 PR。雲端操作細節見 my-workflow plugin 的 `my-claude-cloud-agent`。
+- 交付沿用規則：commit 並 push 到 `develop`（或使用者指定的分支），不開 PR。雲端操作細節見 my-workflow plugin 的 `my-cloud-agent`。
 - 不確定是不是雲端就當本地。
 
 ## 5. 驗證

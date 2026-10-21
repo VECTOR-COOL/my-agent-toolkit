@@ -1,0 +1,4 @@
+interface:
+  display_name: "my-cloud-agent"
+  short_description: "派任務給雲端 agent session 並追蹤驗收"
+  default_prompt: "使用 $my-cloud-agent 開啟、續接、查詢雲端 agent session 並驗收交付。"

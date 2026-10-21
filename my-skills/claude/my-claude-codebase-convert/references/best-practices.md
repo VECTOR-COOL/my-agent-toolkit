@@ -54,4 +54,4 @@ paths:
 
 - 全新 clone，只帶 repo 內容（`CLAUDE.md`、`.claude/settings.json`、`.claude/skills/` 等）。
 - 不載入 plugin 與 marketplace，不讀個人設定。雲端要用的規則必須放進 repo。
-- 操作雲端 session 見 my-workflow plugin 的 `my-claude-cloud-agent`。
+- 操作雲端 session 見 my-workflow plugin 的 `my-cloud-agent`。
