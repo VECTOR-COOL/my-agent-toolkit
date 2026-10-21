@@ -48,10 +48,11 @@ claude plugin update my-workflow@my-agent-toolkit
 
 **引導：更新**
 
+已開 **Sync automatically** 的話跳過第 1、2 步。
+
 1. 打開 👉 [Customize > Plugins](https://claude.ai/customize/plugins)。
 2. 在 `my-agent-toolkit` marketplace 點 **Check for updates**。新版同步後會自動套用，不用再按接受。
-3. 已開 **Sync automatically** 就不用做這步。
-4. 開**新對話**（Cowork 是下一個任務）才會用到新版。
+3. 開**新對話**（Cowork 是下一個任務）才會用到新版。
 
 **引導完要提醒**
 
