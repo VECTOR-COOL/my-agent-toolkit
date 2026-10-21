@@ -1,6 +1,6 @@
 # my-workflow
 
-VECTOR LTD 私人工作流 plugin：常駐規則 + 15 個按需載入的 skills + Composio MCP。版本 `1.10.0`（[`pack.yaml`](pack.yaml)）。不上架公開市集。開發與維護見 [`AGENTS.md`](AGENTS.md)。
+VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills + Composio MCP。版本 `1.12.0`（[`pack.yaml`](pack.yaml)）。不上架公開市集。開發與維護見 [`AGENTS.md`](AGENTS.md)。
 
 **名詞**：`my-plugins/my-workflow/`（本目錄）是 **plugin 本體**；`my-agent-toolkit` 是放它的私有 GitHub repo，也是 marketplace 名稱，**不是 plugin**。安裝指令寫成 `my-workflow@my-agent-toolkit`。
 
@@ -49,6 +49,8 @@ marketplace 在 [`.agents/plugins/marketplace.json`](../../.agents/plugins/marke
 | Codex | 更新 repo 後重新啟用 |
 | ChatGPT | 重貼規則、重傳 skill |
 
+也可直接對 agent 說「安裝／更新 my-workflow」：會載入 `my-plugin-install`，自動判斷你在哪個平台（Claude Code、Claude 網頁與 Cowork、雲端 session、Codex）並選對方法。
+
 ## 內容
 
 ```mermaid
@@ -82,12 +84,11 @@ graph TD
 | 需求規劃 | `my-create-prd` |
 | 介面體驗 | `my-ui-ux` |
 | 品質審查 | `my-review` |
-| 程式庫維護／初始化 | `my-codebase-clear`、`my-codebase-init`（Claude 環境另載 `my-codebase-init-claude`） |
-| 轉成 Claude 最佳化 | `my-claude-codebase-convert` |
+| 程式庫維護／初始化 | `my-codebase-clear`、`my-codebase-init`（Claude 環境可搭配 `my-skills/claude/` 的 `my-codebase-init-claude`） |
 | 安全提交 | `my-commit-all-and-push` |
-| 雲端代理 | `my-claude-cloud-agent` |
+| 雲端代理 | `my-cloud-agent` |
 | 多線協同 | `my-subagent` |
-| 套件更新 | `my-skill-update` |
+| 安裝與更新 | `my-plugin-install` |
 
 **Composio MCP**：[`.mcp.json`](.mcp.json)（Claude）與 [`mcp.json`](mcp.json)（Codex），端點 `https://connect.composio.dev/mcp`，OAuth 登入，repo 不含金鑰。改用個人 MCP URL 與 API key 見 [Composio 文件](https://docs.composio.dev/docs/mcp-overview)（`x-api-key`）。
 

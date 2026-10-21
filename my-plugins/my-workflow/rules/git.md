@@ -8,5 +8,5 @@
 - 合併進 `main`／`master`、`develop` 用 `--no-ff`。
 - 發版（release、tag、版本）前先讀專案發版流程並逐步核對。
 - 本地要使用者要求才 commit；不確定是否雲端就當本地，不掃系統猜環境。
-- Claude 雲端 session 相關（建立環境、開／續／拉回對話）載 `my-claude-cloud-agent`。
+- 雲端 agent session 相關（建立環境、開／續／查／停對話）載 `my-cloud-agent`。
 - commit 用 Conventional Commits：`type(scope): subject`，type 為 `feat`、`fix`、`docs`、`style`、`refactor`、`perf`、`test`、`build`、`ci`、`chore`、`revert`；祈使句、不超過 50 字元、不加句號；內文說 what 與 why；破壞性變更加 `!` 或 `BREAKING CHANGE:`。

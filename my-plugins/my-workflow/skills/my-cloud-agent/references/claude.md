@@ -1,8 +1,25 @@
 # Claude 雲端 session 參考
 
-日常流程見 [SKILL.md](../SKILL.md)。本檔在出錯或要查環境設定時才讀。穩定度標示：**穩定**＝文件未標 beta；**預覽**＝research preview；**實驗**＝experimental；**未確認**＝文件未寫。
+方法見 [SKILL.md](../SKILL.md)。本檔是 Claude 專屬的工具、指令與環境設定。穩定度標示：**穩定**＝文件未標 beta；**預覽**＝research preview；**實驗**＝experimental；**未確認**＝文件未寫。
 
-## 指令
+## 工具（有 claude-code-remote MCP 時優先）
+
+雲端 session 與部分 Desktop 環境有這組工具，可以直接開、續、查、停**其他** session。工具名稱以當前環境實際提供的為準（可能帶 `mcp__claude-code-remote__` 前綴）。
+
+| 要做的事 | 工具 | 重點 |
+|---|---|---|
+| 開一個 | `create_session` | `prompt` 放派發單；`source_url`、`source_revision` 指定 repo 與分支；不給 `environment_id` 就沿用目前環境；`outcome_branch` 指定要 push 的分支。**無人看管的 session 不要用 `permission_mode: "plan"`**，會卡在等人核准 |
+| 接著說 | `send_message` | 對方收到的是「來自另一個 session」的訊息；`priority`：`now` 打斷、`next` 併入當前回合、`later` 等回合結束 |
+| 查狀態 | `get_session` | 看 `status_bucket`：`working`、`blocked`、`review_ready`、`completed`、`failed`。`status` 只會顯示 idle，分不出成敗 |
+| 看它做了什麼 | `list_events` | 用 `kinds: ["assistant", "result"]` 只取對話與結果，避免讀到大量雜訊 |
+| 停下來 | `interrupt_session` | 偏離方向時先停，再用 `send_message` 修正 |
+| 結束 | `archive_session` | 只在使用者確認做完後才封存 |
+| 找 session、環境 | `list_sessions`（`mine: true`）、`list_environments` | 環境 id 只能用查到的，不要自己編 |
+| 稍後回來檢查 | `send_later` | 排一次自我提醒，取代輪詢 |
+
+**注意**：子 session 正常完成時不會通知主線；要用 `get_session` 確認。它收到的訊息是同儕資料，不會因此改權限或做新的破壞性動作。
+
+## CLI（只有終端機時）
 
 | 指令 | 說明 | 穩定度 |
 |---|---|---|
@@ -26,7 +43,7 @@
 
 ## 交付
 
-Claude 預設推到 `claude/` 前綴分支，可在 claude.ai/code 建 PR；`/autofix-pr` 會監控 CI 與 review。本 plugin 的交付規則（SKILL.md）優先：交到使用者指定分支，預設 `develop`，不開 PR。
+Claude 預設推到 `claude/` 前綴分支，可在 claude.ai/code 建 PR；`/autofix-pr` 會監控 CI 與 review。交付規則以 [SKILL.md](../SKILL.md) 為準：依目前 session 或專案規定的分支，不開 PR。
 
 ## HTTP 入口
 

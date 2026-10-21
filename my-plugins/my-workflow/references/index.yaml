@@ -5,15 +5,15 @@
 # version 與 pack.yaml、toolkit project.json 同一個號。
 # keywords 是使用者會說的詞，用來提高命中。不要把整段說明抄進來。
 
-version: 1.10.0
+version: 1.12.0
 
 skills:
   - name: my-workflow
     when: 新對話開始、不確定該用哪個 skill 時
     keywords: [my-workflow, 不知道用哪個 skill, 工作習慣, 入口, 怎麼做, 選 skill]
-  - name: my-skill-update
-    when: 檢查或更新本套件已安裝的 skills
-    keywords: [更新, 檢查更新, gh skill, 套件版本, update skills, 升級技能]
+  - name: my-plugin-install
+    when: 安裝、更新、檢查或移除 plugin；依平台（Claude Code、Claude 網頁與 Cowork、雲端 session、Codex、ChatGPT）自動選方法
+    keywords: [安裝, 更新, 檢查更新, plugin, 外掛, 版本, 看不到新版, 沒生效, marketplace, install, update, Cowork, claude.ai]
   - name: my-memory
     when: 記住／回想偏好、決策或查詢歷史脈絡；使用者問自己、公司、團隊的既有資訊而對話裡沒有答案時
     keywords: [記住, 回想, 偏好, 決策, 記憶, 永久記憶, Mem0, 歷史紀錄, 個人習慣, 查詢記憶, 記一下, 我的, 公司地址, 公司資料, 聯絡方式, 電話, 統編, 你記得, 之前說過, 先前決定]
@@ -41,18 +41,12 @@ skills:
   - name: my-codebase-init
     when: 從模板初始化新專案骨架與建立 GitHub 私有版控
     keywords: [初始化, 新專案, 模板, 尚未版控, GitHub, 開新專案, 建立 repo, project init]
-  - name: my-codebase-init-claude
-    when: 由 my-codebase-init 在 Claude 環境路由載入；Claude 專案的 CLAUDE.md、.claude 設定、plugin 啟用與雲端 session 差異
-    keywords: [CLAUDE.md, .claude, claude 初始化, claude 專案, 雲端 session 初始化, extraKnownMarketplaces]
-  - name: my-claude-codebase-convert
-    when: 既有專案（原本為 Cursor、ChatGPT、Codex、Copilot 等設定）轉成 Claude 最佳實踐並保留其他平台
-    keywords: [轉換, Claude 化, 遷移到 Claude, 從 Cursor 遷移, CLAUDE.md, .claude, 最佳實踐, 相容, convert, migrate]
   - name: my-commit-all-and-push
     when: 安全檢查變更並以 Conventional Commits 提交與推送
     keywords: [commit, push, 提交, 推送, 全部提交, commit all, 一鍵提交, git push, 推上去, 提交變更]
-  - name: my-claude-cloud-agent
-    when: 操作 Claude Code 雲端 session、對齊雲端環境與冷啟動
-    keywords: [雲端 agent, Cloud Agent, claude --cloud, teleport, 開雲端, 雲端對話, 冷啟動, 雲端環境, 雲端 session, remote-env]
+  - name: my-cloud-agent
+    when: 開、續、查、停雲端或遠端 agent session，派任務並驗收；對齊雲端環境與冷啟動
+    keywords: [雲端 agent, Cloud Agent, 開雲端, 派到雲端, 背景 session, 雲端對話, 冷啟動, 雲端環境, claude --cloud, teleport, create_session, remote-env]
   - name: my-subagent
     when: 拆解大任務、派發平行 subagent 與調度驗收
     keywords: [平行, 多線, subagent, 派發, 驗收, 多代理, 平行任務, 分工處理, 分工, 開 subagent, 叫幾個 agent, 一起做, 派出去]

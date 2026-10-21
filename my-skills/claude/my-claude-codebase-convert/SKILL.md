@@ -5,9 +5,9 @@ description: 把原本為 Cursor、ChatGPT、Codex、Copilot 等設定的既有 
 
 # my-claude-codebase-convert — 既有專案轉成 Claude 最佳化
 
-讓 Claude 在這個 codebase 裡發揮最好，**不破壞其他平台**。新專案用 [`my-codebase-init`](../my-codebase-init/SKILL.md)；這份處理已經存在、原本為其他 agent 設定的專案。
+讓 Claude 在這個 codebase 裡發揮最好，**不破壞其他平台**。新專案用 `my-codebase-init`（my-workflow plugin）；這份處理已經存在、原本為其他 agent 設定的專案。
 
-依據：[`best-practices.md`](../../claude/best-practices.md)（官方文件確認過的事實）、[`platform-mapping.md`](../../claude/platform-mapping.md)（各平台對應）、[`templates/`](../../claude/templates/)。
+依據：[`best-practices.md`](references/best-practices.md)（官方文件確認過的事實）、[`platform-mapping.md`](references/platform-mapping.md)（各平台對應）、[`templates/`](templates/)。
 
 ```mermaid
 graph TD
@@ -26,11 +26,11 @@ graph TD
 - **其他平台的檔案一律保留**，不刪、不改壞。只新增或在原檔加「同步來源」註記。
 - `AGENTS.md` 是唯一來源；Claude 專屬的才放 `CLAUDE.md`／`.claude/`。避免同一段內容出現兩份。
 - 每個 `CLAUDE.md` 200 行內，寫具體可驗證的指令。
-- 先提計畫、經同意才動手；在新分支上改，依 [`rules/git.md`](../../rules/git.md) 提交。
+- 先提計畫、經同意才動手；在新分支上改，依專案的 Git 規範提交（不 force push、不提交 secrets、Conventional Commits）。
 
 ## 1. 盤點
 
-列出專案裡所有 agent 設定，依 [`platform-mapping.md`](../../claude/platform-mapping.md) 的「原檔」欄逐一找。常見位置：
+列出專案裡所有 agent 設定，依 [`platform-mapping.md`](references/platform-mapping.md) 的「原檔」欄逐一找。常見位置：
 
 ```text
 AGENTS.md  CLAUDE.md  CLAUDE.local.md  .claude/  .mcp.json
@@ -52,15 +52,15 @@ AGENTS.md  CLAUDE.md  CLAUDE.local.md  .claude/  .mcp.json
 
 ## 4. 建立 CLAUDE.md
 
-- 用 [`templates/CLAUDE.md`](../../claude/templates/CLAUDE.md)：第一行 `@AGENTS.md`，下面只放 Claude 專屬內容。
+- 用 [`templates/CLAUDE.md`](templates/CLAUDE.md)：第一行 `@AGENTS.md`，下面只放 Claude 專屬內容。
 - 已有 `CLAUDE.md`：補上 `@AGENTS.md`，把和 `AGENTS.md` 重複的段落移除，其餘保留。
 - 沒有任何指令檔又不好判斷內容時，可先跑 `/init` 產生初稿再精簡。
 
 ## 5. 轉換規則、skills、MCP
 
-依 [`platform-mapping.md`](../../claude/platform-mapping.md)：
+依 [`platform-mapping.md`](references/platform-mapping.md)：
 
-- **路徑規則**（如 Cursor `.mdc` 的 `globs`）→ `.claude/rules/<topic>.md`，`globs` 改成 `paths`（範本 [`path-rule.md`](../../claude/templates/path-rule.md)）。兩檔開頭互註同步來源。
+- **路徑規則**（如 Cursor `.mdc` 的 `globs`）→ `.claude/rules/<topic>.md`，`globs` 改成 `paths`（範本 [`path-rule.md`](templates/path-rule.md)）。兩檔開頭互註同步來源。
 - **全域規則**（如 `alwaysApply`）→ 優先併進 `AGENTS.md`。
 - **skills** → `.claude/skills/<name>/SKILL.md`，格式相同可直接複製；選一處當來源並註明。
 - **自訂命令** → `.claude/commands/` 或 skill。
@@ -68,9 +68,9 @@ AGENTS.md  CLAUDE.md  CLAUDE.local.md  .claude/  .mcp.json
 
 ## 6. 設定與版控
 
-- `.claude/settings.json`：用 [`templates/settings.json`](../../claude/templates/settings.json)，把實際的測試、lint 指令放進 `permissions.allow`，`deny` 擋 `.env`。
+- `.claude/settings.json`：用 [`templates/settings.json`](templates/settings.json)，把實際的測試、lint 指令放進 `permissions.allow`，`deny` 擋 `.env`。
 - `.gitignore` 加入 `.claude/settings.local.json`、`CLAUDE.local.md`。
-- 要讓團隊自動取得 my-workflow plugin：見 [`my-codebase-init-claude`](../my-codebase-init-claude/SKILL.md) 第 3 節。
+- 要讓團隊自動取得 plugin：在 `.claude/settings.json` 用 `extraKnownMarketplaces` 與 `enabledPlugins` 宣告（寫法依官方 settings 參考），成員信任資料夾後生效。
 - 雲端 session 不載入 plugin，要用的規則必須在 repo 內。
 
 ## 7. 驗證並回報

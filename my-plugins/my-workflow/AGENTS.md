@@ -1,6 +1,6 @@
 # my-workflow — 開發準則
 
-> **版本**：`1.10.0`（[`pack.yaml`](pack.yaml)）
+> **版本**：`1.12.0`（[`pack.yaml`](pack.yaml)）
 > 須與 [`.claude-plugin/plugin.json`](.claude-plugin/plugin.json)、[`plugin.json`](plugin.json)、[`references/index.yaml`](references/index.yaml)、toolkit [`project.json`](../../project.json) 同一個號。
 
 這份給**開發這個 plugin 的人與 Agent** 看。使用者怎麼安裝見 [`README.md`](README.md)。
@@ -42,7 +42,6 @@ graph TD
 | `skills/<name>/rules/*.md` | 該 skill 專屬規則，載入 skill 時一併讀 |
 | `skills/<name>/SKILL.md` | 各 skill，`name` 與資料夾名一致，平鋪不巢狀 |
 | `references/index.yaml` | 入口路由索引（`when`、`keywords`） |
-| `claude/` | Claude 共用的最佳實踐、平台對應與範本（不是 skill，skill 一律平鋪在 `skills/`） |
 | `scripts/` | `inject-rules.mjs`（注入 rules + 入口 skill + 索引，相對路徑改為絕對路徑） |
 
 Claude Code plugin **無法提供 rules**，plugin 內的 `CLAUDE.md` 不會載入，所以改用 SessionStart hook 注入 `additionalContext`。hook 不能呼叫 Skill 工具，為了「開對話就載入入口、不用斜線命令」，同一個腳本也注入入口 `SKILL.md` 與 `index.yaml`（全域規則拆小後約 4,500 字元，每次對話固定成本）。改入口或索引後不用另外同步，腳本每次直接讀檔。
@@ -66,6 +65,12 @@ Claude Code plugin **無法提供 rules**，plugin 內的 `CLAUDE.md` 不會載�
 | Claude Code | SessionStart hook | plugin | `.mcp.json` | 靜態檢查；實際安裝與 hook 注入**未驗證** |
 | Codex | SessionStart hook（`hooks/codex.json`） | plugin | `mcp.json` | **未驗證**；hook 輸出格式、OAuth（`dcr`）登入需實機確認 |
 | ChatGPT 網頁 | 不支援 hook；手動貼 `rules/global.md` 到自訂指示 | 上傳 skill 資料夾 | — | 未驗證 |
+
+## 安裝與更新
+
+使用者要安裝、更新或檢查 plugin 時，載入 [`my-plugin-install`](skills/my-plugin-install/SKILL.md)：它依目前平台自動選方法（Claude Code、Claude 網頁與 Cowork、雲端 session、Codex、無 plugin 機制的平台）。平台方法有變時改該 skill 的 `references/`，不要把步驟散寫到其他檔。
+
+**改 plugin 內容一定要升版**（`.claude-plugin/plugin.json` 等五處），否則各平台判斷不到新版。
 
 ## 驗證
 
