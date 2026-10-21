@@ -17,7 +17,7 @@
 | 類型 | 路徑 | 說明 |
 |------|------|------|
 | 第三方 skills | [`skills/README.md`](./skills/README.md) | 依 design、React、mobile、browser、Cloudflare、workflow、GitHub、security、WordPress 分類的 27 個可攜 skills。 |
-| 自建 skills | [`my-skills/`](./my-skills/) | 前端、WordPress、Claude（[`claude/`](./my-skills/claude/)）、其餘組織技能。常用工作流以 [`my-plugins/my-workflow`](./my-plugins/my-workflow/README.md) 為準。 |
+| 自建 skills | [`my-skills/`](./my-skills/) | 每個都是獨立 skill，分類目錄區隔類型、功能、平台：前端、WordPress、Claude（[`claude/`](./my-skills/claude/)）等。開發準則見 [`my-skills/AGENTS.md`](./my-skills/AGENTS.md)。常用工作流以 [`my-plugins/my-workflow`](./my-plugins/my-workflow/README.md) 為準。 |
 
 ### 自建 Workflow Skills
 

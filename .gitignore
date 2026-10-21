@@ -21,6 +21,8 @@ Thumbs.db
 .cursor/plans/
 AGENTS.md
 !my-plugins/my-workflow/AGENTS.md
+!my-skills/AGENTS.md
+!skills/AGENTS.md
 
 # Logs & temp
 *.log
