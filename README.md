@@ -2,7 +2,7 @@
 
 > VECTOR LTD 可攜式 Agent Skills 套件庫
 
-[![version](https://img.shields.io/badge/version-1.10.0-blue)]()
+[![version](https://img.shields.io/badge/version-1.10.1-blue)]()
 [![GitHub](https://img.shields.io/badge/GitHub-VECTOR--COOL-blue)](https://github.com/VECTOR-COOL/my-agent-toolkit)
 [![Website](https://img.shields.io/badge/Website-vector.cool-blue)](https://vector.cool)
 
@@ -17,7 +17,7 @@
 | 類型 | 路徑 | 說明 |
 |------|------|------|
 | 第三方 skills | [`skills/README.md`](./skills/README.md) | 依 design、React、mobile、browser、Cloudflare、workflow、GitHub、security、WordPress 分類的 27 個可攜 skills。 |
-| 自建 skills | [`my-skills/`](./my-skills/) | 前端、WordPress、其餘組織技能。常用工作流以 [`my-plugins/my-workflow`](./my-plugins/my-workflow/README.md) 為準。 |
+| 自建 skills | [`my-skills/`](./my-skills/) | 前端、WordPress、Claude（[`claude/`](./my-skills/claude/)）、其餘組織技能。常用工作流以 [`my-plugins/my-workflow`](./my-plugins/my-workflow/README.md) 為準。 |
 
 ### 自建 Workflow Skills
 

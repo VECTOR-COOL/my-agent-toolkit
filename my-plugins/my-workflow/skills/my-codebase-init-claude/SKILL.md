@@ -5,7 +5,7 @@ description: my-codebase-init 的 Claude 子 skill。在 Claude 環境（Claude 
 
 # my-codebase-init-claude — Claude 環境的初始化補充
 
-只在 [`my-codebase-init`](../my-codebase-init/SKILL.md) 判斷目前是 Claude 環境時載入。通用流程（模板、AGENTS.md、README.md、Git、遠端 repo）仍照主 skill，本檔只補 Claude 專屬的部分，不重做主流程。共用的最佳實踐與範本在 [`claude/`](../../claude/README.md)。
+只在 [`my-codebase-init`](../my-codebase-init/SKILL.md) 判斷目前是 Claude 環境時載入。通用流程（模板、AGENTS.md、README.md、Git、遠端 repo）仍照主 skill，本檔只補 Claude 專屬的部分，不重做主流程。既有專案要轉成 Claude 最佳化，改用 `my-skills/claude/` 的 `my-claude-codebase-convert`。
 
 ```mermaid
 graph TD
@@ -20,7 +20,7 @@ graph TD
 
 ## 1. CLAUDE.md
 
-Claude Code 只在沒有任何 `CLAUDE.md` 時才直接讀 `AGENTS.md`（v2.1.277 起）。`AGENTS.md` 維持唯一來源，`CLAUDE.md` 第一行引用它，相容新舊版本（範本 [`templates/CLAUDE.md`](../../claude/templates/CLAUDE.md)）：
+Claude Code 只在沒有任何 `CLAUDE.md` 時才直接讀 `AGENTS.md`（v2.1.277 起）。`AGENTS.md` 維持唯一來源，`CLAUDE.md` 第一行引用它，相容新舊版本：
 
 ```markdown
 @AGENTS.md
