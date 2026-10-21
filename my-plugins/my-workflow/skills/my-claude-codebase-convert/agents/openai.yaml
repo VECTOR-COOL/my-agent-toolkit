@@ -1,0 +1,4 @@
+interface:
+  display_name: "my-claude-codebase-convert"
+  short_description: "既有專案轉成 Claude 最佳化並保留其他平台"
+  default_prompt: "使用 $my-claude-codebase-convert 盤點既有 agent 設定，提出轉成 Claude 最佳實踐的計畫。"

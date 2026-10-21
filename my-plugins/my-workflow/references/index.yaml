@@ -5,7 +5,7 @@
 # version 與 pack.yaml、toolkit project.json 同一個號。
 # keywords 是使用者會說的詞，用來提高命中。不要把整段說明抄進來。
 
-version: 1.8.1
+version: 1.10.0
 
 skills:
   - name: my-workflow
@@ -41,6 +41,12 @@ skills:
   - name: my-codebase-init
     when: 從模板初始化新專案骨架與建立 GitHub 私有版控
     keywords: [初始化, 新專案, 模板, 尚未版控, GitHub, 開新專案, 建立 repo, project init]
+  - name: my-codebase-init-claude
+    when: 由 my-codebase-init 在 Claude 環境路由載入；Claude 專案的 CLAUDE.md、.claude 設定、plugin 啟用與雲端 session 差異
+    keywords: [CLAUDE.md, .claude, claude 初始化, claude 專案, 雲端 session 初始化, extraKnownMarketplaces]
+  - name: my-claude-codebase-convert
+    when: 既有專案（原本為 Cursor、ChatGPT、Codex、Copilot 等設定）轉成 Claude 最佳實踐並保留其他平台
+    keywords: [轉換, Claude 化, 遷移到 Claude, 從 Cursor 遷移, CLAUDE.md, .claude, 最佳實踐, 相容, convert, migrate]
   - name: my-commit-all-and-push
     when: 安全檢查變更並以 Conventional Commits 提交與推送
     keywords: [commit, push, 提交, 推送, 全部提交, commit all, 一鍵提交, git push, 推上去, 提交變更]
@@ -50,9 +56,6 @@ skills:
   - name: my-subagent
     when: 拆解大任務、派發平行 subagent 與調度驗收
     keywords: [平行, 多線, subagent, 派發, 驗收, 多代理, 平行任務, 分工處理, 分工, 開 subagent, 叫幾個 agent, 一起做, 派出去]
-  - name: my-upgrade-plan
-    when: 擬定軟體、框架或套件版本安全升級與備份計畫
-    keywords: [升級, 版本, 避雷, 升級計畫, upgrade, 軟體升級, 升級評估, 套件更新]
 
 rules:
   - name: git

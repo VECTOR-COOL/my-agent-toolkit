@@ -9,7 +9,10 @@ description: 從專案模板初始化 codebase，比對補齊 skills、rules 與
 
 ```mermaid
 graph TD
-  A[發起專案初始化] --> B[尋找專案模板]
+  A[發起專案初始化] --> R{判斷環境}
+  R -->|Claude| CL[載入 my-codebase-init-claude]
+  R -->|其他| B[尋找專案模板]
+  CL --> B
   B --> C{專案是否已存在代碼}
   C -->|全新專案| D[套用模板骨架]
   C -->|已有專案| E[比對並補齊規範 / 文件]
@@ -20,6 +23,15 @@ graph TD
 ```
 
 ## 執行流程
+
+### 0. 判斷環境並路由
+
+本 skill 是通用流程，與環境無關。先判斷目前環境：
+
+- **Claude**（Claude Code 本機、Desktop、IDE 外掛、雲端 session）：另載入 [`my-codebase-init-claude`](../my-codebase-init-claude/SKILL.md)。通用流程照下面做，Claude 專屬的步驟（`CLAUDE.md`、`.claude/`、plugin 啟用、雲端 session 差異）由子 skill 補上。
+- **Claude 雲端 session 不載入 plugin 與 marketplace**，所以 my-workflow 的規則與 skill 不會自動存在；新專案要用的規則得放進 repo（`CLAUDE.md`、`.claude/`、`AGENTS.md`），細節見子 skill。
+- **其他環境**：只照本流程。
+- 不確定是不是雲端就當本地，不掃系統來猜。
 
 ### 1. 定位專案模板目錄
 
@@ -47,7 +59,7 @@ graph TD
 2. 確認 Git 路徑大小寫與檔案系統完全一致。
 3. 建立基礎提交，預設主分支為 `main`。
 4. 建立並切換至日常開發分支：`git checkout -b develop`。
-5. 在 GitHub `VECTOR-COOL` 組織下建立對應的**私有 (Private) 儲存庫**：
+5. 在 GitHub `VECTOR-COOL` 組織下建立對應的**私有 (Private) 儲存庫**（預設用 `gh`；沒有 `gh` 就改用該環境提供的方式，Claude 雲端見子 skill）：
    ```bash
    gh repo create VECTOR-COOL/<repo-name> --private --source=. --remote=origin
    ```

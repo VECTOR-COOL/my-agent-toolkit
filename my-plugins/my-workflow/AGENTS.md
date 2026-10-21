@@ -1,6 +1,6 @@
 # my-workflow — 開發準則
 
-> **版本**：`1.8.1`（[`pack.yaml`](pack.yaml)）
+> **版本**：`1.10.0`（[`pack.yaml`](pack.yaml)）
 > 須與 [`.claude-plugin/plugin.json`](.claude-plugin/plugin.json)、[`plugin.json`](plugin.json)、[`references/index.yaml`](references/index.yaml)、toolkit [`project.json`](../../project.json) 同一個號。
 
 這份給**開發這個 plugin 的人與 Agent** 看。使用者怎麼安裝見 [`README.md`](README.md)。
@@ -42,6 +42,7 @@ graph TD
 | `skills/<name>/rules/*.md` | 該 skill 專屬規則，載入 skill 時一併讀 |
 | `skills/<name>/SKILL.md` | 各 skill，`name` 與資料夾名一致，平鋪不巢狀 |
 | `references/index.yaml` | 入口路由索引（`when`、`keywords`） |
+| `claude/` | Claude 共用的最佳實踐、平台對應與範本（不是 skill，skill 一律平鋪在 `skills/`） |
 | `scripts/` | `inject-rules.mjs`（注入 rules + 入口 skill + 索引，相對路徑改為絕對路徑） |
 
 Claude Code plugin **無法提供 rules**，plugin 內的 `CLAUDE.md` 不會載入，所以改用 SessionStart hook 注入 `additionalContext`。hook 不能呼叫 Skill 工具，為了「開對話就載入入口、不用斜線命令」，同一個腳本也注入入口 `SKILL.md` 與 `index.yaml`（全域規則拆小後約 4,500 字元，每次對話固定成本）。改入口或索引後不用另外同步，腳本每次直接讀檔。
