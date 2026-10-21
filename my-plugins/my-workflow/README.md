@@ -1,6 +1,6 @@
 # my-workflow
 
-VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills + Composio MCP。版本 `1.12.0`（[`pack.yaml`](pack.yaml)）。不上架公開市集。開發與維護見 [`AGENTS.md`](AGENTS.md)。
+VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills + Composio MCP。版本 `1.12.1`（[`pack.yaml`](pack.yaml)）。不上架公開市集。開發與維護見 [`AGENTS.md`](AGENTS.md)。
 
 **名詞**：`my-plugins/my-workflow/`（本目錄）是 **plugin 本體**；`my-agent-toolkit` 是放它的私有 GitHub repo，也是 marketplace 名稱，**不是 plugin**。安裝指令寫成 `my-workflow@my-agent-toolkit`。
 
@@ -47,6 +47,7 @@ marketplace 在 [`.agents/plugins/marketplace.json`](../../.agents/plugins/marke
 |------|------|
 | Claude Code | `claude plugin marketplace update my-agent-toolkit` → `claude plugin update my-workflow@my-agent-toolkit` → 重開 |
 | Codex | 更新 repo 後重新啟用 |
+| claude.ai 網頁／Cowork | 到 [Customize > Plugins](https://claude.ai/customize/plugins) 按 **Check for updates**；建議開 **Sync automatically** 自動同步 |
 | ChatGPT | 重貼規則、重傳 skill |
 
 也可直接對 agent 說「安裝／更新 my-workflow」：會載入 `my-plugin-install`，自動判斷你在哪個平台（Claude Code、Claude 網頁與 Cowork、雲端 session、Codex）並選對方法。
