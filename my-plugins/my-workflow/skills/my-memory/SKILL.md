@@ -101,6 +101,7 @@ graph TD
 | 環境 | 檔 |
 |------|-----|
 | Claude Code／Desktop／claude.ai／雲端 session | [claude.md](references/claude.md) |
+| Claude Code 專案裡綁定 ai-team 角色的 thread | [claude-code.md](references/claude-code.md) |
 | Grok Bot | [grok-bot.md](references/grok-bot.md) |
 | ChatGPT 網頁與 App | [chatgpt.md](references/chatgpt.md) |
 | Codex | [codex.md](references/codex.md) |
