@@ -5,7 +5,7 @@
 # version 與 pack.yaml、toolkit project.json 同一個號。
 # keywords 是使用者會說的詞，用來提高命中。不要把整段說明抄進來。
 
-version: 1.8.1
+version: 1.9.0
 
 skills:
   - name: my-workflow
@@ -41,6 +41,9 @@ skills:
   - name: my-codebase-init
     when: 從模板初始化新專案骨架與建立 GitHub 私有版控
     keywords: [初始化, 新專案, 模板, 尚未版控, GitHub, 開新專案, 建立 repo, project init]
+  - name: my-codebase-init-claude
+    when: 由 my-codebase-init 在 Claude 環境路由載入；Claude 專案的 CLAUDE.md、.claude 設定、plugin 啟用與雲端 session 差異
+    keywords: [CLAUDE.md, .claude, claude 初始化, claude 專案, 雲端 session 初始化, extraKnownMarketplaces]
   - name: my-commit-all-and-push
     when: 安全檢查變更並以 Conventional Commits 提交與推送
     keywords: [commit, push, 提交, 推送, 全部提交, commit all, 一鍵提交, git push, 推上去, 提交變更]
