@@ -5,7 +5,7 @@
 # version 與 pack.yaml、toolkit project.json 同一個號。
 # keywords 是使用者會說的詞，用來提高命中。不要把整段說明抄進來。
 
-version: 1.12.1
+version: 1.12.2
 
 skills:
   - name: my-workflow
