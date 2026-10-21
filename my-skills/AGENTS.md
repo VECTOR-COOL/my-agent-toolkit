@@ -30,7 +30,7 @@ my-skills/<分類>/<skill 名>/
 | 分類 | 用途 | Skills |
 |------|------|--------|
 | `backend/` | 後端與 API | `wordpress-rest-api-admin-development`、`wordpress-rest-api-development` |
-| `claude/` | Claude 平台專屬 | `my-claude-codebase-convert` |
+| `claude/` | Claude 平台專屬 | `my-claude-codebase-convert`、`my-codebase-init-claude` |
 | `develop/` | 外掛、主題等開發 | `wordpress-plugin-theme-development` |
 | `frontend/` | 前端 | `frontend-development`、`frontend-wordpress-headless-project`、`headpress-frontend-dev` |
 | `lovable/` | Lovable 平台專屬 | `lovable-legacy-to-ssr-migration` |

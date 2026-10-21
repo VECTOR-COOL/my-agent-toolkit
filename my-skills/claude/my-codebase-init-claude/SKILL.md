@@ -1,11 +1,11 @@
 ---
 name: my-codebase-init-claude
-description: my-codebase-init 的 Claude 子 skill。在 Claude 環境（Claude Code 本機、Desktop、IDE 外掛、雲端 session）初始化專案時，由主 skill 路由載入，補上 CLAUDE.md、.claude/ 設定、plugin 啟用與雲端 session 的差異。不單獨觸發。
+description: 在 Claude 環境（Claude Code 本機、Desktop、IDE 外掛、雲端 session）初始化新專案時，補上 CLAUDE.md、.claude/ 設定、plugin 啟用與雲端 session 的差異。搭配 my-workflow plugin 的 my-codebase-init 使用，由它在 Claude 環境路由載入；沒有該 plugin 時也可單獨用於新專案的 Claude 設定。
 ---
 
 # my-codebase-init-claude — Claude 環境的初始化補充
 
-只在 [`my-codebase-init`](../my-codebase-init/SKILL.md) 判斷目前是 Claude 環境時載入。通用流程（模板、AGENTS.md、README.md、Git、遠端 repo）仍照主 skill，本檔只補 Claude 專屬的部分，不重做主流程。既有專案要轉成 Claude 最佳化，改用 `my-skills/claude/` 的 `my-claude-codebase-convert`。
+搭配 my-workflow plugin 的 `my-codebase-init`：它判斷目前是 Claude 環境時載入本 skill。通用流程（模板、AGENTS.md、README.md、Git、遠端 repo）仍照該 skill，本檔只補 Claude 專屬的部分，不重做主流程。沒有該 plugin 時，先自行建立 `AGENTS.md` 與 Git 版控，再照本檔做。既有專案要轉成 Claude 最佳化，改用 `my-skills/claude/` 的 `my-claude-codebase-convert`。
 
 ```mermaid
 graph TD
@@ -52,7 +52,7 @@ Claude 雲端 session 在全新 clone 上執行，行為和本機不同：
 - 會帶過去的只有 repo 內容：`CLAUDE.md`、`.claude/settings.json`、`.claude/skills/`。所以雲端要用到的規則與 skill 必須放進 repo，不能只靠 plugin。需要全域規則時，把精簡版寫進 `AGENTS.md`。
 - 依賴安裝與冷啟動檢查用 `.claude/settings.json` 的 `SessionStart` hook。環境有 `session-start-hook` skill 就用它。
 - 通常沒有 `gh`：建立遠端 repo 改用環境提供的 GitHub MCP 工具（如 `create_repository`）。被 session 的 repo 範圍擋住就如實回報，請使用者建立 repo 或把它加進 session，不要硬做。
-- 交付沿用規則：commit 並 push 到 `develop`（或使用者指定的分支），不開 PR。細節見 [`my-claude-cloud-agent`](../my-claude-cloud-agent/SKILL.md)。
+- 交付沿用規則：commit 並 push 到 `develop`（或使用者指定的分支），不開 PR。雲端操作細節見 my-workflow plugin 的 `my-claude-cloud-agent`。
 - 不確定是不是雲端就當本地。
 
 ## 5. 驗證

@@ -10,7 +10,7 @@ description: 從專案模板初始化 codebase，比對補齊 skills、rules 與
 ```mermaid
 graph TD
   A[發起專案初始化] --> R{判斷環境}
-  R -->|Claude| CL[載入 my-codebase-init-claude]
+  R -->|Claude| CL[有安裝就載入 my-codebase-init-claude]
   R -->|其他| B[尋找專案模板]
   CL --> B
   B --> C{專案是否已存在代碼}
@@ -28,8 +28,8 @@ graph TD
 
 本 skill 是通用流程，與環境無關。先判斷目前環境：
 
-- **Claude**（Claude Code 本機、Desktop、IDE 外掛、雲端 session）：另載入 [`my-codebase-init-claude`](../my-codebase-init-claude/SKILL.md)。通用流程照下面做，Claude 專屬的步驟（`CLAUDE.md`、`.claude/`、plugin 啟用、雲端 session 差異）由子 skill 補上。
-- **Claude 雲端 session 不載入 plugin 與 marketplace**，所以 my-workflow 的規則與 skill 不會自動存在；新專案要用的規則得放進 repo（`CLAUDE.md`、`.claude/`、`AGENTS.md`），細節見子 skill。
+- **Claude**（Claude Code 本機、Desktop、IDE 外掛、雲端 session）：若已安裝 `my-codebase-init-claude`（在 toolkit 的 `my-skills/claude/`，獨立 skill，不隨本 plugin 安裝）就一併載入，由它補上 `CLAUDE.md`、`.claude/`、plugin 啟用、雲端 session 差異。沒安裝就照本流程，並至少建立只含 `@AGENTS.md` 的 `CLAUDE.md`，再提醒使用者可安裝該 skill。
+- **Claude 雲端 session 不載入 plugin 與 marketplace**，所以 my-workflow 的規則與 skill 不會自動存在；新專案要用的規則得放進 repo（`CLAUDE.md`、`.claude/`、`AGENTS.md`）。
 - **其他環境**：只照本流程。
 - 不確定是不是雲端就當本地，不掃系統來猜。
 
