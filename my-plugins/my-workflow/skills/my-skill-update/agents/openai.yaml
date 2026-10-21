@@ -1,4 +1,0 @@
-interface:
-  display_name: "my-skill-update"
-  short_description: "檢查並更新 my-workflow skills"
-  default_prompt: "使用 $my-skill-update 檢查並更新已安裝的 skills。"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "my-plugin-install"
+  short_description: "依平台安裝與更新 plugin"
+  default_prompt: "使用 $my-plugin-install 判斷目前平台，安裝或更新 my-workflow plugin。"
