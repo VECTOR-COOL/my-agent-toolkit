@@ -157,6 +157,22 @@ function todayStr() {
   return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
 }
 
+// 占位目錄：內容不發佈（如上傳圖檔 img/），但目錄本身要存在。以 git archive --add-virtual-file 放入空的 .gitkeep。
+function readPlaceholders() {
+  const list = Array.isArray(config.placeholders) ? config.placeholders : [];
+  const dirs = list.map((raw) => {
+    const dir = String(raw).replace(/\\/g, '/').replace(/^\.\//, '').replace(/\/+$/, '');
+    if (!dir || dir.startsWith('/') || /^[a-zA-Z]:/.test(dir) || dir.split('/').includes('..') || dir.includes(':')) {
+      return fail(`placeholders 路徑不合法（要是 repo 內的相對目錄）：${raw}`, 2);
+    }
+    return dir;
+  });
+  // 只放到 base path：已被另一個占位目錄涵蓋的子目錄不再另外放
+  const unique = [...new Set(dirs)].sort();
+  const bases = unique.filter((d) => !unique.some((other) => other !== d && d.startsWith(`${other}/`)));
+  return bases.map((d) => `${d}/.gitkeep`);
+}
+
 function buildForbidden() {
   const remove = Array.isArray(config.forbiddenRemove) ? config.forbiddenRemove : [];
   const base = DEFAULT_FORBIDDEN.filter((s) => !remove.some((r) => s.includes(r)));
@@ -171,8 +187,8 @@ function buildForbidden() {
 }
 
 // 內容掃描需要解開檔案：把 git archive 的 tar 輸出交給 tar（GNU tar 與 bsdtar 都能讀 tar；zip 只有 bsdtar 能讀，所以不用 tar 讀 zip）
-function archiveTar(treeRef, pathspecs) {
-  const gitArgs = ['--literal-pathspecs', 'archive', '--worktree-attributes', '--format=tar', treeRef];
+function archiveTar(treeRef, pathspecs, virtualFiles = []) {
+  const gitArgs = ['--literal-pathspecs', 'archive', '--worktree-attributes', '--format=tar', ...virtualFiles.map((f) => `--add-virtual-file=${f}:`), treeRef];
   if (pathspecs && pathspecs.length > 0) gitArgs.push('--', ...pathspecs);
   return spawn('git', gitArgs, { cwd: repoRoot });
 }
@@ -275,8 +291,8 @@ function readTarNames(stream) {
   });
 }
 
-async function listFiles(treeRef, pathspecs) {
-  const g = archiveTar(treeRef, pathspecs);
+async function listFiles(treeRef, pathspecs, virtualFiles = []) {
+  const g = archiveTar(treeRef, pathspecs, virtualFiles);
   let err = '';
   g.stderr.on('data', (d) => (err += d));
   const exited = new Promise((resolveExit, rejectExit) => {
@@ -392,6 +408,26 @@ async function main() {
     if (pathspecs.join('').length > 100000) fail('變更檔案過多，超出命令列長度限制；請改打完整發佈包。');
   }
 
+  // 占位目錄：完整包補上缺的；更新檔只補「上一版發佈包裡沒有」的（正式機已有的目錄不重複放）
+  const placeholderFiles = readPlaceholders();
+  let virtualFiles = [];
+  let placeholdersToCreate = [];
+  if (placeholderFiles.length > 0) {
+    const current = new Set(await listFiles(treeRef, pathspecs));
+    const missing = placeholderFiles.filter((f) => !current.has(f));
+    if (args.since) {
+      const prior = await listFiles(sinceSha);
+      const newDirs = missing.filter((f) => {
+        const dir = f.slice(0, -'/.gitkeep'.length);
+        return !prior.some((p) => p === f || p.startsWith(`${dir}/`));
+      });
+      if (pathspecs.length > 0) virtualFiles = newDirs;
+      else placeholdersToCreate = newDirs.map((f) => f.slice(0, -'/.gitkeep'.length));
+    } else {
+      virtualFiles = missing;
+    }
+  }
+
   const outDir = config.outDir || 'dist';
   const patchSuffix = args.since ? `-patch-${sinceSha.slice(0, 7)}` : '';
   const defaultName = `${detectName()}-${detectVersion()}-${todayStr()}${patchSuffix}.zip`;
@@ -409,15 +445,19 @@ async function main() {
     let entries = [];
     if (hasZip) {
       // 5. 導出 ZIP
-      const archiveArgs = ['--literal-pathspecs', 'archive', '--worktree-attributes', '--format=zip', '-o', targetZip, treeRef];
+      const archiveArgs = ['--literal-pathspecs', 'archive', '--worktree-attributes', '--format=zip', ...virtualFiles.map((f) => `--add-virtual-file=${f}:`), '-o', targetZip, treeRef];
       if (pathspecs.length > 0) archiveArgs.push('--', ...pathspecs);
       const archive = git(archiveArgs, { cwd: repoRoot });
-      if (archive.status !== 0 || !existsSync(targetZip)) fail(`git archive 失敗：${archive.stderr || archive.stdout}`);
+      if (archive.status !== 0 || !existsSync(targetZip)) {
+        const hint = virtualFiles.length && /add-virtual-file/.test(archive.stderr || '') ? '\n占位目錄需要較新的 Git（支援 --add-virtual-file）；請升級 Git，或在 repo 內提交各目錄的 .gitkeep。' : '';
+        fail(`git archive 失敗：${archive.stderr || archive.stdout}${hint}`);
+      }
 
       // 6. 審核：檔名禁則 + 內容掃描
-      entries = await listFiles(treeRef, pathspecs);
+      entries = await listFiles(treeRef, pathspecs, virtualFiles);
       const forbidden = buildForbidden();
-      const leaked = entries.filter((e) => forbidden.some((re) => re.test(e)));
+      const placeholderSet = new Set(placeholderFiles);
+      const leaked = entries.filter((e) => !placeholderSet.has(e) && forbidden.some((re) => re.test(e)));
       const content = leaked.length === 0 ? await scanContents(treeRef, pathspecs) : { errors: [], warnings: [], skipped: false };
       if (leaked.length > 0 || content.errors.length > 0) {
         rmSync(targetZip, { force: true });
@@ -451,6 +491,7 @@ async function main() {
           block('新增', changes.added),
           block('修改', changes.modified),
           block('刪除（解壓覆蓋不會刪檔，需在正式機手動移除）', changes.deleted),
+          ...(placeholdersToCreate.length ? [block('需建立的空目錄（此更新檔沒有其他檔案可附帶占位）', placeholdersToCreate)] : []),
         ].join('\n'),
       );
     }
@@ -471,6 +512,7 @@ async function main() {
           sizeMB: hasZip ? Number((statSync(targetZip).size / (1024 * 1024)).toFixed(3)) : 0,
           totalEntries: entries.length,
           topLevelIncluded: [...new Set(entries.map((e) => e.split('/')[0]))].sort(),
+          placeholdersAdded: virtualFiles.map((f) => f.slice(0, -'/.gitkeep'.length)),
           contentWarnings: typeof contentWarnings === 'undefined' ? 0 : contentWarnings.length,
           leakedSensitiveOrDevFiles: 0,
         },

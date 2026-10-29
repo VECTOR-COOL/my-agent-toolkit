@@ -34,7 +34,7 @@ function makeRepo(files = {}) {
     'docs/a.md': 'doc',
     '.env.example': 'KEY=',
     'package.json': '{"name":"shop","version":"2.3.4"}',
-    '.gitattributes': '/docs export-ignore\n/AGENTS.md export-ignore\n/package.json export-ignore\n/.gitattributes export-ignore\n/.gitignore export-ignore\n',
+    '.gitattributes': '/docs export-ignore\n/AGENTS.md export-ignore\n/package.json export-ignore\n/.gitattributes export-ignore\n/.gitignore export-ignore\n/release.config.json export-ignore\n',
     '.gitignore': 'dist/\n',
     ...files,
   };
@@ -284,5 +284,97 @@ describe('增量更新檔 --since', () => {
     const r = run(dir, ['--since', 'v1']);
     assert.equal(r.status, 0, r.stderr);
     assert.equal(r.json.changes.added, 1);
+  });
+});
+
+describe('占位目錄 placeholders', () => {
+  const cfg = (extra = {}) => JSON.stringify({ placeholders: ['img', 'content/user_files/'], ...extra });
+
+  it('內容被 export-ignore 的目錄仍以空 .gitkeep 占位', () => {
+    const dir = makeRepo({
+      'img/u1.jpg': 'pic',
+      '.gitattributes': '/img/** export-ignore\n/docs export-ignore\n/AGENTS.md export-ignore\n/package.json export-ignore\n/.gitattributes export-ignore\n/.gitignore export-ignore\n/release.config.json export-ignore\n',
+      'release.config.json': cfg(),
+    });
+    const r = run(dir, ['--dry-run']);
+    assert.equal(r.status, 0, r.stderr);
+    assert.deepEqual(r.json.placeholdersAdded, ['content/user_files', 'img']);
+    assert.ok(r.json.topLevelIncluded.includes('img'));
+    assert.ok(r.json.topLevelIncluded.includes('content'));
+  });
+
+  it('repo 已提交的 .gitkeep 不重複加', () => {
+    const dir = makeRepo({ 'img/.gitkeep': '', 'release.config.json': cfg() });
+    const r = run(dir, ['--dry-run']);
+    assert.equal(r.status, 0, r.stderr);
+    assert.deepEqual(r.json.placeholdersAdded, ['content/user_files']);
+  });
+
+  it('禁則擋整個目錄時，占位 .gitkeep 仍放行', () => {
+    const dir = makeRepo({ 'release.config.json': cfg({ forbiddenExtra: ['^img/', '^content/'] }) });
+    const r = run(dir, ['--dry-run']);
+    assert.equal(r.status, 0, r.stderr);
+    assert.deepEqual(r.json.placeholdersAdded, ['content/user_files', 'img']);
+  });
+
+  it('禁則仍擋住占位目錄裡的真實檔案', () => {
+    const dir = makeRepo({ 'img/leak.jpg': 'x', 'release.config.json': cfg({ forbiddenExtra: ['^img/'] }) });
+    assert.equal(run(dir, ['--dry-run']).status, 1);
+  });
+
+  it('只放到 base path：巢狀的子目錄合併到上層，不另外占位', () => {
+    const dir = makeRepo({
+      'content/user_files/2024/01/a.jpg': 'x',
+      '.gitattributes': '/content/user_files/** export-ignore\n/docs export-ignore\n/AGENTS.md export-ignore\n/package.json export-ignore\n/.gitattributes export-ignore\n/.gitignore export-ignore\n/release.config.json export-ignore\n',
+      'release.config.json': JSON.stringify({ placeholders: ['content/user_files/2024/01', 'content/user_files', 'content/user_files/tmp/'] }),
+    });
+    const r = run(dir, ['--dry-run']);
+    assert.equal(r.status, 0, r.stderr);
+    assert.deepEqual(r.json.placeholdersAdded, ['content/user_files']);
+    assert.equal(r.json.totalEntries, 4); // app/index.php、app/lib.php、.env.example、content/user_files/.gitkeep
+  });
+
+  it('不合法的路徑：結束碼 2', () => {
+    for (const bad of ['../x', '/abs', 'C:/win', 'a:b']) {
+      const dir = makeRepo({ 'release.config.json': JSON.stringify({ placeholders: [bad] }) });
+      assert.equal(run(dir, ['--dry-run']).status, 2, bad);
+    }
+  });
+
+  it('更新檔：上一版已有的目錄不重複放，新設定的才放', () => {
+    const dir = makeRepo({ 'release.config.json': JSON.stringify({ placeholders: ['img'] }) });
+    sh(dir, 'git', ['tag', 'v1']);
+    // v1 的完整包會有 img/.gitkeep（虛擬），但 --since 比較的是 v1 的發佈內容（不含虛擬檔），所以 img 視為新目錄
+    write(dir, 'app/index.php', '<?php echo 3;');
+    write(dir, 'release.config.json', JSON.stringify({ placeholders: ['img', 'log'] }));
+    sh(dir, 'git', ['add', '-A']);
+    sh(dir, 'git', ['commit', '-qm', 'c']);
+    const r = run(dir, ['--since', 'v1']);
+    assert.equal(r.status, 0, r.stderr);
+    assert.deepEqual(r.json.placeholdersAdded.sort(), ['img', 'log']);
+  });
+
+  it('更新檔：上一版發佈包已有該目錄的檔案就不放', () => {
+    const dir = makeRepo({ 'img/keep.png': 'x', 'release.config.json': JSON.stringify({ placeholders: ['img'] }) });
+    sh(dir, 'git', ['tag', 'v1']);
+    write(dir, 'app/index.php', '<?php echo 4;');
+    sh(dir, 'git', ['add', '-A']);
+    sh(dir, 'git', ['commit', '-qm', 'c']);
+    const r = run(dir, ['--since', 'v1']);
+    assert.equal(r.status, 0, r.stderr);
+    assert.deepEqual(r.json.placeholdersAdded, []);
+  });
+
+  it('更新檔只有刪除時：新占位目錄列在 CHANGES.txt', () => {
+    const dir = makeRepo();
+    sh(dir, 'git', ['tag', 'v1']);
+    sh(dir, 'git', ['rm', '-q', 'app/lib.php']);
+    write(dir, 'release.config.json', JSON.stringify({ placeholders: ['img'] }));
+    sh(dir, 'git', ['add', '-A']);
+    sh(dir, 'git', ['commit', '-qm', 'd']);
+    const r = run(dir, ['--since', 'v1']);
+    assert.equal(r.status, 0, r.stderr);
+    assert.equal(r.json.output, null);
+    assert.match(readFileSync(join(dir, r.json.changesFile), 'utf8'), /需建立的空目錄[^\n]*\n {2}img/);
   });
 });

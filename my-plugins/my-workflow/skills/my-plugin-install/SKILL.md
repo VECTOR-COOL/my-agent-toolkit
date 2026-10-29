@@ -48,6 +48,10 @@ graph TD
 - 完成後驗證：版本號正確、plugin 已啟用；開新對話，問它有沒有收到 my-workflow 的全域規則。
 - 回報：平台、做了什麼、前後版本、驗證結果、哪一步沒做成。
 
+## 更新失敗
+
+版本沒變、更新按鈕反灰、`unknown command`、雲端 session 停在舊版等，照 plugin 的 [`docs/RELEASE.md`](../../docs/RELEASE.md)「無法更新怎麼排除」：先確認來源 `main` 有新版，再查使用者端。
+
 ## 沒有 plugin 機制
 
 例如 ChatGPT 網頁：
