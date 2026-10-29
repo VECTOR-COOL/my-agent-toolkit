@@ -298,7 +298,7 @@ describe('占位目錄 placeholders', () => {
     });
     const r = run(dir, ['--dry-run']);
     assert.equal(r.status, 0, r.stderr);
-    assert.deepEqual(r.json.placeholdersAdded, ['img', 'content/user_files']);
+    assert.deepEqual(r.json.placeholdersAdded, ['content/user_files', 'img']);
     assert.ok(r.json.topLevelIncluded.includes('img'));
     assert.ok(r.json.topLevelIncluded.includes('content'));
   });
@@ -314,7 +314,7 @@ describe('占位目錄 placeholders', () => {
     const dir = makeRepo({ 'release.config.json': cfg({ forbiddenExtra: ['^img/', '^content/'] }) });
     const r = run(dir, ['--dry-run']);
     assert.equal(r.status, 0, r.stderr);
-    assert.deepEqual(r.json.placeholdersAdded, ['img', 'content/user_files']);
+    assert.deepEqual(r.json.placeholdersAdded, ['content/user_files', 'img']);
   });
 
   it('禁則仍擋住占位目錄裡的真實檔案', () => {
