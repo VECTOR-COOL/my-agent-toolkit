@@ -1,0 +1,4 @@
+interface:
+  display_name: "my-release-packaging"
+  short_description: "建立乾淨的正式發佈包與打包規則"
+  default_prompt: "使用 $my-release-packaging 為目前專案建立 .gitattributes、打包腳本與發佈打包規格書。"

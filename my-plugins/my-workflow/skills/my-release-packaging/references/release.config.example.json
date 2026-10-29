@@ -1,0 +1,13 @@
+{
+  "name": "my-project",
+  "version": { "file": "core/include.php", "regex": "define\\(\\s*'_VERSION'\\s*,\\s*'([^']+)'\\s*\\)" },
+  "lint": ["node", "scripts/lint.mjs"],
+  "forbiddenExtra": [
+    "(^|/)acount\\.json$",
+    "(^|/)(sys|db)\\.config\\.inc\\.php$",
+    "^(docs|scripts|profiles|tests)(/|$)",
+    "^log/(?!\\.gitkeep$).+",
+    "^content/(user_files|temp)/(?!\\.gitkeep$).+"
+  ],
+  "outDir": "dist"
+}
