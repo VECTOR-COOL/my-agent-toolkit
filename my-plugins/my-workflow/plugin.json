@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "my-workflow",
-  "version": "1.15.1",
+  "version": "1.15.2",
   "description": "VECTOR LTD 私人工作流：常駐規則、記憶、審查、PRD、文件與提交等 skills，附 Composio MCP。",
   "extensions": {
     "com.openai": {

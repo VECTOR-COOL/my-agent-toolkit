@@ -33,7 +33,8 @@ graph TD
 | --- | --- | :---: | :---: | --- |
 | ① 本機私密／執行期暫存 | `.env*`、帳密檔、`log/*.log`、使用者上傳檔、快取、`dist/` | 否 | 否 | `.gitignore` + 腳本禁則審核 |
 | ② 開發／測試／AI 治理檔 | `.agents/`、`.claude/`、`.cursor/`、`AGENTS.md`、`CLAUDE.md`、`NOTE.md`、`README.md`、`docs/`、`scripts/`、`tests/` | 是 | 否 | `.gitattributes`（`export-ignore`） |
-| ③ 正式執行程式碼 | 應用程式入口、核心、前端靜態資源、必要 `vendor/`、`*.example` 設定範本、空目錄錨點 `.gitkeep` | 是 | **是** | `git archive` 自動保留 |
+| ③ 正式執行程式碼 | 應用程式入口、核心、前端靜態資源、必要 `vendor/`、`*.example` 設定範本 | 是 | **是** | `git archive` 自動保留 |
+| ④ 占位目錄 | `img/`、`log/`、上傳與暫存目錄：**目錄要在、內容不發佈** | 內容否 | 只有空目錄 | `placeholders` 設定（或提交 `.gitkeep`） |
 
 ## 流程
 
@@ -61,6 +62,7 @@ graph TD
 /README.md      export-ignore
 /.gitignore     export-ignore
 /.gitattributes export-ignore
+/release.config.json export-ignore
 ```
 
 ### 3. 打包腳本與設定檔
@@ -77,6 +79,7 @@ graph TD
 | `forbiddenRemove` | 放行的內建禁則（子字串比對），如 `["AGENTS"]` |
 | `contentScan` | `{ "enabled": false, "allow": ["正規表示式"] }` |
 | `requireClean`、`strict` | 設為 `true` 等同每次加對應旗標 |
+| `placeholders` | 內容不發佈、但目錄要存在的路徑，如 `["img", "log", "content/user_files"]`，見下方「占位目錄」 |
 | `outDir` | 輸出目錄，預設 `dist` |
 
 腳本流程：**前置檢查** → **工作區檢查**（未追蹤檔警告）→ `git stash create` 快照（含已追蹤檔的未提交修改）→ `git archive --worktree-attributes` 產 ZIP（未 commit 的 `.gitattributes` 也立即生效）→ **審核**（檔名禁則加內容掃描）→ 產生 `.sha256`。審核有洩漏就刪除 zip、結束碼 1。
@@ -96,6 +99,16 @@ node scripts/pack-release.mjs --out dist/custom.zip --force
 ```
 
 輸出檔已存在會拒絕，要覆寫才加 `--force`。內部不用 `tar` 讀 zip，Windows、macOS、Linux 都能跑；只有內容掃描需要 `tar` 解開檔案。測試：`node --test scripts/pack-release.test.mjs`。
+
+#### 占位目錄（`placeholders`）
+
+上傳圖檔 `img/`、日誌 `log/`、暫存 `content/temp/` 這類目錄，**內容不能發佈，但正式機需要目錄存在**（程式會寫入）。Git 不追蹤空目錄，內容排除後目錄就從包裡消失，部署後程式寫檔失敗。
+
+- 在 `release.config.json` 列出目錄：`"placeholders": ["img", "log"]`。腳本用 `git archive --add-virtual-file` 在包裡放一個空的 `<目錄>/.gitkeep`，目錄就會存在；repo 不必提交 `.gitkeep`。
+- 內容用 `.gitattributes` 排除：`/img/** export-ignore`（排除內容）。**不要寫 `/img export-ignore`**，那會讓目錄本身也被視為排除（占位仍會補上，但意圖不清）。
+- repo 已提交該目錄的 `.gitkeep` 就不重複加。禁則擋整個目錄（如 `forbiddenExtra: ["^img/"]`）時，占位的 `.gitkeep` 仍放行，目錄裡的真實檔案照樣擋。
+- 更新檔只補「上一版發佈包裡沒有」的目錄；只有刪除、沒有檔案可附帶時，改列在 `CHANGES.txt` 的「需建立的空目錄」。
+- 需要支援 `--add-virtual-file` 的 Git（Git 2.43 實測可用）；太舊會報錯並提示升級，或改在 repo 提交 `.gitkeep`。
 
 #### 增量更新檔（`--since <tag 或 commit>`）
 
@@ -127,7 +140,7 @@ node scripts/pack-release.mjs --out dist/custom.zip --force
 | --- | --- | --- |
 | 改了 `.gitattributes` 還沒 commit，打包卻仍含舊檔 | `git archive` 預設讀 commit 內的屬性 | 腳本已加 `--worktree-attributes`；手動執行時別漏 |
 | 用 `zip -r` 壓整個專案 | 把未進版控的帳密與上傳檔打進去 | 一律 `git archive` |
-| 正式機需要空目錄但包裡沒有 | Git 不追蹤空目錄 | 目錄內放 `.gitkeep` 並提交，`.gitignore` 寫 `/log/*` 加 `!/log/.gitkeep` |
+| 正式機需要空目錄但包裡沒有（`img/`、`log/` 等） | Git 不追蹤空目錄，內容排除後目錄就消失 | 列進 `placeholders`；或目錄內提交 `.gitkeep`，`.gitignore` 寫 `/log/*` 加 `!/log/.gitkeep` |
 | 新增的檔案沒進包 | `git stash create` 不含未追蹤檔 | 先 `git add` 新檔；腳本會列出未追蹤檔，正式發佈用 `--strict` |
 | 更新檔部署後舊檔還在 | 解壓覆蓋不會刪檔 | 照 `CHANGES.txt` 的「刪除」清單在正式機手動移除 |
 | 更新檔缺檔 | `--since` 基準不是上次實際部署的版本 | 每次部署後打 tag，下次以該 tag 為基準 |

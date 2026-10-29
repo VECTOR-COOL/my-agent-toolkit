@@ -9,5 +9,6 @@
     "^log/(?!\\.gitkeep$).+",
     "^content/(user_files|temp)/(?!\\.gitkeep$).+"
   ],
+  "placeholders": ["img", "log", "content/user_files", "content/temp"],
   "outDir": "dist"
 }
