@@ -34,7 +34,7 @@ graph TD
 | ① 本機私密／執行期暫存 | `.env*`、帳密檔、`log/*.log`、使用者上傳檔、快取、`dist/` | 否 | 否 | `.gitignore` + 腳本禁則審核 |
 | ② 開發／測試／AI 治理檔 | `.agents/`、`.claude/`、`.cursor/`、`AGENTS.md`、`CLAUDE.md`、`NOTE.md`、`README.md`、`docs/`、`scripts/`、`tests/` | 是 | 否 | `.gitattributes`（`export-ignore`） |
 | ③ 正式執行程式碼 | 應用程式入口、核心、前端靜態資源、必要 `vendor/`、`*.example` 設定範本 | 是 | **是** | `git archive` 自動保留 |
-| ④ 占位目錄 | `img/`、`log/`、上傳與暫存目錄：**目錄要在、內容不發佈** | 內容否 | 只有空目錄 | `placeholders` 設定（或提交 `.gitkeep`） |
+| ④ 上傳／日誌目錄 | `img/`、`log/`、上傳與暫存目錄：**目錄要存在** | 上傳檔否（`.gitignore`） | 已有內容照常；沒有內容就補空目錄 | `placeholders` 只寫 base path |
 
 ## 流程
 
@@ -102,12 +102,15 @@ node scripts/pack-release.mjs --out dist/custom.zip --force
 
 #### 占位目錄（`placeholders`）
 
-上傳圖檔 `img/`、日誌 `log/`、暫存 `content/temp/` 這類目錄，**內容不能發佈，但正式機需要目錄存在**（程式會寫入）。Git 不追蹤空目錄，內容排除後目錄就從包裡消失，部署後程式寫檔失敗。
+上傳圖檔 `img/`、日誌 `log/`、暫存 `content/temp/` 這類目錄，正式機需要它**存在**（程式會寫入、自己建子目錄），但 Git 不追蹤空目錄，包裡沒有內容時目錄就不見，部署後程式寫檔失敗。
 
-- 在 `release.config.json` 列出目錄：`"placeholders": ["img", "log"]`。**只列到上傳目錄的 base path**，子目錄（如 `img/2024/01`）由程式執行時自行建立，不必列；若列了，腳本會自動合併到上層，不另外占位。腳本用 `git archive --add-virtual-file` 在包裡放一個空的 `<目錄>/.gitkeep`，目錄就會存在；repo 不必提交 `.gitkeep`。
-- 內容用 `.gitattributes` 排除：`/img/** export-ignore`（排除內容）。**不要寫 `/img export-ignore`**，那會讓目錄本身也被視為排除（占位仍會補上，但意圖不清）。
-- repo 已提交該目錄的 `.gitkeep` 就不重複加。禁則擋整個目錄（如 `forbiddenExtra: ["^img/"]`）時，占位的 `.gitkeep` 仍放行，目錄裡的真實檔案照樣擋。
-- 更新檔只補「上一版發佈包裡沒有」的目錄；只有刪除、沒有檔案可附帶時，改列在 `CHANGES.txt` 的「需建立的空目錄」。
+- 在 `release.config.json` **只寫 base path**：`"placeholders": ["img", "log", "content/user_files"]`。子目錄（如 `img/2024/01`）由程式執行時自行建立，不必列；若列了，腳本會合併到上層 base path。
+- 腳本檢查每個 base path：
+  - **目錄在包裡已有檔案或子目錄 → 原樣保留，什麼都不加。**
+  - **目錄在包裡完全沒有內容 → 補一個空的 `<目錄>/.gitkeep`**（`git archive --add-virtual-file`），目錄就存在；repo 不必提交 `.gitkeep`。
+- 要不要發佈目錄裡的內容，是 `.gitignore` 與 `.gitattributes` 的事，`placeholders` 不改變它。上傳檔通常沒進版控（`.gitignore`），自然不會進包；有進版控的預設資源會照常保留。
+- 禁則擋整個目錄（如 `forbiddenExtra: ["^img/"]`）時，占位的 `.gitkeep` 仍放行，目錄裡的真實檔案照樣被擋。
+- 更新檔：上一版發佈包裡已有該目錄（正式機就有了），或本次更新檔自己帶了該目錄的檔案，都不放。只有刪除、沒有檔案可附帶時，改列在 `CHANGES.txt` 的「需建立的空目錄」。
 - 需要支援 `--add-virtual-file` 的 Git（Git 2.43 實測可用）；太舊會報錯並提示升級，或改在 repo 提交 `.gitkeep`。
 
 #### 增量更新檔（`--since <tag 或 commit>`）

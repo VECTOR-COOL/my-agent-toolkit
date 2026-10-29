@@ -157,7 +157,7 @@ function todayStr() {
   return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
 }
 
-// 占位目錄：內容不發佈（如上傳圖檔 img/），但目錄本身要存在。以 git archive --add-virtual-file 放入空的 .gitkeep。
+// 占位目錄：設定檔只寫上傳目錄的 base path（如 img）；包裡該目錄沒有任何內容時，才以 git archive --add-virtual-file 放入空的 .gitkeep。
 function readPlaceholders() {
   const list = Array.isArray(config.placeholders) ? config.placeholders : [];
   const dirs = list.map((raw) => {
@@ -408,24 +408,22 @@ async function main() {
     if (pathspecs.join('').length > 100000) fail('變更檔案過多，超出命令列長度限制；請改打完整發佈包。');
   }
 
-  // 占位目錄：完整包補上缺的；更新檔只補「上一版發佈包裡沒有」的（正式機已有的目錄不重複放）
+  // 占位目錄：只管 base path。該目錄在包裡已有檔案或子目錄就原樣保留、什麼都不加；
+  // 完全沒有內容時，才補一個空的 .gitkeep 讓目錄存在。
+  // 更新檔：上一版發佈包裡已有該目錄（正式機就有了），或本次更新檔自己帶了該目錄的檔案，都不放。
   const placeholderFiles = readPlaceholders();
   let virtualFiles = [];
   let placeholdersToCreate = [];
   if (placeholderFiles.length > 0) {
-    const current = new Set(await listFiles(treeRef, pathspecs));
-    const missing = placeholderFiles.filter((f) => !current.has(f));
-    if (args.since) {
-      const prior = await listFiles(sinceSha);
-      const newDirs = missing.filter((f) => {
-        const dir = f.slice(0, -'/.gitkeep'.length);
-        return !prior.some((p) => p === f || p.startsWith(`${dir}/`));
-      });
-      if (pathspecs.length > 0) virtualFiles = newDirs;
-      else placeholdersToCreate = newDirs.map((f) => f.slice(0, -'/.gitkeep'.length));
-    } else {
-      virtualFiles = missing;
-    }
+    const current = await listFiles(treeRef, pathspecs);
+    const prior = args.since ? await listFiles(sinceSha) : [];
+    const hasContent = (list, dir) => list.some((p) => p.startsWith(`${dir}/`));
+    const missing = placeholderFiles.filter((f) => {
+      const dir = f.slice(0, -'/.gitkeep'.length);
+      return !hasContent(current, dir) && !(args.since && hasContent(prior, dir));
+    });
+    if (args.since && pathspecs.length === 0) placeholdersToCreate = missing.map((f) => f.slice(0, -'/.gitkeep'.length));
+    else virtualFiles = missing;
   }
 
   const outDir = config.outDir || 'dist';

@@ -334,6 +334,33 @@ describe('占位目錄 placeholders', () => {
     assert.equal(r.json.totalEntries, 4); // app/index.php、app/lib.php、.env.example、content/user_files/.gitkeep
   });
 
+  it('目錄裡已有檔案與子目錄：原樣保留，不再加 .gitkeep', () => {
+    const dir = makeRepo({ 'img/a.png': 'x', 'img/sub/b.png': 'y', 'release.config.json': JSON.stringify({ placeholders: ['img'] }) });
+    const r = run(dir, ['--dry-run']);
+    assert.equal(r.status, 0, r.stderr);
+    assert.deepEqual(r.json.placeholdersAdded, []);
+    assert.equal(r.json.totalEntries, 5); // app 2、.env.example 1、img/a.png、img/sub/b.png
+  });
+
+  it('子目錄是空的（只有 .gitkeep）：保留，不重複加', () => {
+    const dir = makeRepo({ 'img/sub/.gitkeep': '', 'release.config.json': JSON.stringify({ placeholders: ['img'] }) });
+    const r = run(dir, ['--dry-run']);
+    assert.equal(r.status, 0, r.stderr);
+    assert.deepEqual(r.json.placeholdersAdded, []);
+    assert.equal(r.json.totalEntries, 4);
+  });
+
+  it('更新檔本身帶了該目錄的檔案：不再加 .gitkeep', () => {
+    const dir = makeRepo({ 'release.config.json': JSON.stringify({ placeholders: ['img'] }) });
+    sh(dir, 'git', ['tag', 'v1']);
+    write(dir, 'img/new.png', 'x');
+    sh(dir, 'git', ['add', '-A']);
+    sh(dir, 'git', ['commit', '-qm', 'c']);
+    const r = run(dir, ['--since', 'v1']);
+    assert.equal(r.status, 0, r.stderr);
+    assert.deepEqual(r.json.placeholdersAdded, []);
+  });
+
   it('不合法的路徑：結束碼 2', () => {
     for (const bad of ['../x', '/abs', 'C:/win', 'a:b']) {
       const dir = makeRepo({ 'release.config.json': JSON.stringify({ placeholders: [bad] }) });
