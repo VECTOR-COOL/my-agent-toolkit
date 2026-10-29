@@ -5,7 +5,7 @@
 # version 與 pack.yaml、toolkit project.json 同一個號。
 # keywords 是使用者會說的詞，用來提高命中。不要把整段說明抄進來。
 
-version: 1.14.0
+version: 1.15.0
 
 skills:
   - name: my-workflow
@@ -42,8 +42,8 @@ skills:
     when: 從模板初始化新專案骨架與建立 GitHub 私有版控
     keywords: [初始化, 新專案, 模板, 尚未版控, GitHub, 開新專案, 建立 repo, project init]
   - name: my-release-packaging
-    when: 建立正式發佈包（更新檔）的打包規則與流程：.gitattributes export-ignore、打包腳本、發佈規格書、審核有無洩漏機敏檔
-    keywords: [打包, 發佈包, 更新檔, 部署包, release, packaging, zip, 正式環境, export-ignore, gitattributes, 發佈規格, 洩漏]
+    when: 建立正式發佈包與增量更新檔的打包規則與流程：.gitattributes export-ignore、打包腳本、發佈規格書、審核有無洩漏機敏檔、解壓覆蓋部署
+    keywords: [打包, 發佈包, 更新檔, 增量更新, 部署包, release, packaging, zip, 正式環境, export-ignore, gitattributes, 發佈規格, 洩漏, 解壓覆蓋, since, 部署 SOP]
   - name: my-commit-all-and-push
     when: 安全檢查變更並以 Conventional Commits 提交與推送
     keywords: [commit, push, 提交, 推送, 全部提交, commit all, 一鍵提交, git push, 推上去, 提交變更]

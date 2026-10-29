@@ -74,23 +74,43 @@ graph TD
 | `version.file` + `version.regex` | 從任意檔案取版本；regex 要有一個擷取群組 |
 | `lint` | 前置檢查指令陣列，如 `["node","scripts/lint.mjs"]`，失敗即中止 |
 | `forbiddenExtra` | 專案特有的禁則（正規表示式字串），疊加在內建禁則上 |
+| `forbiddenRemove` | 放行的內建禁則（子字串比對），如 `["AGENTS"]` |
+| `contentScan` | `{ "enabled": false, "allow": ["正規表示式"] }` |
+| `requireClean`、`strict` | 設為 `true` 等同每次加對應旗標 |
 | `outDir` | 輸出目錄，預設 `dist` |
 
-腳本四個階段：**前置檢查** → `git stash create` 取工作區快照（含已追蹤檔的未提交修改，不含未追蹤檔）→ `git archive --worktree-attributes` 產 ZIP（未 commit 的 `.gitattributes` 也立即生效）→ **審核**條目，有洩漏就刪除 zip、結束碼 1。內建禁則涵蓋 `.env*`、私鑰、`.git/`、AI 治理目錄與檔案、`dist/`。
+腳本流程：**前置檢查** → **工作區檢查**（未追蹤檔警告）→ `git stash create` 快照（含已追蹤檔的未提交修改）→ `git archive --worktree-attributes` 產 ZIP（未 commit 的 `.gitattributes` 也立即生效）→ **審核**（檔名禁則加內容掃描）→ 產生 `.sha256`。審核有洩漏就刪除 zip、結束碼 1。
+
+**審核兩層**
+- **檔名禁則**：內建涵蓋 `.env*`、私鑰與憑證檔、`.git/`、AI 治理目錄與檔案、`dist/`；專案特有的用 `forbiddenExtra` 加，不需要的用 `forbiddenRemove`（子字串比對內建禁則）放行。
+- **內容掃描**：掃包內文字檔，命中私鑰區塊、AWS／GitHub／Anthropic／OpenAI／Slack 金鑰就**失敗**；疑似寫死的 `password = '…'` 只**警告**。`*.example`、`*.sample` 不掃；`contentScan.enabled:false` 可關，`contentScan.allow` 放行特定路徑。
+
+**工作區檢查**：未追蹤檔不在快照內（新檔漏包的主因），預設只警告並列出；`--strict` 失敗；`--require-clean` 要求工作區完全乾淨。未提交的修改會進包，摘要的 `includesUncommittedChanges` 會標示。
 
 ```bash
-node scripts/pack-release.mjs --dry-run      # 預覽，不留下 zip
-node scripts/pack-release.mjs                # 打包到 dist/<name>-v<版本>-<日期>.zip
+node scripts/pack-release.mjs --dry-run                  # 預覽，不留下任何檔
+node scripts/pack-release.mjs                            # 完整發佈包 dist/<name>-v<版本>-<日期>.zip + .sha256
+node scripts/pack-release.mjs --since v1.2.0             # 增量更新檔（見下）
+node scripts/pack-release.mjs --require-clean --strict   # 正式發佈建議
 node scripts/pack-release.mjs --out dist/custom.zip --force
 ```
 
-輸出檔已存在會拒絕，要覆寫才加 `--force`。審核用 `git archive` 的 tar 輸出列條目，所以 Windows、macOS、Linux 都能跑（不依賴 `tar` 讀 zip）。
+輸出檔已存在會拒絕，要覆寫才加 `--force`。內部不用 `tar` 讀 zip，Windows、macOS、Linux 都能跑；只有內容掃描需要 `tar` 解開檔案。測試：`node --test scripts/pack-release.test.mjs`。
+
+#### 增量更新檔（`--since <tag 或 commit>`）
+
+只打包自該 ref 以來「**新增與修改**」的**發佈檔**（同樣套用 export-ignore 與全部審核），並產生 `<zip 名>.CHANGES.txt`：
+
+- **新增／修改**：在 zip 內。
+- **刪除**：**不在 zip 內**。部署是「解壓覆蓋」，不會刪舊檔，所以 `CHANGES.txt` 列出要在正式機**手動移除**的檔案。包含「原本在發佈包、現在被 export-ignore 排除」的檔案。
+- 發佈範圍沒有任何變更會失敗並說明；只有刪除時不產生 zip，仍產生 `CHANGES.txt`。
+- 基準 ref 要用上次實際部署的版本（建議每次部署後打 tag），基準錯了更新檔就會漏檔。
 
 ### 4. 規格書與文件對齊
 
 1. 依 [`references/release-spec-template.md`](references/release-spec-template.md) 建立 `docs/RELEASE_SPEC.md`：包含白名單、排除黑名單、命名、指令、部署與覆蓋更新 SOP。
 2. `AGENTS.md` 加「發佈打包規範」：唯一產出指令 `node scripts/pack-release.mjs`、規格書路徑；硬約束寫明禁止把 `dist/` 提交版控、禁止手動全目錄壓縮。
-3. 同步更新 `README.md`（文件清單）與 `NOTE.md`（交接：目前版本、怎麼打包）。
+3. 同步更新 `README.md`（文件清單）與 `NOTE.md`（交接：目前版本、怎麼打包、上次部署的基準 tag）。
 
 ### 5. 驗證
 
@@ -98,7 +118,7 @@ node scripts/pack-release.mjs --out dist/custom.zip --force
 
 1. `node scripts/pack-release.mjs` 結束碼為 0。
 2. JSON 摘要 `leakedSensitiveOrDevFiles: 0`，`topLevelIncluded` 只有正式環境需要的項目。
-3. `git status -s` 確認 `dist/*.zip` 被忽略、沒污染版控。
+3. `git status -s` 確認 `dist/*.zip`、`*.sha256`、`*.CHANGES.txt` 被忽略、沒污染版控（`dist/` 在 `.gitignore`）。
 4. 想確認審核真的有效，可暫時加一個機敏檔試跑，應看到失敗並刪除 zip。
 
 ## 常見錯誤
@@ -108,11 +128,13 @@ node scripts/pack-release.mjs --out dist/custom.zip --force
 | 改了 `.gitattributes` 還沒 commit，打包卻仍含舊檔 | `git archive` 預設讀 commit 內的屬性 | 腳本已加 `--worktree-attributes`；手動執行時別漏 |
 | 用 `zip -r` 壓整個專案 | 把未進版控的帳密與上傳檔打進去 | 一律 `git archive` |
 | 正式機需要空目錄但包裡沒有 | Git 不追蹤空目錄 | 目錄內放 `.gitkeep` 並提交，`.gitignore` 寫 `/log/*` 加 `!/log/.gitkeep` |
-| 新增的檔案沒進包 | `git stash create` 不含未追蹤檔 | 先 `git add` 新檔 |
+| 新增的檔案沒進包 | `git stash create` 不含未追蹤檔 | 先 `git add` 新檔；腳本會列出未追蹤檔，正式發佈用 `--strict` |
+| 更新檔部署後舊檔還在 | 解壓覆蓋不會刪檔 | 照 `CHANGES.txt` 的「刪除」清單在正式機手動移除 |
+| 更新檔缺檔 | `--since` 基準不是上次實際部署的版本 | 每次部署後打 tag，下次以該 tag 為基準 |
 
 ## 完成回報
 
-1. 壓縮包路徑、大小、條目數。
+1. 壓縮包路徑、大小、條目數與 `.sha256`；更新檔另附新增／修改／刪除數量與 `CHANGES.txt` 路徑。
 2. `topLevelIncluded` 與審核結果。
 3. 新增或更新的檔案：`.gitattributes`、腳本、`release.config.json`、`docs/RELEASE_SPEC.md`、`AGENTS.md`。
 4. 沒實測的部分明說。
