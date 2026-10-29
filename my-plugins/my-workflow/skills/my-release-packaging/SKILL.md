@@ -104,7 +104,7 @@ node scripts/pack-release.mjs --out dist/custom.zip --force
 
 上傳圖檔 `img/`、日誌 `log/`、暫存 `content/temp/` 這類目錄，**內容不能發佈，但正式機需要目錄存在**（程式會寫入）。Git 不追蹤空目錄，內容排除後目錄就從包裡消失，部署後程式寫檔失敗。
 
-- 在 `release.config.json` 列出目錄：`"placeholders": ["img", "log"]`。腳本用 `git archive --add-virtual-file` 在包裡放一個空的 `<目錄>/.gitkeep`，目錄就會存在；repo 不必提交 `.gitkeep`。
+- 在 `release.config.json` 列出目錄：`"placeholders": ["img", "log"]`。**只列到上傳目錄的 base path**，子目錄（如 `img/2024/01`）由程式執行時自行建立，不必列；若列了，腳本會自動合併到上層，不另外占位。腳本用 `git archive --add-virtual-file` 在包裡放一個空的 `<目錄>/.gitkeep`，目錄就會存在；repo 不必提交 `.gitkeep`。
 - 內容用 `.gitattributes` 排除：`/img/** export-ignore`（排除內容）。**不要寫 `/img export-ignore`**，那會讓目錄本身也被視為排除（占位仍會補上，但意圖不清）。
 - repo 已提交該目錄的 `.gitkeep` 就不重複加。禁則擋整個目錄（如 `forbiddenExtra: ["^img/"]`）時，占位的 `.gitkeep` 仍放行，目錄裡的真實檔案照樣擋。
 - 更新檔只補「上一版發佈包裡沒有」的目錄；只有刪除、沒有檔案可附帶時，改列在 `CHANGES.txt` 的「需建立的空目錄」。

@@ -160,13 +160,17 @@ function todayStr() {
 // 占位目錄：內容不發佈（如上傳圖檔 img/），但目錄本身要存在。以 git archive --add-virtual-file 放入空的 .gitkeep。
 function readPlaceholders() {
   const list = Array.isArray(config.placeholders) ? config.placeholders : [];
-  return list.map((raw) => {
+  const dirs = list.map((raw) => {
     const dir = String(raw).replace(/\\/g, '/').replace(/^\.\//, '').replace(/\/+$/, '');
     if (!dir || dir.startsWith('/') || /^[a-zA-Z]:/.test(dir) || dir.split('/').includes('..') || dir.includes(':')) {
       return fail(`placeholders 路徑不合法（要是 repo 內的相對目錄）：${raw}`, 2);
     }
-    return `${dir}/.gitkeep`;
+    return dir;
   });
+  // 只放到 base path：已被另一個占位目錄涵蓋的子目錄不再另外放
+  const unique = [...new Set(dirs)].sort();
+  const bases = unique.filter((d) => !unique.some((other) => other !== d && d.startsWith(`${other}/`)));
+  return bases.map((d) => `${d}/.gitkeep`);
 }
 
 function buildForbidden() {

@@ -322,6 +322,18 @@ describe('占位目錄 placeholders', () => {
     assert.equal(run(dir, ['--dry-run']).status, 1);
   });
 
+  it('只放到 base path：巢狀的子目錄合併到上層，不另外占位', () => {
+    const dir = makeRepo({
+      'content/user_files/2024/01/a.jpg': 'x',
+      '.gitattributes': '/content/user_files/** export-ignore\n/docs export-ignore\n/AGENTS.md export-ignore\n/package.json export-ignore\n/.gitattributes export-ignore\n/.gitignore export-ignore\n/release.config.json export-ignore\n',
+      'release.config.json': JSON.stringify({ placeholders: ['content/user_files/2024/01', 'content/user_files', 'content/user_files/tmp/'] }),
+    });
+    const r = run(dir, ['--dry-run']);
+    assert.equal(r.status, 0, r.stderr);
+    assert.deepEqual(r.json.placeholdersAdded, ['content/user_files']);
+    assert.equal(r.json.totalEntries, 4); // app/index.php、app/lib.php、.env.example、content/user_files/.gitkeep
+  });
+
   it('不合法的路徑：結束碼 2', () => {
     for (const bad of ['../x', '/abs', 'C:/win', 'a:b']) {
       const dir = makeRepo({ 'release.config.json': JSON.stringify({ placeholders: [bad] }) });
