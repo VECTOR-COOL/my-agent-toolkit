@@ -1,7 +1,7 @@
 # my-workflow — 開發準則
 
-> **版本**：`1.15.0`（[`pack.yaml`](pack.yaml)）
-> 須與 [`.claude-plugin/plugin.json`](.claude-plugin/plugin.json)、[`plugin.json`](plugin.json)、[`references/index.yaml`](references/index.yaml)、toolkit [`project.json`](../../project.json) 同一個號。
+> **版本**：`1.15.1`（[`pack.yaml`](pack.yaml)）
+> 全部 8 處要同一個號，清單與發布流程見 [`docs/RELEASE.md`](docs/RELEASE.md)；用 `scripts/check-release.mjs` 檢查。
 
 這份給**開發這個 plugin 的人與 Agent** 看。使用者怎麼安裝見 [`README.md`](README.md)。
 
@@ -42,7 +42,8 @@ graph TD
 | `skills/<name>/rules/*.md` | 該 skill 專屬規則，載入 skill 時一併讀 |
 | `skills/<name>/SKILL.md` | 各 skill，`name` 與資料夾名一致，平鋪不巢狀 |
 | `references/index.yaml` | 入口路由索引（`when`、`keywords`） |
-| `scripts/` | `inject-rules.mjs`（注入 rules + 入口 skill + 索引，相對路徑改為絕對路徑） |
+| `scripts/` | `inject-rules.mjs`（注入 rules + 入口 skill + 索引，相對路徑改為絕對路徑）、`check-release.mjs`（發布前檢查） |
+| `docs/RELEASE.md` | 發布流程與「無法更新」排除 |
 
 Claude Code plugin **無法提供 rules**，plugin 內的 `CLAUDE.md` 不會載入，所以改用 SessionStart hook 注入 `additionalContext`。hook 不能呼叫 Skill 工具，為了「開對話就載入入口、不用斜線命令」，同一個腳本也注入入口 `SKILL.md` 與 `index.yaml`（全域規則拆小後約 4,500 字元，每次對話固定成本）。改入口或索引後不用另外同步，腳本每次直接讀檔。
 
@@ -70,15 +71,24 @@ Claude Code plugin **無法提供 rules**，plugin 內的 `CLAUDE.md` 不會載�
 
 使用者要安裝、更新或檢查 plugin 時，載入 [`my-plugin-install`](skills/my-plugin-install/SKILL.md)：它依目前平台自動選方法（Claude Code、Claude 網頁與 Cowork、雲端 session、Codex、無 plugin 機制的平台）。平台方法有變時改該 skill 的 `references/`，不要把步驟散寫到其他檔。
 
-**改 plugin 內容一定要升版**（`.claude-plugin/plugin.json` 等五處），否則各平台判斷不到新版。
+**改 plugin 內容一定要升版**（8 處，見 [`docs/RELEASE.md`](docs/RELEASE.md)），否則各平台判斷不到新版。使用者回報「看不到新版、更新按鈕反灰、指令不認得」時，照該文件的「無法更新怎麼排除」處理。
+
+## 發布
+
+**發布一律照 [`docs/RELEASE.md`](docs/RELEASE.md)**，重點：
+
+- 使用者只會拿到 `main`。只推 `develop` 等於沒發布。
+- 升版 8 處同號，`node my-plugins/my-workflow/scripts/check-release.mjs` 通過才 commit。
+- 合併到 `main` 後跑 `check-release.mjs --remote`，並在乾淨環境（暫存的 `CLAUDE_CONFIG_DIR`）實裝確認版本。
+- 新增的檔案若被 `.gitignore` 擋住，本機正常、使用者卻缺檔；檢查腳本會抓出來。
 
 ## 驗證
 
 在 repo 根：
 
 ```text
+node my-plugins/my-workflow/scripts/check-release.mjs
 node my-plugins/my-workflow/scripts/inject-rules.mjs | python3 -m json.tool
-claude plugin validate ./my-plugins/my-workflow
 ```
 
 另需確認：所有 `.json` 合法、每個 `SKILL.md` 的 `name` 與資料夾一致、`index.yaml` 的 skill 名都存在、markdown 相對連結都指得到檔案。
