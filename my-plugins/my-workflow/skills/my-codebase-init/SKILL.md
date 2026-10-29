@@ -57,10 +57,13 @@ graph TD
 | `README.md` | 給人看的專案說明 | **標題正下方一行寫目前版本**（``**版本：`v0.1.0`**``）；再來定位、技術棧、快速啟動 |
 | `NOTE.md` | 交接紀錄 | 目前狀態、進行中、下一步、已決定、待確認、怎麼驗證、更新紀錄。做完一段工作或交接時更新；不記機密 |
 | `.agents/skills/<name>/SKILL.md` | 專案專屬 skill，跨編輯器共用 | 從模板複製貼近業務的 skill，加上專案自己的；`name` 與資料夾名一致 |
+| `.gitignore` | 忽略清單 | **一律建立**：`.env`、`.env.*`（保留 `!.env.example`）、`dist/`、`node_modules/`、`.claude/settings.local.json`、`CLAUDE.local.md`、`*.log` |
+| `.gitattributes` | 發佈排除（`export-ignore`） | **僅「以打包檔部署」的專案**才建（見下）；函式庫、公開開源專案不要建 |
 
 - **版本**：初始 `v0.1.0`（使用者另有指定就照指定）。專案若已有版本來源（`package.json`、`VERSION`、git tag），README 的版本與它保持一致，改版時同步。
 - **`.agents/skills/`** 是各編輯器共用的 skill 位置（Codex 會發現它）。其他編輯器若讀自己的路徑（如 Claude 讀 `.claude/skills/`），以 symlink 或複製指到這裡，不要維護兩份；各編輯器的發現路徑以其官方文件為準，沒查證就不要斷言。
 - **`CLAUDE.md`**：Claude 環境見下方路由；其他環境不需要。
+- **發佈打包（選用）**：專案是解壓到正式機、交給客戶或維運的 ZIP（PHP、WordPress、靜態網站等）時，載入 `my-release-packaging`：建立 `.gitattributes` 的 `export-ignore`、`scripts/pack-release.mjs`、`release.config.json`、`docs/RELEASE_SPEC.md`。**不是每個專案都需要**：`export-ignore` 也會影響 GitHub 的 Source code ZIP 下載，函式庫與開源專案通常不該排除 `docs/`、`README.md`。不確定就問使用者「這個專案是不是打包部署」。
 - 不把任何平台專屬設定寫進 `AGENTS.md` 主體，放在它最後的「各 agent 平台備註」。
 
 ### 4. Git 版本控制與遠端設定
