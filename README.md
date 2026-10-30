@@ -1,8 +1,9 @@
 # My Agent Toolkit
 
+**版本：`v1.15.5`**
+
 > VECTOR LTD 可攜式 Agent Skills 套件庫
 
-[![version](https://img.shields.io/badge/version-1.15.4-blue)]()
 [![GitHub](https://img.shields.io/badge/GitHub-VECTOR--COOL-blue)](https://github.com/VECTOR-COOL/my-agent-toolkit)
 [![Website](https://img.shields.io/badge/Website-vector.cool-blue)](https://vector.cool)
 
@@ -38,7 +39,7 @@
 | [`my-codebase-init`](./my-plugins/my-workflow/skills/my-codebase-init/SKILL.md) | 從 project-templates 初始化專案並建立 VECTOR-COOL 私有 repo。 | v1.2.0 |
 | [`my-commit-all-and-push`](./my-plugins/my-workflow/skills/my-commit-all-and-push/SKILL.md) | 全部 commit 並 push，說明用繁體中文。 | v1.2.0 |
 | [`my-cloud-agent`](./my-plugins/my-workflow/skills/my-cloud-agent/SKILL.md) | 開、續、查、停雲端 agent session，派任務並驗收（Claude 支援工具與 CLI）。 | v1.2.0 |
-| [`my-release-packaging`](./my-plugins/my-workflow/skills/my-release-packaging/SKILL.md) | 建立正式發佈包與增量更新檔（--since）的 export-ignore 規則、打包腳本與規格書，審核機敏檔洩漏（檔名＋內容）。 | v1.15.4 |
+| [`my-release-packaging`](./my-plugins/my-workflow/skills/my-release-packaging/SKILL.md) | 建立正式發佈包與增量更新檔（--since）的 export-ignore 規則、打包腳本與規格書，審核機敏檔洩漏（檔名＋內容）。 | v1.15.5 |
 | [`my-docs`](./my-plugins/my-workflow/skills/my-docs/SKILL.md) | 建立精簡技術文件並確保 AGENTS.md／README 齊備。 | v1.2.0 |
 | [`my-subagent`](./my-plugins/my-workflow/skills/my-subagent/SKILL.md) | 主線調度平行 subagent 並負責驗收。 | v1.2.0 |
 

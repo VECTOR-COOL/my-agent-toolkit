@@ -53,7 +53,7 @@ if (!version) {
     ['project.json', (t) => JSON.parse(t).version],
     ['my-plugins/my-workflow/AGENTS.md', (t) => (t.match(/\*\*版本\*\*：`([^`]+)`/) || [])[1]],
     ['my-plugins/my-workflow/README.md', (t) => (t.match(/版本 `([^`]+)`/) || [])[1]],
-    ['README.md', (t) => (t.match(/badge\/version-([0-9.]+)-/) || [])[1]],
+    ['README.md', (t) => (t.match(/\*\*版本：`v?([0-9.]+)`\*\*/) || [])[1]],
   ];
   for (const [rel, get] of checks) {
     const text = read(rel);

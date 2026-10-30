@@ -29,7 +29,7 @@ graph TD
    | `my-plugins/my-workflow/AGENTS.md` | 開頭的「版本」 |
    | `my-plugins/my-workflow/README.md` | 第一段的「版本」 |
    | `project.json` | `version` |
-   | `README.md`（repo 根） | 版本徽章 |
+   | `README.md`（repo 根） | 標題正下方的「版本：`v…`」 |
 
 3. **跑檢查**，必須通過：
 
