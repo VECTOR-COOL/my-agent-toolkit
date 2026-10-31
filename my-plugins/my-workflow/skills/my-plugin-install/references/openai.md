@@ -26,6 +26,15 @@
 5. 更新後回讀實際 release／安裝內容，與目標來源比對；平台同步若已前進到另一 SHA，重新查該 SHA 的差異並如實回報，不能沿用舊 SHA 宣稱驗證通過。最後依 Web 驗證步驟確認實際任務；需要新對話或使用者操作時，標記已更新與仍待驗證的部分。
 6. 在結果附上來源 repo、分支、完整 SHA、plugin ID、前後 release／版本與更新摘要，供下次追蹤。沒有持久保存的紀錄不能假定下次讀得到；沒有基準就重新比較實際內容。失敗沿用下方引導，保留原安裝，不盲目重試寫入。
 
+## ChatGPT 現況（2026-10-31 使用者實測）
+
+- **個人帳號只能用 ZIP 安裝**：到 ChatGPT **網頁版**用 ZIP 安裝或更新（`create_plugin`／`update_plugin`），會同步到 ChatGPT 桌面版。從 GitHub 匯入 marketplace 是工作區管理員功能，個人帳號沒有。
+- **不會自動更新**：帳號端 plugin 不追蹤 GitHub，每次發版都要從 `main` 重新打包再上傳。
+- **桌面版的「新增外掛市集」不會到網頁版**：在桌面版加 GitHub 市集只裝在本機（`my-workflow@my-agent-toolkit`），和帳號端那份（如 `my-workflow@openai-curated-remote`）是兩份，不同步。兩份不要同時啟用，同名 skill 會互相干擾。
+- 要網頁版與桌面版一致：只留帳號端那份，用 ZIP 更新；本機市集那份停用或移除。
+- **網頁版 ZIP 不能帶 hook**：含 `hooks/codex.json`（要在本機跑 `node`）的包會被標成「僅限桌面版」，網頁版不能用。網頁版包要排除 `hooks/`、根 `scripts/`，並刪掉 `plugin.json` 的 `extensions`；全域規則改由入口 skill 讀 `global.md`。Composio MCP（`mcp.json`）是否也會觸發此限制**待實測**。
+- **版本號要比帳號裡的高**：ChatGPT 存檔時要求包內 `plugin.json` 的 `version` 大於目前版本（錯誤：`Bump the plugin manifest version before saving`）。包內版本用發版的 `pack.yaml` 版本；同一版要重傳就先發新版，不要只改包。
+
 ## 先選安裝目標
 
 已確認目標是 OpenAI，且使用者要求「在對話內安裝／更新」「ChatGPT Web 也能用」時，優先走**帳號端的私人或工作區 marketplace**，即使目前對話是 Codex 也一樣。安裝整個 plugin，不逐一安裝子 skill，不以貼規則或本機 cache 代替。目標若是其他產品的 Web，改讀該產品的 reference，不套用本節。

@@ -1,6 +1,6 @@
 # My Agent Toolkit
 
-**版本：`v1.16.1`**
+**版本：`v1.16.2`**
 
 > VECTOR LTD 可攜式 Agent Skills 套件庫
 
@@ -60,7 +60,8 @@
 | claude.ai 網頁／Desktop 聊天／Cowork／雲端 session | [Customize > Plugins](https://claude.ai/customize/plugins) → Add marketplace → 輸入 `VECTOR-COOL/my-agent-toolkit` → Add `my-workflow` | 開 **Sync automatically** |
 | Codex | `.codex/config.toml` 啟用 `my-workflow@my-agent-toolkit`（**未驗證**） | 更新 repo 後重新啟用 |
 | Gemini CLI | clone 後 `gemini extensions install ./my-plugins/my-workflow`（**未驗證**） | `git pull` 後重裝 |
-| ChatGPT／Gemini 網頁 | 貼 [`global.md`](./my-plugins/my-workflow/skills/my-workflow/references/global.md) 到自訂指示或 Gem，上傳需要的 skill（**未驗證**） | 重貼、重傳 |
+| ChatGPT 網頁／桌面版（個人帳號） | 網頁版用發版產出的 ZIP 安裝，會同步到桌面版；桌面版的「新增外掛市集」只裝本機，不會到網頁版 | **不會自動更新**，每次發版重傳 ZIP |
+| Gemini 網頁 | 貼 [`global.md`](./my-plugins/my-workflow/skills/my-workflow/references/global.md) 到 Gem，上傳需要的 skill（**未驗證**） | 重貼、重傳 |
 
 來源為私有 repo `main` 分支，需先能讀取（本機 `gh auth login`／SSH key；網頁版連結 GitHub 並授權 Claude GitHub App）。`.claude-plugin/plugin.json` 不寫 `version`，Claude 以 commit 當版本，`main` 更新就會被偵測。完整步驟與排除見 [`my-plugins/my-workflow/README.md`](./my-plugins/my-workflow/README.md)，也可對 agent 說「安裝 my-workflow」。
 

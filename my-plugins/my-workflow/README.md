@@ -1,6 +1,6 @@
 # my-workflow
 
-VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills + Composio MCP。版本 `1.16.1`（[`pack.yaml`](pack.yaml)）。不上架公開市集。開發見 [`AGENTS.md`](AGENTS.md)。
+VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills + Composio MCP。版本 `1.16.2`（[`pack.yaml`](pack.yaml)）。不上架公開市集。開發見 [`AGENTS.md`](AGENTS.md)。
 
 **名詞**：本目錄是 **plugin 本體**；`my-agent-toolkit` 是放它的私有 repo，也是 marketplace 名稱。安裝 id：`my-workflow@my-agent-toolkit`。
 
@@ -15,7 +15,8 @@ VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills 
 | claude.ai 網頁／Desktop 聊天／Cowork | plugin（Customize → Plugins） | 入口 skill 讀 `global.md` | skills、MCP 有；規則路徑**未驗證** |
 | Codex | plugin（`.agents/plugins/marketplace.json`） | hook 注入 | **未驗證**（載入、hook 信任、`dcr` 登入、hook 輸出格式） |
 | Gemini CLI | extension（`gemini-extension.json`、`GEMINI.md`） | `GEMINI.md` 指到 `global.md` | **未驗證** |
-| ChatGPT／Gemini 網頁 | 手動貼 `global.md`、上傳 skill | 貼在指示 | 無 plugin、無 MCP；**未驗證** |
+| ChatGPT 網頁／桌面版（個人帳號） | plugin（網頁版上傳 ZIP，同步到桌面版） | 入口 skill 讀 `global.md` | 不自動更新；MCP 在網頁版可否使用**未驗證** |
+| Gemini 網頁 | 手動貼 `global.md`、上傳 skill | 貼在指示 | 無 plugin、無 MCP；**未驗證** |
 
 ## 安裝
 
@@ -50,7 +51,9 @@ marketplace 在 [`.agents/plugins/marketplace.json`](../../.agents/plugins/marke
 
 **Gemini CLI**：clone 後 `gemini extensions install ./my-plugins/my-workflow`。repo 根是多 plugin marketplace，不支援 URL 直裝。更新：`git pull` 後重新 install。**未驗證**。
 
-**ChatGPT／Gemini 網頁**：把 `global.md` 貼到 Custom GPT／專案指示或 Gem 指示；需要的 skill 資料夾上傳（先 `my-workflow`）。更新就重貼、重傳。**未驗證**。
+**ChatGPT（個人帳號）**：只能在**網頁版**用 ZIP 安裝，會同步到桌面版；ZIP 由發版從 `main` 產出（`dist/`，不提交）。桌面版的「新增外掛市集」只裝本機、不到網頁版，和帳號那份不要同時啟用。細節見 [`openai.md`](skills/my-plugin-install/references/openai.md)「ChatGPT 現況」。
+
+**Gemini 網頁**：把 `global.md` 貼到 Gem 指示；需要的 skill 資料夾上傳（先 `my-workflow`）。更新就重貼、重傳。**未驗證**。
 
 ## 更新
 
@@ -62,7 +65,8 @@ manifest **不寫 `version`**，Claude 以 commit 當版本，`main` 每次更�
 | claude.ai／Cowork／雲端 session | 開 **Sync automatically**；手動 **Check for updates**，開新對話生效 |
 | Codex | 更新 repo 後重新啟用，hooks 有變要重新信任 |
 | Gemini CLI | `git pull` 後重新 install |
-| ChatGPT／Gemini 網頁 | 重貼、重傳 |
+| ChatGPT | **不會自動更新**：每次發版重產 ZIP，到網頁版更新同一個 plugin |
+| Gemini 網頁 | 重貼、重傳 |
 
 更新不到：[`docs/RELEASE.md`](docs/RELEASE.md)「無法更新怎麼排除」。
 
