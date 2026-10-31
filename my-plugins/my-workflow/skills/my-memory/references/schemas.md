@@ -27,7 +27,14 @@
 | 鍵 | 值 |
 |----|----|
 | `weight` | 整數。沒有、或舊值 `normal`，當 `1`。舊值 `high` 當 `3` |
-| `tier` | `short` 或 `mid`。沒有就當 `short`。長期不留在 Mem0 |
+| `tier` | `short`、`mid` 或 `long`。沒有就當 `short`。`long` 是長期索引：完整值在 Notion，這筆只是指向 |
+
+長期索引筆的正文固定寫成 `[長期] <一句摘要> #<關鍵字> → notion:<隔離鍵> <頁面連結>`，例如 `[長期] 公司在台北 #公司地址 #辦公室 #address → notion:general|claude||company.address https://www.notion.so/...`。
+
+- 摘要一句、40 字內，用使用者平常問的講法寫（「公司在哪」比「企業註冊地」容易被搜到）。
+- 關鍵字 2～5 個，抄 Notion 那頁的 `關鍵字` 與 `類別`，再補使用者會用的同義詞或英文；Notion 的 `關鍵字` 若是空的，把同一組寫回去。這是語意搜尋命中率的來源，詳細內容不要放這裡，去 Notion 拿。
+- 每個 Notion 頁面只對一筆索引，不重複。
+- 寫入用 `infer=false` 保留原句；`weight` 沿用升級前的值或 `3`。索引筆不加權、不遺忘。
 
 舊的 `read_count` 不要再加。加權與遺忘的閥值見 [`my-memory-consolidate`](../../my-memory-consolidate/SKILL.md)。
 
