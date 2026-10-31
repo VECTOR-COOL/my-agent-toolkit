@@ -9,7 +9,7 @@
 
 需求：把個人工作流（規則、記憶、審查、PRD、文件、提交、雲端代理等）封裝成可重用 plugin，不必每次重新交代。
 
-1. **單一來源**：本目錄是唯一 SSOT，Claude、OpenAI（Codex、ChatGPT）、Gemini 共用；各平台只多一份薄定義檔指到它。
+1. **單一來源、通用格式**：本目錄是唯一 SSOT，Claude、OpenAI（Codex、ChatGPT）、Gemini 共用。SSOT 一律用開放通用格式：skill 用 Agent Skills（`skills/<name>/SKILL.md`），plugin 用 agent-plugins（根目錄 `plugin.json`）。各供應商專用檔（`.claude-plugin/plugin.json`、`hooks/hooks.json`、`hooks/codex.json`、`gemini-extension.json`、`GEMINI.md`）只引用通用格式，不複製內容。
 2. **規則不靠本機腳本**：全域規則在入口 skill 的 [`references/global.md`](skills/my-workflow/references/global.md)。有 hook 的平台（Claude Code、Codex）開對話注入，其他平台載入入口 skill 時自己讀；**任何平台都不能只靠 hook 才拿得到規則**。其餘規則在 `skills/my-workflow/references/index.yaml` 的 `rules` 區登記，伺機載入。
 3. **Skills 按需載入**：入口 [`skills/my-workflow`](skills/my-workflow/SKILL.md) 依情境只載對上的一個。
 4. **Composio MCP 隨 plugin**：OAuth 登入，repo 不放金鑰。
@@ -52,6 +52,7 @@ Claude Code plugin **無法提供 rules**（plugin 內 `CLAUDE.md` 不載入）�
 ## 規則
 
 - 只改 `my-plugins/my-workflow/`。
+- 新增 skill 或 plugin 設定先寫通用格式（Agent Skills、agent-plugins），再視需要加供應商專用檔引用它。`SKILL.md` frontmatter 只用通用欄位，不放單一供應商才認得的欄位；某供應商需要特殊設定時放它自己的檔。
 - 新 skill：建 `skills/<name>/SKILL.md`，在 `index.yaml` 補 `when`、`keywords`，更新 README 元件表。新規則：建 `rules/<name>.md`，在 `index.yaml` 的 `rules` 區補。
 - 版本標籤以 `pack.yaml` 為準。`.claude-plugin/plugin.json`、`plugin.json` **不寫 `version`**（會凍結自動更新）；各 `SKILL.md` 不手寫 `version`。
 - 常駐規則寫成事實陳述（官方建議注入內容不用命令式）；改規則只改對應檔。

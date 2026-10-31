@@ -48,6 +48,8 @@ node --test my-plugins/my-workflow/skills/my-release-packaging/scripts/pack-rele
 
 ## 更新紀錄
 
+- `2026-10-31` Codex：安裝 skill 加入唯讀檢查更新、來源內容與帳號 release 比對、四種結果狀態；補上失敗／環境不適用的具體引導表與跨對話交接提示。未執行帳號端安裝或更新。
+- `2026-10-31` Codex：補齊 `my-plugin-install/references/openai.md` 的對話內帳號端建立、安裝與同 ID 更新流程，Web 目標優先；區分本機 marketplace、GitHub 工作區同步及 Web 實測。同步入口路由與 Gemini 範圍說明；僅更新文件，未建立／更新帳號 plugin，未發布。
 - `2026-10-31` Claude：plugin 文件瘦身（`AGENTS.md`、`README.md`、`RELEASE.md`、`global.md`、入口與各 skill）；規則與觸發條件不變，`my-codebase-init` 的「既有檔案轉換」拆到 `references/convert.md`。
 - `2026-10-31` Claude：撤回根目錄 init 產物——`AGENTS.md`、`CLAUDE.md` 改寫成純目錄導覽，`NOTE.md` 與 `docs/plans/` 搬進 plugin 的 `docs/`；清掉未追蹤雜物（`.cursor/`、`.playwright-mcp/`、`dist/`、舊版 zip、`.codex-plugin/`、`my-skills/my-workflow/`）。
 - `2026-10-31` Claude：`1.16.0` 落地 init codebase 結構（B + 生態慣例優先）與 docs/ 結構定義；實測新專案、舊格式搬家、打包排除三項通過。
