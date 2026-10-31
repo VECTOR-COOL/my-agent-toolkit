@@ -56,7 +56,7 @@ claude plugin update my-workflow@my-agent-toolkit
 
 **引導完要提醒**
 
-- 網頁與 Desktop 聊天只載入 skills、commands、MCP；Cowork 另外載入 agents。**hook 不會執行，全域規則不會自動注入**；需要時請使用者把 `rules/global.md` 加到個人偏好或專案指示。
+- 網頁與 Desktop 聊天只載入 skills、commands、MCP；Cowork 另外載入 agents。**hook 不會執行，全域規則不會自動注入**；載入入口 skill `my-workflow` 時會自己讀 `references/global.md`；仍沒生效就請使用者把該檔加到個人偏好或專案指示。
 - 帳號上的 plugin 會同步到 Cowork 與 Claude Code；反過來，Claude Code 終端機裝的不會回到帳號。
 - 停用：plugin 頁的 **Disable plugin** 開關；移除：plugin 選單的 **Remove**。
 

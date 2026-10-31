@@ -29,7 +29,7 @@
 - `my-skills/` 內每個 skill 獨立，不互相連結；`skills/` 只放第三方、不改內容。
 - plugin 不做 Cursor 相容層；Claude 是第一個支援的客戶端（記憶 `user_id=claude`）。
 - `.agents/skills/` 是跨編輯器的專案 skill 位置；此 repo 目前沒有專屬 skill，所以沒建。
-- 版本以 `my-plugins/my-workflow/pack.yaml` 為基準，8 處同號。
+- 版本以 `my-plugins/my-workflow/pack.yaml` 為基準，6 處同號（manifest 不寫 version）。
 
 ## 待確認／阻礙
 

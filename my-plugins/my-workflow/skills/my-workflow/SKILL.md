@@ -5,7 +5,7 @@ description: 私人工作流的路由入口。新對話開始、任務不明確�
 
 # 工作流入口
 
-這份 skill **只負責分流**，不是規則全文。全域規則（[`rules/global.md`](../../rules/global.md)）由 plugin 在對話開始時注入，其餘規則伺機載入；維護、安裝、版本在 [`AGENTS.md`](../../AGENTS.md)。
+這份 skill **只負責分流**，不是規則全文。全域規則（[`references/global.md`](references/global.md)）在 Claude Code、Codex 由 hook 注入；其他平台載入這份 skill 時自己讀。兩者都**不需要本機腳本**。其餘規則伺機載入；維護、安裝、版本在 [`AGENTS.md`](../../AGENTS.md)。
 
 ```mermaid
 graph TD
@@ -29,9 +29,9 @@ graph TD
 
 路徑相對於這份 `SKILL.md`；`rules/`、`references/` 在 plugin 根目錄。
 
-1. **全域規則** — [`rules/global.md`](../../rules/global.md)，plugin 已注入；沒有注入的客戶端（見 README）先讀這份。
+1. **全域規則** — [`references/global.md`](references/global.md)。對話開頭沒看到「my-workflow plugin 已在對話開始載入」這段注入，就先讀這份（網頁、Cowork、ChatGPT、Gemini 都是這樣）。
 2. **[`../my-memory/SKILL.md`](../my-memory/SKILL.md)** — 在「記住、回想、偏好、決策、歷史脈絡」，或使用者問自己、公司、團隊的既有資訊（公司地址、聯絡方式、偏好、先前決定）而對話裡沒有答案時，且優先於其他子 skill。
-3. **[`references/index.yaml`](../../references/index.yaml)** — 用 `when` 或 `keywords` 對上**一筆**後，只載 `../<name>/SKILL.md`。
+3. **[`references/index.yaml`](references/index.yaml)** — 用 `when` 或 `keywords` 對上**一筆**後，只載 `../<name>/SKILL.md`。
 4. **其他規則** — `index.yaml` 的 `rules` 區：任務碰到 `when` 的情境（如 commit、Code Review、收尾、寫腳本、安裝套件、用 MCP）才讀對應檔，可與一個 skill 並行；沒碰到不讀。Git 的工作習慣（先 pull、只 commit 自己的、提交與發布分開）在 [`rules/git.md`](../../rules/git.md)。記憶規則在 `my-memory`、`my-memory-consolidate` 的 `rules/`，載入該 skill 時一併讀。
 5. 查到 Mem0、或要升長期、或要遺忘時，改載 `../my-memory-consolidate/SKILL.md`。寫入不另搜；去重、加權與遺忘以那份的查詢時機為準。
 

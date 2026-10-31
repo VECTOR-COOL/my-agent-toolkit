@@ -4,7 +4,7 @@
 
 ```mermaid
 graph TD
-  A[在 develop 改內容] --> B[升版：pack.yaml 等 8 處]
+  A[在 develop 改內容] --> B[發布時升版標籤 6 處]
   B --> C[check-release.mjs 通過]
   C --> D[commit 並 push develop]
   D --> E[合併到 main]
@@ -18,14 +18,15 @@ graph TD
 使用者安裝與更新**一律抓 `main`**。只推到 `develop`，任何人都拿不到新版。
 
 1. **在 `develop` 改內容**。
-2. **升版**（SemVer：只改文件或修小錯升 patch，新增 skill 或功能升 minor，破壞相容升 major）。以 `pack.yaml` 為準，以下 8 處要同一個號：
+2. **升版標籤**（給人看；SemVer：只改文件或修小錯升 patch，新增 skill 或功能升 minor，破壞相容升 major）。以 `pack.yaml` 為準，以下 6 處要同一個號。
+
+   **`.claude-plugin/plugin.json` 與 `plugin.json` 刻意不寫 `version`**：沒有 version 時 Claude 以 git commit 當版本，`main` 每次更新 market 都偵測得到；一旦寫了 version，沒 bump 就會被判定「已是最新」而凍結自動更新（`check-release.mjs` 會擋）。
 
    | 檔案 | 位置 |
    |------|------|
    | `my-plugins/my-workflow/pack.yaml` | `version:`（基準） |
-   | `my-plugins/my-workflow/.claude-plugin/plugin.json` | `version`（Claude 判斷新版用這個） |
-   | `my-plugins/my-workflow/plugin.json` | `version`（Codex） |
-   | `my-plugins/my-workflow/references/index.yaml` | `version:` |
+   | `my-plugins/my-workflow/gemini-extension.json` | `version`（Gemini CLI） |
+   | `my-plugins/my-workflow/skills/my-workflow/references/index.yaml` | `version:` |
    | `my-plugins/my-workflow/AGENTS.md` | 開頭的「版本」 |
    | `my-plugins/my-workflow/README.md` | 第一段的「版本」 |
    | `project.json` | `version` |
@@ -37,7 +38,7 @@ graph TD
    node my-plugins/my-workflow/scripts/check-release.mjs
    ```
 
-   它檢查 8 處版本一致、plugin 內有沒有被 `.gitignore` 擋掉的檔、還沒 `git add` 的檔，並跑 `claude plugin validate`。改到 `my-release-packaging` 時另跑 `node --test my-plugins/my-workflow/skills/my-release-packaging/scripts/pack-release.test.mjs`。
+   它檢查版本標籤一致、manifest 沒有 `version`、plugin 內有沒有被 `.gitignore` 擋掉的檔、還沒 `git add` 的檔，並跑 `claude plugin validate`。改到 `my-release-packaging` 時另跑 `node --test my-plugins/my-workflow/skills/my-release-packaging/scripts/pack-release.test.mjs`。
 4. **commit 並 push `develop`**。
 5. **合併到 `main`**：用 PR 或 `git merge --no-ff develop`，再 push `main`。
 6. **確認 `main`**：
@@ -76,7 +77,7 @@ graph TD
 | 症狀 | 原因 | 處理 |
 |------|------|------|
 | `--remote` 顯示 main 還是舊版 | 只推了 `develop`，沒合併到 `main` | 合併到 `main` 並 push |
-| 內容改了，所有平台都說「已是最新」 | 沒升版號，或只改了部分檔案 | 升版，跑 `check-release.mjs` 確認 8 處一致 |
+| 內容改了，所有平台都說「已是最新」 | manifest 被加回了 `version` 卻沒 bump（凍結自動更新） | 刪掉 `.claude-plugin/plugin.json`、`plugin.json` 的 `version`；`check-release.mjs` 會擋 |
 | 本機測試正常，使用者裝了卻缺檔 | 檔案被 `.gitignore` 擋掉沒上傳（例：`AGENTS.md` 規則擋掉了 `templates/AGENTS.md`） | `check-release.mjs` 會列出；在 `.gitignore` 加 `!路徑` 例外並提交 |
 | 乾淨環境安裝失敗 | `plugin.json` 或 `marketplace.json` 格式錯 | `claude plugin validate ./my-plugins/my-workflow` 與 `claude plugin validate .` |
 
@@ -90,7 +91,7 @@ graph TD
 | 終端機 `error: unknown command 'marketplace'` 或 `'update'` | Claude Code 太舊 | `claude update`；不行就重裝：PowerShell `irm https://claude.ai/install.ps1 \| iex`；WinGet 用 `winget upgrade Anthropic.ClaudeCode`；npm 用 `npm install -g @anthropic-ai/claude-code@latest`。之後開新終端機確認 `claude --version` |
 | 雲端 session 還是舊版 | session 開始時就固定 plugin，中途不能換 | 帳號端更新後開新 session；session 內讀 `~/.claude/plugins/synced/` 下 my-workflow 的 `.claude-plugin/plugin.json` 看實際版本 |
 | 終端機更新了，桌面聊天還是舊版（或反過來） | 本機安裝與帳號同步是兩份 | 只留一份：建議從帳號裝，本機用 `claude plugin uninstall my-workflow@my-agent-toolkit` 移除 |
-| 更新了但規則沒生效 | 網頁、Desktop 聊天、Cowork 不執行 hook | 這些平台規則不會自動注入，把 `rules/global.md` 貼到個人偏好或專案指示 |
+| 更新了但規則沒生效 | 網頁、Desktop 聊天、Cowork 不執行 hook | 這些平台規則不會自動注入，把 `skills/my-workflow/references/global.md` 貼到個人偏好或專案指示 |
 
 ### 回報時附上
 

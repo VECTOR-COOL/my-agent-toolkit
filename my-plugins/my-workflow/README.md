@@ -6,16 +6,21 @@ VECTOR LTD 私人工作流 plugin：常駐規則 + 15 個按需載入的 skills 
 
 ## 支援
 
-| 環境 | 做法 | 程度 |
-|------|------|------|
-| Claude Code／Desktop Code 分頁（本機） | plugin | rules、skills、Composio MCP 皆有 |
-| Desktop 聊天／Cowork | Customize → Plugins → Add marketplace | 僅 skills、MCP；**不執行 hook，rules 不自動注入**（未驗證） |
-| Codex | plugin | 結構支援，**未驗證** |
-| ChatGPT | 手動貼規則、上傳 skill | 無 plugin 機制，無自動 rules、無 MCP |
+一份內容（本目錄），各平台只多一份薄薄的定義檔指到它。**規則不靠本機腳本**：入口 skill `my-workflow` 自帶 [`references/global.md`](skills/my-workflow/references/global.md)，有 hook 的平台開對話就注入，沒有 hook 的平台載入入口 skill 時自己讀。
 
-## 安裝（手動）
+| 環境 | 做法 | 規則怎麼進來 | 程度 |
+|------|------|-------------|------|
+| Claude Code／Desktop Code 分頁／IDE | plugin（marketplace） | SessionStart hook 注入 | rules、skills、Composio MCP 皆有；雲端 Claude Code 已實測 |
+| 雲端 Claude session | plugin（帳號同步） | hook 注入 | 同上 |
+| claude.ai 網頁／Desktop 聊天／Cowork | plugin（Customize → Plugins，帳號同步） | 載入入口 skill 時讀 `global.md`（hook 不執行） | skills、MCP 有；規則走 skill 的路徑**未驗證** |
+| Codex | plugin（`.agents/plugins/marketplace.json`） | hook 注入 | 結構支援，**未驗證** |
+| ChatGPT 網頁 | 手動：貼 `global.md`、上傳 skill | 貼在自訂指示 | 無 plugin 機制，無 MCP；**未驗證** |
+| Gemini CLI | extension（`gemini-extension.json`、`GEMINI.md`） | `GEMINI.md` 指到 `global.md` | **未驗證** |
+| Gemini 網頁 | 手動：貼 `global.md` 到 Gem 指示 | 貼在 Gem 指示 | 無匯入機制；**未驗證** |
 
-來源：[VECTOR-COOL/my-agent-toolkit](https://github.com/VECTOR-COOL/my-agent-toolkit)（私有，`main` 分支）。本機需能讀取該 repo（`gh auth login` 或 SSH key）。
+## 安裝
+
+來源：[VECTOR-COOL/my-agent-toolkit](https://github.com/VECTOR-COOL/my-agent-toolkit)（私有，`main` 分支）。需要能讀取該 repo（本機 `gh auth login` 或 SSH key；網頁版連結 GitHub 並授權 Claude GitHub App）。也可對 agent 說「安裝 my-workflow」，會載入 [`my-plugin-install`](skills/my-plugin-install/SKILL.md) 自動判斷平台。
 
 ### Claude Code ／ Desktop Code 分頁
 
@@ -24,7 +29,18 @@ VECTOR LTD 私人工作流 plugin：常駐規則 + 15 個按需載入的 skills 
 /plugin install my-workflow@my-agent-toolkit
 ```
 
-裝完重開，輸入 `/mcp` 登入 `composio`（OAuth）。Desktop 與終端機共用設定，裝一次即可，到 **+ → Plugins → Manage plugins** 確認。
+裝完重開，輸入 `/mcp` 登入 `composio`（OAuth）。到 `/plugin` → Marketplaces → `my-agent-toolkit` 開 **auto-update**，之後 `main` 有新 commit 會自動更新。
+
+### claude.ai 網頁／Desktop 聊天／Cowork
+
+不需要終端機或任何本機腳本：
+
+1. 打開 [Customize > Plugins](https://claude.ai/customize/plugins) → **Add → Add marketplace**，輸入 `VECTOR-COOL/my-agent-toolkit`。
+2. 私有 repo：出現 **Connect GitHub** 就連結；出現 **Install the Claude GitHub App** 就授權它讀這個 repo。
+3. **Discover** 找 `my-workflow` → **Add**；打開 **Sync automatically**。
+4. 開 plugin 的 **Connectors**，`composio` 顯示 Not connected 就登入。
+
+這些平台不執行 hook；開新對話後入口 skill 載入時會自己讀全域規則。沒生效就把 [`global.md`](skills/my-workflow/references/global.md) 貼到個人偏好。
 
 ### Codex
 
@@ -35,22 +51,38 @@ VECTOR LTD 私人工作流 plugin：常駐規則 + 15 個按需載入的 skills 
 enabled = true
 ```
 
-marketplace 在 [`.agents/plugins/marketplace.json`](../../.agents/plugins/marketplace.json)，適用於本 repo 內的專案。Codex 會要求信任 hooks。
+marketplace 在 [`.agents/plugins/marketplace.json`](../../.agents/plugins/marketplace.json)，適用於本 repo 內的專案。Codex 會要求信任 hooks。**未驗證**。
 
-### ChatGPT
+### Gemini CLI
 
-把 [`rules/global.md`](rules/global.md) 貼到自訂指示，再上傳需要的 `skills/` 資料夾（先傳 `my-workflow`）。
+先 clone 本 repo，再從本目錄安裝（extension 定義在 [`gemini-extension.json`](gemini-extension.json)，入口 [`GEMINI.md`](GEMINI.md)）：
+
+```text
+gemini extensions install ./my-plugins/my-workflow
+```
+
+GitHub URL 安裝要求 repo 根目錄就是 extension，本 repo 根目錄是多 plugin 的 marketplace，所以不支援 URL 直裝（**未驗證**）。更新：`git pull` 後重新 install。
+
+### ChatGPT／Gemini 網頁
+
+沒有 plugin 機制，手動兩步：
+
+1. 把 [`global.md`](skills/my-workflow/references/global.md) 貼到 Custom GPT／專案指示（ChatGPT）或 Gem 指示（Gemini）。
+2. 需要的 skill 內容（先 `my-workflow`）上傳為知識檔或貼進指示。
+
+更新就重貼、重傳。規則不會自動帶入，也沒有 MCP。**未驗證**。
 
 ## 更新
 
+`.claude-plugin/plugin.json` 與 `plugin.json` **不寫 `version`**，Claude 以 commit 當版本，`main` 每次更新都偵測得到。
+
 | 環境 | 做法 |
 |------|------|
-| Claude Code | `claude plugin marketplace update my-agent-toolkit` → `claude plugin update my-workflow@my-agent-toolkit` → 重開 |
+| Claude Code | 開 marketplace 的 **auto-update**；手動：`claude plugin marketplace update my-agent-toolkit` → `claude plugin update my-workflow@my-agent-toolkit` → 重開 |
+| claude.ai 網頁／Cowork／雲端 session | [Customize > Plugins](https://claude.ai/customize/plugins) 開 **Sync automatically**；手動按 **Check for updates**，開新對話生效 |
 | Codex | 更新 repo 後重新啟用 |
-| claude.ai 網頁／Cowork | 到 [Customize > Plugins](https://claude.ai/customize/plugins) 按 **Check for updates**；建議開 **Sync automatically** 自動同步 |
-| ChatGPT | 重貼規則、重傳 skill |
-
-也可直接對 agent 說「安裝／更新 my-workflow」：會載入 `my-plugin-install`，自動判斷你在哪個平台（Claude Code、Claude 網頁與 Cowork、雲端 session、Codex）並選對方法。
+| Gemini CLI | `git pull` 後重新 install |
+| ChatGPT／Gemini 網頁 | 重貼規則、重傳 skill |
 
 更新不到新版時，見 [`docs/RELEASE.md`](docs/RELEASE.md) 的「無法更新怎麼排除」。
 
@@ -60,11 +92,11 @@ marketplace 在 [`.agents/plugins/marketplace.json`](../../.agents/plugins/marke
 graph TD
   Start["新對話"] --> Rules["常駐 rules (hook 注入)"]
   Rules --> Entry["skill: my-workflow 入口"]
-  Entry --> Index["references/index.yaml"]
+  Entry --> Index["my-workflow/references/index.yaml"]
   Index --> One["只載對上的一個 skill"]
 ```
 
-**規則**：[`rules/global.md`](rules/global.md)（回覆、可信度、安全、品質）由 SessionStart hook 在每次對話開始注入，**連同入口 skill `my-workflow` 與 `references/index.yaml` 一併載入**，不需要斜線命令（hook 無法呼叫 Skill 工具，所以直接注入內容）。其餘規則碰到情境才讀：
+**規則**：[`global.md`](skills/my-workflow/references/global.md)（回覆、可信度、安全、品質）在入口 skill 內。Claude Code、Codex 由 SessionStart hook 在每次對話開始注入，**連同入口 skill `my-workflow` 與 `index.yaml` 一併載入**；其他平台載入入口 skill 時自己讀。其餘規則碰到情境才讀：
 
 | 規則 | 情境 |
 |------|------|
@@ -76,7 +108,7 @@ graph TD
 | [`tools`](rules/tools.md) | 外部服務、MCP、失敗回報 |
 | [`memory`](skills/my-memory/rules/memory.md)、[`consolidate`](skills/my-memory-consolidate/rules/consolidate.md) | 載入記憶 skill 時 |
 
-**Skills**：入口是 `my-workflow`，依 [`references/index.yaml`](references/index.yaml) 的 `when`／`keywords` 載入一個。
+**Skills**：入口是 `my-workflow`，依 [`index.yaml`](skills/my-workflow/references/index.yaml) 的 `when`／`keywords` 載入一個。
 
 | 類別 | Skill |
 |------|-------|

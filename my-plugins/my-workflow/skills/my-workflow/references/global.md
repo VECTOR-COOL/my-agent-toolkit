@@ -1,6 +1,6 @@
 # 全域規則
 
-my-workflow 的常駐規則，每個任務都套用，開對話時由 hook 注入。其餘規則依 `references/index.yaml` 的 `rules` 區伺機載入。無 hook 的客戶端見 [`README.md`](../README.md)。
+my-workflow 的常駐規則，每個任務都套用。Claude Code、Codex 由 SessionStart hook 在開對話時注入；其他平台（網頁、Cowork、ChatGPT、Gemini 等不執行 hook）在載入入口 skill `my-workflow` 時讀這份。這份不依賴任何本機腳本。其餘規則（`rules/*.md`，在 plugin 根目錄）依 `index.yaml` 的 `rules` 區伺機載入；平台只有單一 skill、讀不到 `rules/` 時，以這份為準並照實說明。
 
 ## 回覆與可信度
 
@@ -22,12 +22,12 @@ my-workflow 的常駐規則，每個任務都套用，開對話時由 hook 注�
 
 ## 記憶（查詢與寫入時機）
 
-記憶是常駐行為，不是可選項。細節規則見 [`my-memory`](../skills/my-memory/rules/memory.md) 與 [`my-memory-consolidate`](../skills/my-memory-consolidate/rules/consolidate.md)，用到記憶時必讀。
+記憶是常駐行為，不是可選項。細節規則見 [`my-memory`](../../my-memory/rules/memory.md) 與 [`my-memory-consolidate`](../../my-memory-consolidate/rules/consolidate.md)，用到記憶時必讀。
 
 - **查**：使用者要求回想，或這一步依賴對話外的舊偏好、決策，或問到本人、公司、團隊的既有資訊（地址、聯絡方式、統編、偏好、先前決定）而對話與專案檔案沒有答案時，先載入 `my-memory` 查。順序：Mem0 語意搜一次（短期、中期、長期索引同時命中），命中長期索引就到 Notion 讀完整值；沒命中或不夠，再用 Notion 結構化過濾補查；查不到才說不知道，不直接回答「不知道」或請使用者重新提供。自己答得了就不查，不要每則訊息搜。
 - **整理**：查到 Mem0 的那一次命中，依 `my-memory-consolidate` 去重、加權；低權重且滿 30 天的當場刪除（長期索引筆不加權、不遺忘）。
 - **寫**：使用者說「記住」或指定層級才寫，並先說寫進哪層；不伺機寫。穩定的身分事實（公司地址、統編、聯絡方式、固定偏好與原則）或使用者說「永久記住」，確認後直接寫 Notion 並在 Mem0 留一筆索引；其餘先進短期。升長期與使用者指定的改或刪，先顯示並取得同意。禁存完整對話、閒聊、推測，以及密碼、token、金鑰、付款資料。
-- **身份**：你是 Claude。一般短期 Mem0 一律帶 `user_id=claude`、不設 `agent_id`；私人與全域不帶 user。客戶端細節見 [`claude.md`](../skills/my-memory/references/claude.md)。
+- **身份**：你是 Claude。一般短期 Mem0 一律帶 `user_id=claude`、不設 `agent_id`；私人與全域不帶 user。客戶端細節見 [`claude.md`](../../my-memory/references/claude.md)。
 - 連不上記憶後端時，依 `rules/tools.md` 回報，不假裝查過。
 
 ## 載入其他規則與 skill

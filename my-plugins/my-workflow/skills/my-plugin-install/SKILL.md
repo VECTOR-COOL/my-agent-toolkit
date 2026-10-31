@@ -31,15 +31,17 @@ graph TD
 | 你是 Claude，在雲端 session（全新 clone 的雲端容器） | Claude 雲端 session | [claude.md](references/claude.md)「雲端 session」 |
 | 你是 Claude，沒有 shell（claude.ai 網頁、Desktop 聊天、Cowork） | Claude 網頁／Cowork | [claude.md](references/claude.md)「網頁與 Cowork」 |
 | 你是 Codex | Codex | [codex.md](references/codex.md) |
+| 你是 Gemini（CLI 或網頁） | Gemini | [gemini.md](references/gemini.md) |
 | 平台沒有 plugin 機制（如 ChatGPT） | 手動 | 下方「沒有 plugin 機制」 |
 
 只讀對應平台的那一節。
 
 ## 2. 查版本
 
-- **最新版本**：來源 repo `main` 上 `my-plugins/my-workflow/.claude-plugin/plugin.json` 的 `version`。
+- **最新版本**：來源 repo `main` 上 `my-plugins/my-workflow/pack.yaml` 的 `version`（給人看的標籤）。`.claude-plugin/plugin.json` 刻意不寫 `version`，Claude 以 commit 當版本，所以 `main` 有新 commit 就算有新版。
 - **目前版本**：依平台方法查（如 `claude plugin list`）。
-- 版本相同但內容不同，代表 plugin 改了卻沒升版；平台不會提供更新，要先請維護者升版（見 plugin 的 `AGENTS.md`）。
+- 版本標籤相同但內容不同是正常的（標籤只在發布時升）。平台不提供更新時，先確認 manifest 沒被加回 `version`（會凍結自動更新），見 plugin 的 `docs/RELEASE.md`。
+- 建議使用者開 marketplace 的自動更新（Claude Code 的 auto-update、claude.ai 的 **Sync automatically**）。
 
 ## 3. 執行與驗證
 
@@ -54,9 +56,9 @@ graph TD
 
 ## 沒有 plugin 機制
 
-例如 ChatGPT 網頁：
+例如 ChatGPT 網頁（Gemini 網頁同理，見 [gemini.md](references/gemini.md)）：
 
-- 把 `rules/global.md` 貼到自訂指示。
+- 把 `skills/my-workflow/references/global.md` 貼到自訂指示（ChatGPT 的 Custom GPT／專案指示、Gemini 網頁的 Gem 指示都一樣）。
 - 需要的 skill 資料夾單獨上傳（先傳 `my-workflow`）。
 - 更新就重貼、重傳。規則不會自動帶入新對話，也沒有 hook 與 MCP。
 

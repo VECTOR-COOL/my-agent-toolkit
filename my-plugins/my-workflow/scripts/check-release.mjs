@@ -47,9 +47,8 @@ if (!version) {
   errors.push('pack.yaml 讀不到 version');
 } else {
   const checks = [
-    ['my-plugins/my-workflow/.claude-plugin/plugin.json', (t) => JSON.parse(t).version],
-    ['my-plugins/my-workflow/plugin.json', (t) => JSON.parse(t).version],
-    ['my-plugins/my-workflow/references/index.yaml', (t) => (t.match(/^version:\s*(\S+)/m) || [])[1]],
+    ['my-plugins/my-workflow/gemini-extension.json', (t) => JSON.parse(t).version],
+    ['my-plugins/my-workflow/skills/my-workflow/references/index.yaml', (t) => (t.match(/^version:\s*(\S+)/m) || [])[1]],
     ['project.json', (t) => JSON.parse(t).version],
     ['my-plugins/my-workflow/AGENTS.md', (t) => (t.match(/\*\*版本\*\*：`([^`]+)`/) || [])[1]],
     ['my-plugins/my-workflow/README.md', (t) => (t.match(/版本 `([^`]+)`/) || [])[1]],
@@ -67,8 +66,15 @@ if (!version) {
     if (found === undefined) errors.push(`${rel} 找不到版本號`);
     else if (found !== version) errors.push(`${rel} 版本是 ${found}，pack.yaml 是 ${version}`);
   }
-  if (!errors.some((e) => e.includes('版本'))) ok.push(`版本號一致：${version}（8 處）`);
+  if (!errors.some((e) => e.includes('版本'))) ok.push(`版本號一致：${version}（${checks.length + 1} 處）`);
 }
+
+// 1b. manifest 不寫 version：沒有 version 時 Claude 以 commit SHA 當版本，main 每次更新都會被 market 偵測到並自動更新
+for (const rel of ['my-plugins/my-workflow/.claude-plugin/plugin.json', 'my-plugins/my-workflow/plugin.json']) {
+  const text = read(rel);
+  if (text !== null && 'version' in JSON.parse(text)) errors.push(`${rel} 不要寫 version（寫了會凍結自動更新，使用者不 bump 就拿不到新版）`);
+}
+if (!errors.some((e) => e.includes('不要寫 version'))) ok.push('manifest 沒有 version，market 以 commit 偵測更新');
 
 // 2. 會漏傳的檔案
 function walk(dir) {
