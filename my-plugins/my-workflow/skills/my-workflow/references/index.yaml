@@ -10,8 +10,8 @@ skills:
     when: 新對話開始、不確定該用哪個 skill 時
     keywords: [my-workflow, 不知道用哪個 skill, 工作習慣, 入口, 怎麼做, 選 skill]
   - name: my-plugin-install
-    when: 安裝、更新、檢查或移除 plugin；依平台（Claude Code、Claude 網頁與 Cowork、雲端 session、Codex、ChatGPT）自動選方法
-    keywords: [安裝, 更新, 檢查更新, plugin, 外掛, 版本, 看不到新版, 沒生效, marketplace, install, update, Cowork, claude.ai]
+    when: 安裝、更新、檢查或移除 plugin；依平台（Claude Code、Claude 網頁與 Cowork、雲端 session、Codex、ChatGPT、Antigravity、Gemini）自動選方法
+    keywords: [安裝, 更新, 檢查更新, plugin, 外掛, 版本, 看不到新版, 沒生效, marketplace, install, update, Cowork, claude.ai, Antigravity, AGY, Gemini]
   - name: my-memory
     when: 記住／回想偏好、決策或查詢歷史脈絡；使用者問自己、公司、團隊的既有資訊而對話裡沒有答案時
     keywords: [記住, 回想, 偏好, 決策, 記憶, 永久記憶, Mem0, 歷史紀錄, 個人習慣, 查詢記憶, 記一下, 我的, 公司地址, 公司資料, 聯絡方式, 電話, 統編, 你記得, 之前說過, 先前決定]
