@@ -67,14 +67,30 @@
 2. 檢查 Web 相容性：核心規則由入口 skill 讀取，不能依賴本機 SessionStart、shell、stdio MCP 或本機路徑。遠端 MCP 可保留，但要確認端點、驗證方式與目標 Web 支援。檢查 local-executor 要求與 Desktop only 標示，不能只改旗標就宣稱相容。
 3. 有本機依賴時列出需要調整的功能；必要時製作獨立的 Web 上傳產物，保留來源 SSOT。不得默默刪除 MCP、skills 或功能；若只能提供部分功能，先確認這個範圍符合使用者要求。
 4. 按 Plugin Creator 的套件規格產生 ZIP／tar.gz，含 `plugin.json`、skills 與必要資源，檢查 JSON、frontmatter、相對連結及封裝內容。帳號上傳產物採其要求的版本格式；不要把版本需求寫回 repo 刻意不含 version 的 marketplace manifest。
-5. 用 `create_plugin(archive=<絕對本機路徑>)` 儲存。工具會使用目前 active workspace，沒有才用個人帳號；讀回 scope，保留 `plugin_id`、release ID、版本與 `plugin_url`。結果不明時先查現況，不能重複建立。
+5. 呼叫 `create_plugin` 儲存：
+
+   ```yaml
+   create_plugin: {archive: <絕對本機路徑>}
+   ```
+
+   工具會使用目前 active workspace，沒有才用個人帳號；讀回 scope，保留 `plugin_id`、release ID、版本與 `plugin_url`。結果不明時先查現況，不能重複建立。
 6. 回傳可點擊的 `plugin_url`。先查是否已安裝；尚未安裝且工具支援時，用 `search_plugins` 回傳的確切 ID 呼叫 `suggest_plugins` 顯示安裝入口，或引導使用者從 plugin 詳情安裝。需要使用者按鈕／OAuth 時清楚標記待完成，不能把儲存成功當成已安裝。
 
 ### 更新同一個 plugin
 
 1. 先完成「檢查更新」；沒有需更新內容就回報，不為檢查而升版。以現有 `plugin_id` 讀取當前檔案與 `current_release_id`。文字檔優先用 `get_plugin_files`；二進位或大小限制才用 `get_owned_plugin_archive`。
 2. 比對來源新版與現有套件，保留 plugin 身分、scope、受眾、App 綁定、整合、提示與資產；只修改授權範圍。準備更新 manifest 與變更檔，依既有版本規則升版。
-3. 呼叫 `update_plugin(plugin_id, archive, expected_release_id)`，最後一項使用讀到的 `current_release_id`。這是覆蓋合併：沒上傳的檔案仍保留；刪檔須從清單取得確切路徑、確認在授權範圍內，另傳 `delete_paths`。
+3. 呼叫 `update_plugin`：
+
+   ```yaml
+   update_plugin:
+     plugin_id: <backend plugin_id>
+     archive: <絕對本機路徑>
+     expected_release_id: <讀到的 current_release_id>
+     delete_paths: [<確切路徑>]   # 選填；只放從清單取得、在授權範圍內的路徑
+   ```
+
+   這是覆蓋合併：沒上傳的檔案仍保留，要刪的檔只能靠 `delete_paths`。
 4. release 衝突時重新讀取並整合，不拿舊 ZIP 換個 expected ID 強送。權限拒絕、打包失敗、上傳失敗分開回報。
 5. 成功後讀回版本、release 與變更內容，回傳原 plugin 的連結。更新同一項目，不重建，也不自行擴大分享範圍。
 

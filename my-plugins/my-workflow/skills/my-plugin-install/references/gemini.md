@@ -110,7 +110,14 @@ Antigravity 原生支援 `my-plugins/my-workflow/plugin.json`。先完成「檢�
 **方式 B：安裝至 `~/.gemini/config/plugins/my-workflow/` 並以 Language Server RPC 管理**
 
 1. 從 GitHub `main` 將 `my-plugins/my-workflow/` 同步至 `~/.gemini/config/plugins/my-workflow/`，並把 GitHub `main` 的 commit SHA 寫入 `~/.gemini/config/plugins/my-workflow/.source-commit`。
-2. 透過 Language Server Connect 端點（`http://${ANTIGRAVITY_LS_ADDRESS}/exa.language_server_pb.LanguageServerService/<Method>`，Header 帶 `x-codeium-csrf-token: ${ANTIGRAVITY_CSRF_TOKEN}`）管理生命周期。**所有變更一律以安裝資料夾名 `<dir>`（`my-workflow`）為 key，絕不直接手改 `~/.gemini/config/config.json`**：
+2. 透過 Language Server Connect 端點管理生命周期：
+
+   ```yaml
+   endpoint: http://${ANTIGRAVITY_LS_ADDRESS}/exa.language_server_pb.LanguageServerService/<Method>
+   headers: {x-codeium-csrf-token: ${ANTIGRAVITY_CSRF_TOKEN}}
+   ```
+
+   **所有變更一律以安裝資料夾名 `<dir>`（`my-workflow`）為 key，絕不直接手改 `~/.gemini/config/config.json`**：
    - 盤點確認：`lsrpc GetAllPlugins '{"workspaceUris":["file:///path/to/workspace"]}' | jq '[.plugins[] | {name, dir: (.path | split("/") | last), disabled: (.disabled // false), isGlobal, skills: [.skills[]?.name]}]'`
    - 啟用／停用：`lsrpc JetboxWriteState '{"userConfig":{"plugins":{"my-workflow":{"enabled":true}}}}'`（立即生效，免重啟）。
    - 移除：`lsrpc DeletePlugin '{"pluginId":"my-workflow"}'`（若原本是 `disabled`，刪除前先用 `JetboxWriteState` 設回 `"enabled": true`，避免殘留設定導致重裝後預設停用；內建 `/builtin/plugins/` 不可移除）。
@@ -123,7 +130,14 @@ Antigravity 原生支援 `my-plugins/my-workflow/plugin.json`。先完成「檢�
 - **元件相容性（誠實標示）**：
   - **Skills**：`skills/*/SKILL.md` 自動掃描並按需載入（Progressive Disclosure）。
   - **規則**：Antigravity 自動載入 plugin 下 `rules/*.md`（情境規則）；全域規則 `skills/my-workflow/references/global.md` 於載入入口 skill `my-workflow` 時讀取（或在工作區由 `AGENTS.md`／`GEMINI.md` 載入）。
-  - **Hooks 與 MCP**：Antigravity 原生 plugin（含 `plugin.json`）只讀取 plugin 根目錄的 `hooks.json`（`injectSteps` 契約）與 `mcp_config.json`；本 plugin 目前的 `hooks/hooks.json`（Claude）、`hooks/codex.json`（Codex）與 `.mcp.json`／`mcp.json` **不會**被 Antigravity 自動當成原生 hook／MCP 載入。若需在 Antigravity 使用 Composio MCP，請引導在 `~/.gemini/config/mcp_config.json` 設定 Streamable HTTP 端點 `"composio": {"url": "https://connect.composio.dev/mcp"}`。未在新對話實際完成工具呼叫前，不得宣稱 hook 或 MCP 已生效。
+  - **Hooks 與 MCP**：Antigravity 原生 plugin（含 `plugin.json`）只讀取 plugin 根目錄的 `hooks.json`（`injectSteps` 契約）與 `mcp_config.json`；本 plugin 目前的 `hooks/hooks.json`（Claude）、`hooks/codex.json`（Codex）與 `.mcp.json`／`mcp.json` **不會**被 Antigravity 自動當成原生 hook／MCP 載入。若需在 Antigravity 使用 Composio MCP，請引導在 `~/.gemini/config/mcp_config.json` 加入 Streamable HTTP 端點：
+
+    ```jsonc
+    // 片段：放進該檔既有的伺服器清單
+    "composio": { "url": "https://connect.composio.dev/mcp" }
+    ```
+
+    未在新對話實際完成工具呼叫前，不得宣稱 hook 或 MCP 已生效。
 
 ## Gemini CLI：本機 extension 與 skills
 
@@ -169,7 +183,7 @@ Antigravity 原生支援 `my-plugins/my-workflow/plugin.json`。先完成「檢�
 | 檢查發現 GitHub `main` 落後於本地 `develop`（新版還沒發布到 `main`） | 說明正式安裝與各平台 marketplace 一律抓 `main` 分支；只改 `develop` 不會進入 `main`。引導先執行專案 skill `my-plugin-release`（或依 [`docs/RELEASE.md`](../../docs/RELEASE.md) 檢查版本、跑 `check-release.mjs`、合併 `develop` 到 `main` 並 push），完成後再更新。 |
 | 私有 GitHub repo 無法讀取（`gh api` 或 `git fetch` 權限不足） | 保留實際錯誤訊息，引導在本機執行 `gh auth login` 或設定 SSH key 授權讀取 `VECTOR-COOL/my-agent-toolkit`；不要求使用者貼出 token。無法讀遠端 GitHub 時標示「無法確認最新遠端狀態」，不拿本地舊快照冒充最新。 |
 | Antigravity 已設定 `plugins.json` 或建立目錄，但點 `[my-workflow](customization://my-workflow)` 顯示空白或找不到 skill | 說明 Antigravity 只在啟動時掃描新 plugin 目錄與 `plugins.json`，引導使用者**重啟 Antigravity** 後再開新對話驗證；若曾停用，用 `JetboxWriteState` 確認 `"enabled": true`。 |
-| Antigravity 中 Composio MCP 或 SessionStart 自動注入未生效 | 說明 Antigravity 原生 plugin 只讀 plugin 根目錄的 `mcp_config.json` 與 `hooks.json`（`injectSteps` 格式），不讀 Claude／Codex 專用檔。引導在 `~/.gemini/config/mcp_config.json` 加入 `"composio": {"url": "https://connect.composio.dev/mcp"}`，規則則由載入 `my-workflow` skill 時讀取 `references/global.md`。 |
+| Antigravity 中 Composio MCP 或 SessionStart 自動注入未生效 | 說明 Antigravity 原生 plugin 只讀 plugin 根目錄的 `mcp_config.json` 與 `hooks.json`（`injectSteps` 格式），不讀 Claude／Codex 專用檔。照「驗證與相容性說明」的 `mcp_config.json` 片段加入 Composio，規則則由載入 `my-workflow` skill 時讀取 `references/global.md`。 |
 | 在 Gemini CLI 互動對話內輸入 `gemini extensions install` 失敗 | 說明 `gemini extensions install|link|update` 是系統 shell 命令，不是 Gemini CLI 互動模式內的斜線指令；引導在一般終端機（PowerShell／bash）執行。 |
 
 需要轉往支援 Web marketplace 的目標環境（如 ChatGPT／Codex 帳號端對話）接續時，提供可直接貼上的交接提示（只填實際查得的值，未知寫「未取得」）：
