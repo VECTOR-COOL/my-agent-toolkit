@@ -22,6 +22,9 @@ graph TD
   F --> P[平台入口只引用 AGENTS.md]
   P --> G[Git 初始化與分支建立]
   G --> H[在 VECTOR-COOL 建立私有 Repo 並推送]
+  H --> D2{打包部署的專案?}
+  D2 -->|是| RP[引用 my-release-packaging 建立發佈流程配置]
+  D2 -->|否| End[完成]
 ```
 
 ## 執行流程
@@ -77,7 +80,7 @@ graph TD
 - **版本**：初始 `v0.1.0`（使用者另有指定就照指定）。專案若已有版本來源（`package.json`、`VERSION`、git tag），README 的版本與它保持一致，改版時同步。
 - **`.agents/skills/`** 是各編輯器共用的 skill 位置（Codex 會發現它）。其他編輯器若讀自己的路徑（如 Claude 讀 `.claude/skills/`），以 symlink 或複製指到這裡，不要維護兩份；各編輯器的發現路徑以其官方文件為準，沒查證就不要斷言。
 - **平台入口**（`CLAUDE.md` 等）：見步驟 5。
-- **發佈打包（選用）**：專案是解壓到正式機、交給客戶或維運的 ZIP（PHP、WordPress、靜態網站等）時，載入 `my-release-packaging`：建立 `.gitattributes` 的 `export-ignore`、`scripts/pack-release.mjs`、`release.config.json`、`docs/RELEASE_SPEC.md`。**不是每個專案都需要**：`export-ignore` 也會影響 GitHub 的 Source code ZIP 下載，函式庫與開源專案通常不該排除 `docs/`、`README.md`。不確定就問使用者「這個專案是不是打包部署」。
+- **發佈打包（選用）**：打包部署的專案在**最後一步**（步驟 7）引用 `my-release-packaging` 建立發佈流程配置，這裡先不建 `.gitattributes`。
 - 不把任何平台專屬設定寫進 `AGENTS.md` 主體，放在它最後的「各 agent 平台備註」。
 
 ### 5. 平台入口（只引用 AGENTS.md）
@@ -113,3 +116,18 @@ graph TD
    git push -u origin develop
    ```
 7. 回報遠端儲存庫 URL 與分支狀態。
+
+### 7. 發佈流程配置（最後一步，僅打包部署的專案）
+
+專案是**解壓到正式機、交給客戶或維運的 ZIP**（PHP、WordPress、靜態網站等）時，Git 與遠端都建好後，**引用 [`my-release-packaging`](../my-release-packaging/SKILL.md)** 建立發佈流程配置。不確定就問使用者「這個專案是不是打包部署」；函式庫、公開開源專案、純內部工具**不要建**：`export-ignore` 也會影響 GitHub 的 Source code ZIP，會把 `docs/`、`README.md` 排除。
+
+1. 載入 `my-release-packaging`，依它的流程建立：
+   - `.gitattributes`：把開發與 AI 治理檔（`.agents/`、`.claude/`、`.cursor/`、`AGENTS.md`、`CLAUDE.md`、`NOTE.md`、`docs/`、`scripts/`、`tests/` 等）標成 `export-ignore`，並加上 `/release.config.json export-ignore`。
+   - `scripts/pack-release.mjs`：複製該 skill 附帶的腳本。
+   - `release.config.json`：用步驟 3 讀到的事實填（範例見 [`release.config.example.json`](../my-release-packaging/references/release.config.example.json)）：`name`、`version`（版本來源檔與 regex）、`lint`（實際存在的檢查指令）、`placeholders`（上傳、圖檔、日誌目錄的 base path）、`forbiddenExtra`（專案特有的帳密或設定檔）、`outDir`。**不確定的欄位問使用者，不猜。**
+   - `docs/RELEASE_SPEC.md`：依該 skill 的規格書範本。
+2. 把 `.gitignore` 補上 `dist/`（若步驟 4 還沒有）。
+3. 回頭更新 `AGENTS.md` 的「發佈（若有）」一節（唯一產出指令、規格書路徑、`dist/` 不進版控、每次部署後打 tag），以及 `NOTE.md` 的「部署紀錄」。沒有打包部署的專案就把這兩節刪掉。
+4. **驗證**：實際跑 `node scripts/pack-release.mjs --dry-run`，確認結束碼 0、`topLevelIncluded` 只有正式機需要的項目、沒有洩漏。失敗就修設定，不要略過審核。
+5. commit 並 push `develop`：`chore(release): 建立發佈流程配置`。
+6. 回報建立了哪些檔、`--dry-run` 的結果，以及沒實測的部分（例如沒有在正式機實際部署過）。
