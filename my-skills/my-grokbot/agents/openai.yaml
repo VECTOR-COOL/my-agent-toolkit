@@ -1,0 +1,4 @@
+interface:
+  display_name: "my-grokbot"
+  short_description: "設定與稽核個別 Grok Bot"
+  default_prompt: "使用 $my-grokbot 建立、設定或審查一個 Grok Bot。同一回合必須同時引用 $my-workflow。"
