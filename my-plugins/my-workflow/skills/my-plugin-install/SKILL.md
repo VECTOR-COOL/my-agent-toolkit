@@ -1,16 +1,16 @@
 ---
 name: my-plugin-install
-description: 安裝、檢查更新、更新、檢查或移除 plugin（預設是 my-workflow），依目標與目前環境選方法：Claude、OpenAI（Codex、ChatGPT）、Gemini。支援對話內操作與 Web marketplace；安裝或更新失敗、工具缺少、環境不適用時，說明原因並引導到正確入口。
+description: 安裝、檢查更新、更新、檢查或移除 plugin（預設是 my-workflow），依使用者指定目標與實際工具能力選方法：Claude、OpenAI（Codex、ChatGPT）、Gemini。提供對話內操作與 ChatGPT Web marketplace 流程；工具與權限不足、安裝或更新失敗、環境不適用時，說明原因並引導到正確入口。
 ---
 
 # my-plugin-install — 安裝與更新 plugin
 
-依「目前所在平台」自動選方法，不要問使用者用哪個平台再開始，先自己判斷；判斷不了才問。預設對象是 my-workflow：
+先依使用者指定的目標平台、帳號／工作區與 marketplace 選流程，再確認目前環境的實際工具與權限能否執行；不能只靠模型身分推定能力。未指定目標時，先用對話脈絡與已知環境判斷，仍有歧義才問。預設對象是 my-workflow：
 
 - 來源 repo（marketplace）：`https://github.com/VECTOR-COOL/my-agent-toolkit`，私有，`main` 分支
 - marketplace 名稱 `my-agent-toolkit`，plugin `my-workflow`，安裝 id `my-workflow@my-agent-toolkit`
 
-以上是 Git marketplace 的識別；帳號端私人／工作區 plugin 使用平台回傳的 ID。使用者指定「對話內安裝與更新、Web 也能用」時，優先走 [OpenAI 帳號端流程](references/openai.md)，即使目前是 Codex 也不改成本機目標。
+以上是 Git marketplace 的識別；帳號端私人／工作區 plugin 使用平台回傳的 ID。使用者指定「對話內安裝與更新、ChatGPT Web 也能用」時，優先走 [OpenAI 帳號端流程](references/openai.md)，即使目前是 Codex 也不改成本機目標。只說「Web」時先從脈絡確認是哪個產品，不把 Claude／Gemini 網頁需求轉成 ChatGPT。
 
 ```mermaid
 graph TD
@@ -28,19 +28,19 @@ graph TD
 
 ## 1. 判斷平台
 
-看自己是誰、手上有什麼工具，不要掃系統猜：
+依目標選下表的 reference，再探索當前可用工具；不能用「有 shell」「模型叫 Codex」推定具備帳號端 plugin 工具，也不掃整台系統猜平台。缺少必要能力時依後文引導，不更換使用者的目標。
 
 | 判斷依據 | 平台 | 方法 |
 |------|------|------|
-| 你是 Claude，能執行 shell 且有 `claude` 指令 | Claude Code（終端機、Desktop Code 分頁、IDE） | [claude.md](references/claude.md)「Claude Code」 |
-| 你是 Claude，在雲端 session（全新 clone 的雲端容器） | Claude 雲端 session | [claude.md](references/claude.md)「雲端 session」 |
-| 你是 Claude，沒有 shell（claude.ai 網頁、Desktop 聊天、Cowork） | Claude 網頁／Cowork | [claude.md](references/claude.md)「網頁與 Cowork」 |
-| 你是 Codex，或要求對話內安裝且 Web 可用 | OpenAI | [openai.md](references/openai.md)「先選安裝目標」 |
-| 你是 ChatGPT | ChatGPT | [openai.md](references/openai.md)「帳號端安裝與更新」 |
-| 你是 Gemini（CLI 或網頁） | Gemini | [gemini.md](references/gemini.md) |
+| 目標是 Claude Code | Claude Code（終端機、Desktop Code 分頁、IDE） | [claude.md](references/claude.md)「Claude Code」 |
+| 目標是 Claude 雲端 session | Claude 雲端 session | [claude.md](references/claude.md)「雲端 session」 |
+| 目標是 claude.ai 網頁、Desktop 聊天或 Cowork | Claude 網頁／Cowork | [claude.md](references/claude.md)「網頁與 Cowork」 |
+| 目標是 Codex | OpenAI | [openai.md](references/openai.md)「先選安裝目標」 |
+| 目標是 ChatGPT，包含對話內操作且 ChatGPT Web 可用 | ChatGPT | [openai.md](references/openai.md)「帳號端安裝與更新」 |
+| 目標是 Gemini CLI 或 Gemini 網頁 | Gemini | [gemini.md](references/gemini.md) |
 | 其他沒有 plugin 機制的平台 | 需確認 | 查該平台官方支援；貼規則或上傳檔案不算 marketplace 安裝 |
 
-每家廠商一檔：Claude 讀 `claude.md`、OpenAI 讀 `openai.md`、Gemini 讀 `gemini.md`。只讀對應平台的那一節。
+每個目標生態一檔：Claude 讀 `claude.md`、OpenAI 讀 `openai.md`、Gemini 讀 `gemini.md`。執行任務的模型與目標可以不同；只讀目標對應的章節。
 
 ## 2. 檢查更新
 
@@ -49,16 +49,16 @@ graph TD
 1. 確認目標平台、帳號／工作區與實際 plugin；不能用另一個同名項目或本機快取代替。
 2. 取得已安裝／帳號端版本、release 與可用的來源 commit，再讀來源 `main` 的目前 commit 與 plugin 內容。讀不到哪一側就明說，不能判成最新。
 3. 比對 plugin 本身的內容差異；repo 其他 plugin 有 commit 不代表本 plugin 有更新。版本相同也要查內容；帳號端版本可能獨立升版，不直接和 repo 標籤比較大小。
-4. 回報「已是最新／有更新／尚未安裝／無法確認」，附檢查時間、目標、兩側版本或 release／commit、差異摘要與下一步。OpenAI 的詳細比對見 [openai.md](references/openai.md)「檢查更新」。
+4. 回報「已是最新／有更新／尚未安裝／無法確認」，附檢查時間、目標、兩側版本或 release／commit、差異摘要與下一步。「尚未安裝」須有目標環境的明確安裝狀態證據；搜尋不到或權限不足一律不能據此判定。OpenAI 的詳細比對見 [openai.md](references/openai.md)「檢查更新」。
 
-- **最新版本**：來源 repo `main` 上 `my-plugins/my-workflow/pack.yaml` 的 `version`（給人看的標籤）。`.claude-plugin/plugin.json` 刻意不寫 `version`，Claude 以 commit 當版本，所以 `main` 有新 commit 就算有新版。
+- **來源版本標籤**：來源 repo `main` 上 `my-plugins/my-workflow/pack.yaml` 的 `version`，只作人類可讀標籤。marketplace 來源 commit 改變時，仍須確認本 plugin 的內容差異，不能把 repo 任意新 commit 都當成本 plugin 有更新。
 - **目前版本**：依平台方法查（如 `claude plugin list`）。
 - 版本標籤相同但內容不同是正常的（標籤只在發布時升）。Claude Git marketplace 的更新排除見 plugin 的 `docs/RELEASE.md`；OpenAI 帳號上傳的版本與 release 依 [openai.md](references/openai.md) 處理，不套用 Claude 的無 version 規則。
 - 建議使用者開 marketplace 的自動更新（Claude Code 的 auto-update、claude.ai 的 **Sync automatically**）。
 
 ## 3. 執行與驗證
 
-- 照平台方法安裝或更新。安裝與更新都會改使用者環境，**先說要執行什麼，取得同意再做**。
+- 照平台方法安裝或更新，先說明將執行的動作。使用者已明確要求安裝或更新，即可在該授權範圍內執行，不重複詢問；只要求檢查時不寫入，新增或擴大範圍才另行確認。平台要求的安裝按鈕或 OAuth 授權仍須完成。
 - 私有 repo：本機要能讀取（`gh auth login` 或 SSH key）；Claude 網頁走 Claude GitHub App 授權，OpenAI 工作區同步走其管理員 GitHub 授權流程。
 - 完成後驗證：版本／release 正確、plugin 已安裝啟用；在指定平台開新對話，實際執行 skill 任務。Web 目標另驗 Web，不以本機成功代替。
 - 回報：平台、做了什麼、前後版本、驗證結果、哪一步沒做成。
