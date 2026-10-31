@@ -32,6 +32,30 @@ graph TD
    - **`README.md`**：人類工程師的導讀手冊。說明專案定位、快速啟動、架構簡圖與目錄指引。
    - **`AGENTS.md`**：AI Agent 的最高行為準則。說明專案結構、治理規則、執行約定與嚴禁事項。
 
+## docs/ 結構
+
+文件放哪、叫什麼名字，以這節為準（`my-codebase-init`、`my-create-prd`、`my-release-packaging` 都照這裡）。
+
+```text
+docs/
+├─ NOTE.md            交接紀錄（唯一一定有的檔）
+├─ README.md          文件索引（超過約 5 份文件才建）
+├─ specs/             技術規格、PRD     <主題>.md、prd-<主題>.md
+├─ guides/            操作指南、SOP     <主題>.md
+├─ adr/               架構決策          NNNN-<主題>.md（0001 起，不改號）
+├─ plans/             計畫              YYYY-MM-DD-<主題>.md
+├─ diagrams/          獨立圖檔          <主題>.mmd 等
+├─ archived/          廢棄文件          保留原檔名
+└─ RELEASE_SPEC.md    發佈規格（僅打包部署）
+```
+
+- **有才建**：子目錄有第一份文件才建，不建空目錄。
+- **一份一主題**；檔名英文小寫、用 `-` 連接（`NOTE.md`、`README.md`、`RELEASE_SPEC.md` 例外）。
+- 文件內的 mermaid 直接寫在文件裡；獨立維護的圖檔才放 `diagrams/`。
+- 計畫做完狀態改「已完成」，留在 `plans/`；ADR 不刪不改號，被取代改狀態並連到新的；其他過時文件移 `archived/`（見下方生命週期）。
+- 已有專案沿用既有 `docs/` 子目錄名，寫進 `AGENTS.md` 目錄架構即可，不強制搬。
+- `DESIGN.md`（`my-ui-ux`）照設計工具慣例放根目錄。
+
 ## 撰寫準則
 
 - **言簡意賅**：能用一句話說清楚就不要開長段；結論與重點先行。

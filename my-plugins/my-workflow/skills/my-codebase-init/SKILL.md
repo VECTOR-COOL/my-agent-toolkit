@@ -1,6 +1,6 @@
 ---
 name: my-codebase-init
-description: 從專案模板初始化 codebase，或把既有專案的入口文件轉換成最新格式：先閱讀並理解專案，再建立或轉換各 AI 編輯器通用、可立即接手的工作區（AGENTS.md 為唯一來源、README.md 含版本、NOTE.md 交接紀錄、.agents/skills/），Claude、Cursor 等平台只建引用 AGENTS.md 的入口，並在 VECTOR-COOL 組織建立私有 GitHub repo、設定 main 與 develop 分支。用於新專案初始化、開新專案、補齊或升級舊專案的入口文件（AGENTS.md、README、NOTE.md、發佈配置）、讓 AI 能接手專案、比對 project-templates 時。
+description: 從專案模板初始化 codebase，或把既有專案的入口文件轉換成最新格式：先閱讀並理解專案，再建立或轉換各 AI 編輯器通用、可立即接手的工作區（AGENTS.md 為唯一來源、README.md 含版本、docs/NOTE.md 交接紀錄、.agents/skills/；根目錄只留入口與生態規定的檔，只加 docs/、scripts/ 兩個目錄），Claude、Cursor 等平台只建引用 AGENTS.md 的入口，並在 VECTOR-COOL 組織建立私有 GitHub repo、設定 main 與 develop 分支。用於新專案初始化、開新專案、補齊或升級舊專案的入口文件（AGENTS.md、README、NOTE.md、發佈配置）、整理根目錄結構、讓 AI 能接手專案、比對 project-templates 時。
 ---
 
 # my-codebase-init — 專案與版控初始化
@@ -26,6 +26,29 @@ graph TD
   D2 -->|是| RP[引用 my-release-packaging 建立發佈流程配置]
   D2 -->|否| End[完成]
 ```
+
+## codebase 結構
+
+目標：**通用、接地氣**，任何 agent 或工程師一看就懂。不自創結構，用大家早就在用的慣例。
+
+```text
+<專案>/
+├─ README.md   AGENTS.md   CLAUDE.md     ← 入口（CLAUDE.md 只在用 Claude 時建）
+├─ package.json / composer.json …       ← 語言生態規定放根目錄的，照放
+├─ LICENSE  CHANGELOG.md  .gitignore     ← 業界慣例的根目錄檔，照放
+├─ docs/                                  ← 所有文件（內部結構見 my-docs 的「docs/ 結構」）
+│  ├─ NOTE.md            交接紀錄（一定有）
+│  └─ specs/ guides/ adr/ plans/ …        有才建
+├─ scripts/                               ← 所有腳本與其設定
+│  ├─ pack-release.mjs   （僅打包部署）
+│  └─ release.config.json
+└─ src/ tests/  或框架自己的結構           ← 跟語言／框架慣例，不改
+```
+
+1. **生態慣例優先**：根目錄只留**入口與生態規定的檔**。`package.json`、`composer.json`、`LICENSE`、`.gitignore`、`.gitattributes` 等工具要求在根目錄的照放，硬搬會壞。程式目錄跟語言與框架慣例（Node 用 `src/`、Laravel 照 `app/`、WordPress 照外掛結構），不重新發明。
+2. **只加兩個目錄**：`docs/`、`scripts/`。專案已有就沿用，不另建第二個；沒有需要不建空目錄。
+3. 隱藏的工具目錄（`.agents/`、`.claude/`、`.cursor/`、`.github/`）照各工具規定放。
+4. 實際結構寫進 `AGENTS.md` 的「目錄架構」，不另建結構文件。
 
 ## 執行流程
 
@@ -58,7 +81,7 @@ graph TD
 
 **寫任何入口文件之前先讀懂專案**，內容來自實際讀到的事實，不憑猜測、不套空洞範本（規則：不編造路徑、指令、版本）。
 
-1. 看結構：`ls`、目錄樹、`git log --oneline -20`、有沒有既有的 agent 設定（`AGENTS.md`、`CLAUDE.md`、`.cursor/`、`.github/copilot-instructions.md`、`GEMINI.md`、`.agents/` 等）。
+1. 看結構：`ls -a`、目錄樹（兩層即可）、各頂層目錄的用途、`git log --oneline -20`、有沒有既有的 agent 設定（`AGENTS.md`、`CLAUDE.md`、`.cursor/`、`.github/copilot-instructions.md`、`GEMINI.md`、`.agents/` 等）。
 2. 讀 `README.md`、`package.json`／`composer.json`／`Makefile`／`pyproject.toml` 等，找出**實際存在的**安裝、啟動、測試、lint、build 指令與版本來源。
 3. 找出技術棧、入口檔、主要目錄的用途、既有慣例（分支、commit、風格）、不能動的東西。
 4. 指令能跑就**實際跑一次**驗證；跑不了的標「待確認」，不要寫成已驗證。
@@ -73,7 +96,7 @@ graph TD
 |------|------|------|
 | `AGENTS.md` | 所有 agent 的專案入口 | 角色指引、指令、目錄架構、規範、禁止事項，開頭寫「接手三步」。200 行內，超過拆到 `docs/` |
 | `README.md` | 給人看的專案說明 | **標題正下方一行寫目前版本**（``**版本：`v0.1.0`**``）；再來定位、技術棧、快速啟動 |
-| `NOTE.md` | 交接紀錄 | 目前狀態、進行中、下一步、已決定、待確認、怎麼驗證、更新紀錄。做完一段工作或交接時更新；不記機密 |
+| `docs/NOTE.md` | 交接紀錄 | 目前狀態、進行中、下一步、已決定、待確認、怎麼驗證、更新紀錄。做完一段工作或交接時更新；不記機密 |
 | `.agents/skills/<name>/SKILL.md` | 專案專屬 skill，跨編輯器共用 | 從模板複製貼近業務的 skill，加上專案自己的；`name` 與資料夾名一致 |
 | `.gitignore` | 忽略清單 | **一律建立**：`.env`、`.env.*`（保留 `!.env.example`）、`dist/`、`node_modules/`、`.claude/settings.local.json`、`CLAUDE.local.md`、`*.log` |
 | `.gitattributes` | 發佈排除（`export-ignore`） | **僅「以打包檔部署」的專案**才建（見下）；函式庫、公開開源專案不要建 |
@@ -81,6 +104,7 @@ graph TD
 - **版本**：初始 `v0.1.0`（使用者另有指定就照指定）。專案若已有版本來源（`package.json`、`VERSION`、git tag），README 的版本與它保持一致，改版時同步。
 - **`.agents/skills/`** 是各編輯器共用的 skill 位置（Codex 會發現它）。其他編輯器若讀自己的路徑（如 Claude 讀 `.claude/skills/`），以 symlink 或複製指到這裡，不要維護兩份；各編輯器的發現路徑以其官方文件為準，沒查證就不要斷言。
 - **平台入口**（`CLAUDE.md` 等）：見步驟 5。
+- **結構驗證**：寫完 `ls -a` 根目錄，逐項對照上方「codebase 結構」與 `AGENTS.md` 的「目錄架構」：根目錄只有入口、生態規定的檔與目錄；不在清單的就搬或寫進 `AGENTS.md` 說明。
 - **發佈打包（選用）**：打包部署的專案在**最後一步**（步驟 7）引用 `my-release-packaging` 建立發佈流程配置，這裡先不建 `.gitattributes`。
 - 不把任何平台專屬設定寫進 `AGENTS.md` 主體，放在它最後的「各 agent 平台備註」。
 
@@ -102,19 +126,20 @@ graph TD
 |------|-----------|----------------|
 | `AGENTS.md` | 沒有「接手三步」；指令、目錄、規範、禁止事項散在各處；內容超過 200 行；含平台專屬內容 | 重組成範本結構（接手三步、專案、指令、目錄架構、規範、禁止事項、發佈、各 agent 平台備註）。舊條目逐條歸位；平台專屬內容移到最後一節或對應入口；過長就拆到 `docs/` 並在這裡留連結 |
 | `README.md` | 版本只在徽章或內文、不在標題正下方；沒有版本 | **標題正下方一行** ``**版本：`vX.Y.Z`**``，版本取自專案版本來源（徽章若是靜態文字就以版本來源為準）；其餘內容保留；缺的「技術棧」「快速啟動」「文件」依實際補上 |
-| `NOTE.md` | 沒有；或叫 `TODO.md`、`HANDOFF.md`、`MEMORY.md`、`STATUS.md` 的交接／進度檔 | 轉成 `NOTE.md` 結構（目前狀態、進行中、下一步、已決定、待確認、怎麼驗證、更新紀錄）。舊檔內容併入後，舊檔若只剩重複內容就刪除（git 歷史留底），並更新所有引用 |
+| `docs/NOTE.md` | 沒有；在根目錄的 `NOTE.md`；或叫 `TODO.md`、`HANDOFF.md`、`MEMORY.md`、`STATUS.md` 的交接／進度檔 | 用 `git mv` 搬到 `docs/NOTE.md`，轉成 `NOTE.md` 結構（目前狀態、進行中、下一步、已決定、待確認、怎麼驗證、更新紀錄）。舊檔內容併入後，舊檔若只剩重複內容就刪除（git 歷史留底），並更新所有引用 |
 | `CLAUDE.md` | 內容和 `AGENTS.md` 重複；或沒有 `@AGENTS.md` | 第一行 `@AGENTS.md`；和 `AGENTS.md` 重複的段落移除（先確認 `AGENTS.md` 已有）；只留 Claude 專屬內容 |
 | `.cursorrules`、`.cursor/rules/*.mdc`、`.github/copilot-instructions.md`、`GEMINI.md`、`.windsurfrules` | 各平台各寫一份規則 | **不刪、不改壞**。把其中**通用內容**收斂進 `AGENTS.md`；原檔保留，需要時在開頭註明「以 AGENTS.md 為準」。要轉成 Claude 最佳實踐（`.claude/rules/` 等）用 `my-claude-codebase-convert` |
-| `.agents/skills/`、`.claude/skills/`、`.cursor/skills/` | 專案 skill 在多處各有一份 | 以 `.agents/skills/` 為唯一來源，其他指向它（symlink 或複製並在 `NOTE.md` 記下同步方式） |
+| `.agents/skills/`、`.claude/skills/`、`.cursor/skills/` | 專案 skill 在多處各有一份 | 以 `.agents/skills/` 為唯一來源，其他指向它（symlink 或複製並在 `docs/NOTE.md` 記下同步方式） |
+| 根目錄其他檔 | 根目錄散著規格、計畫、設計文件、腳本、打包設定（如 `SPEC.md`、`RELEASE_SPEC.md`、`build.mjs`、`release.config.json`） | 文件 `git mv` 進 `docs/`、腳本與其設定進 `scripts/`，再全專案 `grep` 舊路徑並更新引用（含 CI、`package.json` scripts）。**生態規定的檔與專案原有的程式目錄不搬**；搬了會壞或不確定的，列給使用者決定 |
 | `.gitignore` | 缺 `.env*`、`dist/`、`.claude/settings.local.json`、`CLAUDE.local.md`、`*.log` | 只**補缺的條目**，不改動既有行 |
-| `.gitattributes` | 打包專案已有但沒有 `/release.config.json export-ignore` 或缺 AI 治理檔 | 只補缺的 `export-ignore` 行；不確定是不是打包部署就問 |
-| `scripts/pack-release.mjs`、`release.config.json`、`docs/RELEASE_SPEC.md` | **舊版打包腳本**：沒有 `release.config.json` 支援、專案名稱／版本檔／禁則／lint 路徑寫死在腳本裡、用 `tar -tf` 讀 zip、沒有 `--since`、沒有內容掃描 | 見下「發佈配置轉換」 |
+| `.gitattributes` | 打包專案缺 `/docs`、`/scripts` 或 AI 治理檔的 `export-ignore` | 只補缺的 `export-ignore` 行；不確定是不是打包部署就問 |
+| `scripts/pack-release.mjs`、`scripts/release.config.json`、`docs/RELEASE_SPEC.md` | 設定檔在根目錄；或**舊版打包腳本**：沒有 `release.config.json` 支援、專案名稱／版本檔／禁則／lint 路徑寫死在腳本裡、用 `tar -tf` 讀 zip、沒有 `--since`、沒有內容掃描 | 見下「發佈配置轉換」 |
 
 **發佈配置轉換**（步驟 7 發現舊版打包腳本時）
 
-1. 讀舊腳本，把寫死的專案內容**搬到 `release.config.json`**：專案名稱（`name`）、版本來源檔與 regex（`version`）、lint 指令（`lint`）、專案特有的禁則（`forbiddenExtra`，如帳密檔、上傳與日誌目錄的 pattern）、輸出目錄（`outDir`）。上傳、日誌目錄的 base path 同時列入 `placeholders`。
+1. 讀舊腳本，把寫死的專案內容**搬到 `scripts/release.config.json`**（根目錄已有 `release.config.json` 就 `git mv` 過去）：專案名稱（`name`）、版本來源檔與 regex（`version`）、lint 指令（`lint`）、專案特有的禁則（`forbiddenExtra`，如帳密檔、上傳與日誌目錄的 pattern）、輸出目錄（`outDir`）。上傳、日誌目錄的 base path 同時列入 `placeholders`。
 2. 用 `my-release-packaging` 附帶的最新腳本**取代** `scripts/pack-release.mjs`（舊版保留在 git 歷史，不另存備份檔）。舊腳本裡**不屬於上述設定、無法歸類的客製邏輯**，逐項列給使用者決定，不要默默丟掉。
-3. `.gitattributes` 補 `/release.config.json export-ignore`；`docs/RELEASE_SPEC.md` 依最新範本補上「占位目錄」「增量更新檔」「部署 SOP（解壓覆蓋）」，保留專案自己的白名單與排除清單。
+3. `.gitattributes` 確認有 `/scripts export-ignore`（設定檔已在 `scripts/` 內，不必再單獨列）；`docs/RELEASE_SPEC.md` 依最新範本補上「占位目錄」「增量更新檔」「部署 SOP（解壓覆蓋）」，保留專案自己的白名單與排除清單。
 4. **驗證新舊結果一致**：用舊腳本與新腳本各打一次（或各 `--dry-run`），比對包內檔案清單，差異必須能解釋（例如新腳本多了內容掃描、占位目錄）；不能解釋的差異就是轉換漏了東西。
 
 ### 5. 平台入口（只引用 AGENTS.md）
@@ -131,7 +156,7 @@ graph TD
 | 其他 | 該平台官方文件 | 沒查證就不要斷言，也不要憑記憶寫 |
 
 - 入口檔和 `AGENTS.md` 內容衝突時以 `AGENTS.md` 為準。
-- 專案專屬 skill 的唯一來源是 `.agents/skills/`；平台若讀自己的路徑（如 `.claude/skills/`），以 symlink 或複製指到這裡，不維護兩份（symlink 在 Windows 可能需要額外設定，不確定時用複製並在 `NOTE.md` 記下同步方式）。
+- 專案專屬 skill 的唯一來源是 `.agents/skills/`；平台若讀自己的路徑（如 `.claude/skills/`），以 symlink 或複製指到這裡，不維護兩份（symlink 在 Windows 可能需要額外設定，不確定時用複製並在 `docs/NOTE.md` 記下同步方式）。
 
 ### 6. Git 版本控制與遠端設定
 
@@ -157,12 +182,12 @@ graph TD
 
 0. **已有舊版打包腳本或發佈配置**：改走上面「發佈配置轉換」，不要重建、不要覆蓋掉專案的客製內容。
 1. 載入 `my-release-packaging`，依它的流程建立：
-   - `.gitattributes`：把開發與 AI 治理檔（`.agents/`、`.claude/`、`.cursor/`、`AGENTS.md`、`CLAUDE.md`、`NOTE.md`、`docs/`、`scripts/`、`tests/` 等）標成 `export-ignore`，並加上 `/release.config.json export-ignore`。
+   - `.gitattributes`：把開發與 AI 治理檔（`.agents/`、`.claude/`、`.cursor/`、`AGENTS.md`、`CLAUDE.md`、`docs/`、`scripts/`、`tests/` 等）標成 `export-ignore`。
    - `scripts/pack-release.mjs`：複製該 skill 附帶的腳本。
-   - `release.config.json`：用步驟 3 讀到的事實填（範例見 [`release.config.example.json`](../my-release-packaging/references/release.config.example.json)）：`name`、`version`（版本來源檔與 regex）、`lint`（實際存在的檢查指令）、`placeholders`（上傳、圖檔、日誌目錄的 base path）、`forbiddenExtra`（專案特有的帳密或設定檔）、`outDir`。**不確定的欄位問使用者，不猜。**
+   - `scripts/release.config.json`（和腳本放一起，腳本預設先讀同目錄）：用步驟 3 讀到的事實填（範例見 [`release.config.example.json`](../my-release-packaging/references/release.config.example.json)）：`name`、`version`（版本來源檔與 regex）、`lint`（實際存在的檢查指令）、`placeholders`（上傳、圖檔、日誌目錄的 base path）、`forbiddenExtra`（專案特有的帳密或設定檔）、`outDir`。**不確定的欄位問使用者，不猜。**
    - `docs/RELEASE_SPEC.md`：依該 skill 的規格書範本。
 2. 把 `.gitignore` 補上 `dist/`（若步驟 4 還沒有）。
-3. 回頭更新 `AGENTS.md` 的「發佈（若有）」一節（唯一產出指令、規格書路徑、`dist/` 不進版控、每次部署後打 tag），以及 `NOTE.md` 的「部署紀錄」。沒有打包部署的專案就把這兩節刪掉。
+3. 回頭更新 `AGENTS.md` 的「發佈（若有）」一節（唯一產出指令、規格書路徑、`dist/` 不進版控、每次部署後打 tag），以及 `docs/NOTE.md` 的「部署紀錄」。沒有打包部署的專案就把這兩節刪掉。
 4. **驗證**：實際跑 `node scripts/pack-release.mjs --dry-run`，確認結束碼 0、`topLevelIncluded` 只有正式機需要的項目、沒有洩漏。失敗就修設定，不要略過審核。
 5. commit 並 push `develop`：`chore(release): 建立發佈流程配置`。
 6. 回報建立了哪些檔、`--dry-run` 的結果，以及沒實測的部分（例如沒有在正式機實際部署過）。

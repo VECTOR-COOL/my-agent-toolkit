@@ -185,6 +185,27 @@ describe('設定與參數', () => {
     assert.equal(run(dir, ['--skip-lint']).status, 0);
   });
 
+  it('設定檔預設先讀腳本同目錄（scripts/release.config.json），優先於 repo 根目錄', () => {
+    const dir = makeRepo({
+      'scripts/release.config.json': JSON.stringify({ name: 'beside' }),
+      'release.config.json': JSON.stringify({ name: 'root' }),
+      '.gitattributes': '/docs export-ignore\n/scripts export-ignore\n/AGENTS.md export-ignore\n/package.json export-ignore\n/.gitattributes export-ignore\n/.gitignore export-ignore\n/release.config.json export-ignore\n',
+    });
+    copyFileSync(SCRIPT, join(dir, 'scripts/pack-release.mjs'));
+    const r = spawnSync(process.execPath, ['scripts/pack-release.mjs'], { cwd: dir, encoding: 'utf8' });
+    assert.equal(r.status, 0, r.stderr);
+    assert.match(JSON.parse(r.stdout).output, /^dist\/beside-v2\.3\.4-/);
+  });
+
+  it('腳本同目錄沒有設定檔時，退回 repo 根目錄的 release.config.json', () => {
+    const dir = makeRepo({ 'release.config.json': JSON.stringify({ name: 'root' }) });
+    mkdirSync(join(dir, 'scripts'), { recursive: true });
+    copyFileSync(SCRIPT, join(dir, 'scripts/pack-release.mjs'));
+    const r = spawnSync(process.execPath, ['scripts/pack-release.mjs'], { cwd: dir, encoding: 'utf8' });
+    assert.equal(r.status, 0, r.stderr);
+    assert.match(JSON.parse(r.stdout).output, /^dist\/root-v2\.3\.4-/);
+  });
+
   it('壞的設定檔：結束碼 2', () => {
     const dir = makeRepo({ 'release.config.json': '{bad' });
     assert.equal(run(dir).status, 2);

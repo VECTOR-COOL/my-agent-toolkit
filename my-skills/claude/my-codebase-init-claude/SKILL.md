@@ -33,8 +33,8 @@ Claude Code 只在沒有任何 `CLAUDE.md` 時才直接讀 `AGENTS.md`（v2.1.27
 
 - `.claude/settings.json`：可以 commit，放全隊共用的 `permissions`（專案的 lint、測試指令）、`hooks`、`env`。只寫專案需要的，不放個人偏好與機密。
 - `.claude/settings.local.json`：個人覆寫，**加進 `.gitignore`**（手動建立的檔案 Claude 不會幫你忽略）。
-- 專案專屬 skill 的唯一來源是通用的 `.agents/skills/<name>/`（主 skill 已建立）。Claude 讀 `.claude/skills/`，所以讓它指到同一份，**不維護兩份**：優先用 symlink（`.claude/skills` → `../.agents/skills`），Windows 或環境不支援 symlink 時才複製，並在 `NOTE.md` 記下同步方式。symlink 在雲端 clone 是否保留未驗證，建立後用 `/status` 或問 Claude 專案有哪些 skill 確認。
-- `NOTE.md` 是交接紀錄；在 `CLAUDE.md` 的 Claude 專屬段落提醒「做完一段工作更新 `NOTE.md`」即可，細節留在 `AGENTS.md`。
+- 專案專屬 skill 的唯一來源是通用的 `.agents/skills/<name>/`（主 skill 已建立）。Claude 讀 `.claude/skills/`，所以讓它指到同一份，**不維護兩份**：優先用 symlink（`.claude/skills` → `../.agents/skills`），Windows 或環境不支援 symlink 時才複製，並在 `docs/NOTE.md` 記下同步方式。symlink 在雲端 clone 是否保留未驗證，建立後用 `/status` 或問 Claude 專案有哪些 skill 確認。
+- `docs/NOTE.md` 是交接紀錄；在 `CLAUDE.md` 的 Claude 專屬段落提醒「做完一段工作更新 `docs/NOTE.md`」即可，細節留在 `AGENTS.md`。
 - 設定檔是嚴格 JSON，不能有註解或結尾逗號。
 
 ## 3. 本機：啟用 my-workflow plugin
@@ -50,7 +50,7 @@ Claude Code 只在沒有任何 `CLAUDE.md` 時才直接讀 `AGENTS.md`（v2.1.27
 Claude 雲端 session 在全新 clone 上執行，行為和本機不同：
 
 - **不載入 plugin 與 marketplace**，也不讀 `~/.claude/settings.json` 與 `settings.local.json`。my-workflow 的 hook 注入在雲端不會運作。
-- 會帶過去的只有 repo 內容：`AGENTS.md`、`NOTE.md`、`CLAUDE.md`、`.claude/settings.json`、`.claude/skills/`（`NOTE.md` 讓下一個雲端 session 接得上）。所以雲端要用到的規則與 skill 必須放進 repo，不能只靠 plugin。需要全域規則時，把精簡版寫進 `AGENTS.md`。
+- 會帶過去的只有 repo 內容：`AGENTS.md`、`docs/NOTE.md`、`CLAUDE.md`、`.claude/settings.json`、`.claude/skills/`（`docs/NOTE.md` 讓下一個雲端 session 接得上）。所以雲端要用到的規則與 skill 必須放進 repo，不能只靠 plugin。需要全域規則時，把精簡版寫進 `AGENTS.md`。
 - 依賴安裝與冷啟動檢查用 `.claude/settings.json` 的 `SessionStart` hook。環境有 `session-start-hook` skill 就用它。
 - 通常沒有 `gh`：建立遠端 repo 改用環境提供的 GitHub MCP 工具（如 `create_repository`）。被 session 的 repo 範圍擋住就如實回報，請使用者建立 repo 或把它加進 session，不要硬做。
 - 交付沿用規則：commit 並 push 到 `develop`（或使用者指定的分支），不開 PR。雲端操作細節見 my-workflow plugin 的 `my-cloud-agent`。

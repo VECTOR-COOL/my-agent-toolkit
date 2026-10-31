@@ -1,6 +1,6 @@
 # 計畫：my-codebase-init 的 codebase 結構
 
-日期：`2026-10-31` · 狀態：**建議 B（加生態慣例優先），待使用者確認** · 對象：[`my-plugins/my-workflow/skills/my-codebase-init`](../../my-plugins/my-workflow/skills/my-codebase-init/SKILL.md)
+日期：`2026-10-31` · 狀態：**已採用 B + 生態慣例優先，`1.16.0` 實作**；`docs/` 內部結構見 [docs 檔案架構定義](2026-10-31-docs-structure.md) · 對象：[`my-plugins/my-workflow/skills/my-codebase-init`](../../my-plugins/my-workflow/skills/my-codebase-init/SKILL.md)
 
 ## 背景與問題
 
@@ -124,7 +124,7 @@
 
 ## 待決定
 
-- [ ] 確認採用「B + 生態慣例優先」，確認後依下方實作清單執行。
+- [x] 確認採用「B + 生態慣例優先」（2026-10-31 使用者確認）。
 
 ## 實作清單
 

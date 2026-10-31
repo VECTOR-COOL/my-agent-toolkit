@@ -8,7 +8,7 @@
  *                        列出刪除項目（解壓覆蓋不會刪檔，需在正式機手動移除）
  *
  * 流程：前置檢查 → 工作區狀態檢查 → git stash create 快照 → git archive → 審核（檔名禁則 + 內容掃描）→ sha256
- * 專案差異全放設定檔（預設 repo 根目錄 release.config.json），腳本不含專案專屬內容。
+ * 專案差異全放設定檔 release.config.json（預設先找腳本同目錄，其次 repo 根目錄），腳本不含專案專屬內容。
  */
 
 import { spawn, spawnSync } from 'node:child_process';
@@ -16,6 +16,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, dirname, join, relative, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const HELP = [
   '用法: node scripts/pack-release.mjs [選項]',
@@ -25,7 +26,7 @@ const HELP = [
   '  --since <ref>       增量更新檔：只打包自 <ref>（tag、commit、分支）以來新增與修改的發佈檔',
   '  --out <path>        輸出 .zip 路徑（預設 <outDir>/<name>-<version>-<YYYYMMDD>[-patch-<ref>].zip）',
   '  --name <slug>       檔名前綴（優先於設定檔與 package.json）',
-  '  --config <path>     設定檔（預設 repo 根目錄 release.config.json，不存在就用預設值）',
+  '  --config <path>     設定檔（預設先找腳本同目錄的 release.config.json，其次 repo 根目錄；都沒有就用預設值）',
   '  --strict            有未追蹤檔（不在快照內）就失敗，而不只是警告',
   '  --require-clean     工作區有任何未提交修改或未追蹤檔就失敗',
   '  --skip-lint         略過前置檢查',
@@ -109,7 +110,12 @@ function readJson(path, label) {
   }
 }
 
-const configPath = args.config ? resolve(process.cwd(), args.config) : join(repoRoot, 'release.config.json');
+function defaultConfigPath() {
+  const besideScript = join(dirname(fileURLToPath(import.meta.url)), 'release.config.json');
+  return existsSync(besideScript) ? besideScript : join(repoRoot, 'release.config.json');
+}
+
+const configPath = args.config ? resolve(process.cwd(), args.config) : defaultConfigPath();
 if (args.config && !existsSync(configPath)) fail(`找不到設定檔：${configPath}`, 2);
 const config = existsSync(configPath) ? readJson(configPath, '設定檔') : {};
 

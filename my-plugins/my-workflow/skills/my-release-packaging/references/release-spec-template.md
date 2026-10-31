@@ -1,6 +1,6 @@
 # 正式發佈打包規格書範本 (Release Packaging Specification Template)
 
-將以下範本套用至目標專案的 `docs/RELEASE_SPEC.md`，並依專案實際路徑填寫表格。專案特有的禁則同步寫進 `release.config.json` 的 `forbiddenExtra`：
+將以下範本套用至目標專案的 `docs/RELEASE_SPEC.md`，並依專案實際路徑填寫表格。專案特有的禁則同步寫進 `scripts/release.config.json` 的 `forbiddenExtra`：
 
 ````markdown
 # 正式發佈打包規格書 (Release Packaging Specification)
@@ -35,9 +35,9 @@
 | --- | --- | --- |
 | **機敏設定與日誌** | `<帳密檔>`、`.env*`、`log/*.log` | `.gitignore` + `pack-release.mjs` 審核（帳密檔寫進 `forbiddenExtra`） |
 | **執行期暫存與上傳** | `<上傳目錄>/*`、`<暫存目錄>/*`（僅保留 `.gitkeep`） | `.gitignore` + `pack-release.mjs` 審核 |
-| **AI 規則與技能** | `/.agents/`、`/.claude/`、`/.cursor/`、`AGENTS.md`、`CLAUDE.md`、`NOTE.md` | `.gitattributes` (`export-ignore`) |
-| **工程文件與交接** | `NOTE.md`、`README.md`、`/docs/` | `.gitattributes` (`export-ignore`) |
-| **自動化測試與腳本** | `/scripts/`、`/profiles/`、`/tests/` | `.gitattributes` (`export-ignore`) |
+| **AI 規則與技能** | `/.agents/`、`/.claude/`、`/.cursor/`、`AGENTS.md`、`CLAUDE.md` | `.gitattributes` (`export-ignore`) |
+| **工程文件與交接** | `README.md`、`/docs/`（含 `NOTE.md`） | `.gitattributes` (`export-ignore`) |
+| **自動化測試與腳本** | `/scripts/`（含 `release.config.json`）、`/profiles/`、`/tests/` | `.gitattributes` (`export-ignore`) |
 | **打包與版控設定** | `/.git/`、`/.gitignore`、`/.gitattributes`、`/dist/` | `.gitattributes` (`export-ignore`) |
 
 ---
@@ -85,5 +85,5 @@ node scripts/pack-release.mjs --since <上次部署的 tag>
 5. **初次安裝才需要**：把 `*.example` 複製為正式設定檔並填寫正式機參數，確認上傳與日誌目錄可寫。
 6. **驗證**：開啟網站或執行健康檢查，確認版本號與主要功能。
 7. **回滾**：有問題就還原第 2 步的備份。
-8. **記錄**：成功後打 tag（作為下次 `--since` 基準），更新 `NOTE.md` 的部署紀錄。
+8. **記錄**：成功後打 tag（作為下次 `--since` 基準），更新 `docs/NOTE.md` 的部署紀錄。
 ````

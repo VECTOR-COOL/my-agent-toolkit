@@ -10,7 +10,7 @@ description: 建立正式發佈包（更新檔）的打包規則與流程：以 
 ```mermaid
 graph TD
   A[盤點專案與版本來源] --> B[建立 .gitattributes export-ignore]
-  B --> C[放入打包腳本與 release.config.json]
+  B --> C[scripts/ 放打包腳本與 release.config.json]
   C --> D[dry-run 預覽]
   D --> E[正式打包]
   E --> F{審核有洩漏?}
@@ -32,7 +32,7 @@ graph TD
 | 分層 | 內容範例 | 進 Git | 進發佈包 | 控制機制 |
 | --- | --- | :---: | :---: | --- |
 | ① 本機私密／執行期暫存 | `.env*`、帳密檔、`log/*.log`、使用者上傳檔、快取、`dist/` | 否 | 否 | `.gitignore` + 腳本禁則審核 |
-| ② 開發／測試／AI 治理檔 | `.agents/`、`.claude/`、`.cursor/`、`AGENTS.md`、`CLAUDE.md`、`NOTE.md`、`README.md`、`docs/`、`scripts/`、`tests/` | 是 | 否 | `.gitattributes`（`export-ignore`） |
+| ② 開發／測試／AI 治理檔 | `.agents/`、`.claude/`、`.cursor/`、`AGENTS.md`、`CLAUDE.md`、`README.md`、`docs/`（含 `NOTE.md`）、`scripts/`、`tests/` | 是 | 否 | `.gitattributes`（`export-ignore`） |
 | ③ 正式執行程式碼 | 應用程式入口、核心、前端靜態資源、必要 `vendor/`、`*.example` 設定範本 | 是 | **是** | `git archive` 自動保留 |
 | ④ 上傳／日誌目錄 | `img/`、`log/`、上傳與暫存目錄：**目錄要存在** | 上傳檔否（`.gitignore`） | 已有內容照常；沒有內容就補空目錄 | `placeholders` 只寫 base path |
 
@@ -58,17 +58,17 @@ graph TD
 /tests          export-ignore
 /AGENTS.md      export-ignore
 /CLAUDE.md      export-ignore
-/NOTE.md        export-ignore
 /README.md      export-ignore
 /.gitignore     export-ignore
 /.gitattributes export-ignore
-/release.config.json export-ignore
 ```
+
+設定檔在 `scripts/` 內，已被 `/scripts` 涵蓋。舊專案的 `NOTE.md` 或 `release.config.json` 還在根目錄時，另補 `/NOTE.md export-ignore`、`/release.config.json export-ignore`（腳本的內建禁則也會擋根目錄 `NOTE.md`）。
 
 ### 3. 打包腳本與設定檔
 
 - 把 [`scripts/pack-release.mjs`](scripts/pack-release.mjs) 複製到專案 `scripts/pack-release.mjs`（只用 Node 內建模組、`git`、`tar`）。
-- 專案差異全放 repo 根目錄的 `release.config.json`，範例見 [`references/release.config.example.json`](references/release.config.example.json)；沒有設定檔也能跑（版本取自 `package.json` 或 `VERSION`）。
+- 專案差異全放 `scripts/release.config.json`（和腳本放一起，根目錄保持整潔），範例見 [`references/release.config.example.json`](references/release.config.example.json)；沒有設定檔也能跑（版本取自 `package.json` 或 `VERSION`）。腳本先找**自己同目錄**的設定檔，其次 repo 根目錄（舊專案相容），`--config` 可指定其他路徑。
 
 | 設定 | 用途 |
 | --- | --- |
@@ -126,7 +126,7 @@ node scripts/pack-release.mjs --out dist/custom.zip --force
 
 1. 依 [`references/release-spec-template.md`](references/release-spec-template.md) 建立 `docs/RELEASE_SPEC.md`：包含白名單、排除黑名單、命名、指令、部署與覆蓋更新 SOP。
 2. `AGENTS.md` 加「發佈打包規範」：唯一產出指令 `node scripts/pack-release.mjs`、規格書路徑；硬約束寫明禁止把 `dist/` 提交版控、禁止手動全目錄壓縮。
-3. 同步更新 `README.md`（文件清單）與 `NOTE.md`（交接：目前版本、怎麼打包、上次部署的基準 tag）。
+3. 同步更新 `README.md`（文件清單）與 `docs/NOTE.md`（交接：目前版本、怎麼打包、上次部署的基準 tag）。
 
 ### 5. 驗證
 
@@ -152,5 +152,5 @@ node scripts/pack-release.mjs --out dist/custom.zip --force
 
 1. 壓縮包路徑、大小、條目數與 `.sha256`；更新檔另附新增／修改／刪除數量與 `CHANGES.txt` 路徑。
 2. `topLevelIncluded` 與審核結果。
-3. 新增或更新的檔案：`.gitattributes`、腳本、`release.config.json`、`docs/RELEASE_SPEC.md`、`AGENTS.md`。
+3. 新增或更新的檔案：`.gitattributes`、`scripts/pack-release.mjs`、`scripts/release.config.json`、`docs/RELEASE_SPEC.md`、`AGENTS.md`。
 4. 沒實測的部分明說。

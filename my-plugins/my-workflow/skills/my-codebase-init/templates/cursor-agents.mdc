@@ -3,4 +3,4 @@ description: 專案入口：指向 AGENTS.md
 alwaysApply: true
 ---
 
-本專案的 agent 指引以根目錄的 `AGENTS.md` 為準（Cursor 也會直接讀它）。動手前先讀 `@AGENTS.md` 與 `@NOTE.md`。
+本專案的 agent 指引以根目錄的 `AGENTS.md` 為準（Cursor 也會直接讀它）。動手前先讀 `@AGENTS.md` 與 `@docs/NOTE.md`。

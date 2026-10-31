@@ -4,11 +4,11 @@
 
 ## 接手三步
 
-1. 讀 [`NOTE.md`](NOTE.md)：目前狀態、進行中、下一步、待確認。
+1. 讀 [`docs/NOTE.md`](docs/NOTE.md)：目前狀態、進行中、下一步、待確認。
 2. 讀 [`README.md`](README.md)：定位、技術棧、快速啟動。
 3. 看 [`.agents/skills/`](.agents/skills/)：專案專屬的做法，對上情境才讀。
 
-做完一段工作、或要交接時，**更新 `NOTE.md`**。
+做完一段工作、或要交接時，**更新 `docs/NOTE.md`**。
 
 ## 專案
 
@@ -28,15 +28,21 @@
 
 ## 目錄架構
 
+根目錄只留入口與語言生態規定的檔；文件放 `docs/`、腳本放 `scripts/`；程式結構跟語言與框架慣例。
+
 ```text
-<目錄>/   <用途>
+README.md  AGENTS.md  CLAUDE.md   入口
+<package.json 等>                 生態規定的根目錄檔
+docs/                             文件：NOTE.md 交接紀錄、specs/、guides/、adr/、plans/（有才建）
+scripts/                          腳本與其設定
+<src/ tests/ 或框架結構>          <用途>
 ```
 
 ## 發佈（若有）
 
 <只有「打包部署」的專案保留；否則刪除這節>
 
-- 唯一產出指令：`node scripts/pack-release.mjs`（完整包）、`--since <上次部署 tag>`（更新檔）
+- 唯一產出指令：`node scripts/pack-release.mjs`（完整包，設定在 `scripts/release.config.json`）、`--since <上次部署 tag>`（更新檔）
 - 規格與部署 SOP：`docs/RELEASE_SPEC.md`；`dist/` 不進版控，禁止手動全目錄壓縮
 - 每次部署後打 tag，作為下次更新檔的基準
 
