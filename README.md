@@ -33,7 +33,6 @@
 | [`my-create-PRD`](./my-plugins/my-workflow/skills/my-create-prd/SKILL.md) | 透過主動多輪需求訪談，建立足以讓所有 Agent 理解、實作與驗收的繁體中文 PRD。 | v1.2.0 |
 | [`my notion`](./my-plugins/my-workflow/skills/my-notion/SKILL.md) | 在 Codex 與 ChatGPT Web 操作 Notion，設計、建立、查詢與維護適合人機協作及 RAG 擷取的資料結構。 | v1.2.0 |
 | [`my-memory`](./my-plugins/my-workflow/skills/my-memory/SKILL.md) | 分流使用 Agent 記憶庫、Notion Memory 與 Mem0 讀寫外部記憶。 | v1.2.0 |
-| [`my-memory-consolidate`](./my-plugins/my-workflow/skills/my-memory-consolidate/SKILL.md) | 寫入不另搜；查 Mem0 的那一次命中去重、升中期並加權；權重達到 3 升長期；低權重且存放滿 30 天必須刪除。 | v1.4.0 |
 | [`my-review`](./my-plugins/my-workflow/skills/my-review/SKILL.md) | 以專案／架構視角嚴格審查計畫與實作，拉回目標並收尾更新文件。 | v1.2.0 |
 | [`my-codebase-clear`](./my-plugins/my-workflow/skills/my-codebase-clear/SKILL.md) | 掃描可清理檔案、review candidates，經同意後安全刪除並收尾。 | v1.2.0 |
 | [`my-codebase-init`](./my-plugins/my-workflow/skills/my-codebase-init/SKILL.md) | 從 project-templates 初始化專案並建立 VECTOR-COOL 私有 repo。 | v1.2.0 |
@@ -48,6 +47,7 @@
 | 技能 | 說明 | 納入版本 |
 |------|------|----------|
 | [`my-agent-plugin-creator`](./my-skills/workflow/my-agent-plugin-creator/SKILL.md) | 依開放標準建立、遷移或驗證可攜 Agent Plugin。 | v1.1.0 |
+| [`my-memory-consolidate`](./my-skills/memory/my-memory-consolidate/SKILL.md) | 排程整理 Mem0：有界掃描、去重合併、升中期、刪除低權重且存放滿 30 天的筆，升長期只列建議。給排程 agent 用，與 my-memory 搭配但不依賴它。 | 未發布 |
 | [`my-clean-windows-storage`](./my-skills/workflow/my-clean-windows-storage/SKILL.md) | 安全掃描、分類並清理 Windows 磁碟可釋放空間（須先授權再刪）。 | v1.1.0 |
 
 ## 安裝

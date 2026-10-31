@@ -29,12 +29,12 @@ UUID 還沒對上就留這個佔位，不要猜、不要抄別的 bot。ChatGPT�
 2. 任務依賴對話外的舊偏好、決策或脈絡時。
 3. 不要每則訊息都搜尋。
 
-讀法：一次語意搜尋，帶上這次身份，並只要 id、正文、身份、`created_at`、metadata。查到就走 `my-memory-consolidate`。不要再逐筆取，也不要為整理再搜一次。
+讀法：一次語意搜尋，帶上這次身份，並只要 id、正文、身份、`created_at`、metadata。照常回答，不在對話中整理。不要再逐筆取。
 
 ## 何時寫
 
 - 短期 Mem0 要小安確認才寫。不要伺機寫。
-- 小安說「請記住」：先判斷時效。短期同時寫 Grok Bot 本地記憶與 Composio Mem0。升長期只在查詢加權達條件後，走 `my-memory-consolidate`。
+- 小安說「請記住」：先判斷時效。短期同時寫 Grok Bot 本地記憶與 Composio Mem0。升長期只在排程整理（`my-memory-consolidate`）回報建議、使用者同意後。
 - 寫法：`MEM0_ADD_NEW_MEMORY_RECORDS`，`infer=true`。要保留原句才用 `infer=false`。這一則對話已有同一事實的 id 就更新，否則直接新增，不要先搜一輪去重。一則一個事實，條目精簡，繁體中文（台灣）。
 
 ## 禁止

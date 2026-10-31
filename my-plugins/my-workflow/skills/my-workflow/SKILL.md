@@ -32,8 +32,8 @@ graph TD
 1. **全域規則** — [`references/global.md`](references/global.md)。對話開頭沒看到「my-workflow plugin 已在對話開始載入」這段注入，就先讀這份（網頁、Cowork、ChatGPT、Gemini 都是這樣）。
 2. **[`../my-memory/SKILL.md`](../my-memory/SKILL.md)** — 在「記住、回想、偏好、決策、歷史脈絡」，或使用者問自己、公司、團隊的既有資訊（公司地址、聯絡方式、偏好、先前決定）而對話裡沒有答案時，且優先於其他子 skill。
 3. **[`references/index.yaml`](references/index.yaml)** — 用 `when` 或 `keywords` 對上**一筆**後，只載 `../<name>/SKILL.md`。
-4. **其他規則** — `index.yaml` 的 `rules` 區：任務碰到 `when` 的情境（如 commit、Code Review、收尾、寫腳本、安裝套件、用 MCP）才讀對應檔，可與一個 skill 並行；沒碰到不讀。Git 的工作習慣（先 pull、只 commit 自己的、提交與發布分開）在 [`rules/git.md`](../../rules/git.md)。記憶規則在 `my-memory`、`my-memory-consolidate` 的 `rules/`，載入該 skill 時一併讀。
-5. 查到 Mem0、或要升長期、或要遺忘時，改載 `../my-memory-consolidate/SKILL.md`。寫入不另搜；去重、加權與遺忘以那份的查詢時機為準。
+4. **其他規則** — `index.yaml` 的 `rules` 區：任務碰到 `when` 的情境（如 commit、Code Review、收尾、寫腳本、安裝套件、用 MCP）才讀對應檔，可與一個 skill 並行；沒碰到不讀。Git 的工作習慣（先 pull、只 commit 自己的、提交與發布分開）在 [`rules/git.md`](../../rules/git.md)。記憶規則在 `my-memory` 的 `rules/`，載入該 skill 時一併讀。
+5. 記憶整理（去重、升中期、遺忘）不在對話中做，由排程 agent 跑獨立 skill `my-memory-consolidate`。
 
 同一對話已讀過的檔不必重讀。超過約 200 行的檔先讀摘要或索引，不要一次載整包。
 

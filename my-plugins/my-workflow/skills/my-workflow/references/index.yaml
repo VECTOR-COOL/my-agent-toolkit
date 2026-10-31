@@ -1,6 +1,6 @@
 # 全域規則（同目錄 global.md）在 Claude Code／Codex 由 SessionStart hook 注入，其他平台載入入口 skill 時讀，不在索引內。記憶相關先載 my-memory。然後只讀 when 或 keywords 對得上的那一筆。不要一次全載。
 # rules 區的檔案路徑相對於 plugin 根目錄；碰到 when 的情境才讀，沒碰到不讀。平台讀不到 rules/ 時略過，以 global.md 為準。
-# 記憶規則在 skills/my-memory/rules/ 與 skills/my-memory-consolidate/rules/，載入該 skill 時一併讀。
+# 記憶規則在 skills/my-memory/rules/，載入該 skill 時一併讀。記憶整理是獨立 skill my-memory-consolidate（my-skills/memory/），由排程 agent 執行，不在此索引。
 # 記憶：依客戶端只讀 my-memory/references/ 對應那一份。
 # version 與 pack.yaml、toolkit project.json 同一個號。
 # keywords 是使用者會說的詞，用來提高命中。不要把整段說明抄進來。
@@ -17,9 +17,6 @@ skills:
   - name: my-memory
     when: 記住／回想偏好、決策或查詢歷史脈絡；使用者問自己、公司、團隊的既有資訊而對話裡沒有答案時
     keywords: [記住, 回想, 偏好, 決策, 記憶, 永久記憶, Mem0, 歷史紀錄, 個人習慣, 查詢記憶, 記一下, 我的, 公司地址, 公司資料, 聯絡方式, 電話, 統編, 你記得, 之前說過, 先前決定]
-  - name: my-memory-consolidate
-    when: 查到 Mem0 時用該次命中去重、升中期並加權；權重達到 3 升長期；低權重且存放滿 30 天必須刪除。寫入不另搜
-    keywords: [記憶整理, 整理記憶, 升長期, 中期, 去重, 合併, 閥值, 權重, 遺忘, 刪短期, consolidate]
   - name: my-notion
     when: 操作 Notion 知識庫、資料庫、頁面與 View
     keywords: [Notion, 資料庫, 知識庫, 頁面, View, notion kb, 資料結構]

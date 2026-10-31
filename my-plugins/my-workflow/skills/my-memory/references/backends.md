@@ -24,7 +24,7 @@
 
 **查**：兩種進法。(a) Mem0 命中 `tier=long` 索引：用索引裡的隔離鍵找那一頁，讀 `目前值`；找不到或 `狀態` 不是 `有效`，回報索引與 Notion 不一致，問使用者要刪索引還是恢復頁面，不要自己補寫。(b) Mem0 沒命中或不夠：`狀態=有效` 且 `AI 可用`，再依目前客戶端的 `scope`／`user_id`／`agent_id` 過濾，並可一併讀 `scope=global` 且 `user_id` 為空的列。禁整庫拉。
 
-**寫**：欄位與允許值只用 [schemas.md](schemas.md)。寫入並讀回成功後，在 Mem0 留索引（格式見 schemas.md）；沒有索引的舊頁面，查到時補一筆。從短期整理進來時，先照 [`my-memory-consolidate`](../../my-memory-consolidate/SKILL.md) 去重並合併，再更新同一隔離鍵，不重複新增。去重先對新鍵 `scope|user_id|agent_id|記憶鍵`，沒有再對舊鍵 `user_id|agent_id|記憶鍵`。對到就更新那一筆。這次不改寫既有列。
+**寫**：欄位與允許值只用 [schemas.md](schemas.md)。寫入並讀回成功後，在 Mem0 留索引（格式見 schemas.md）；沒有索引的舊頁面，查到時補一筆。從短期升進來時（排程整理的建議經使用者同意），先去重並合併，再更新同一隔離鍵，不重複新增。去重先對新鍵 `scope|user_id|agent_id|記憶鍵`，沒有再對舊鍵 `user_id|agent_id|記憶鍵`。對到就更新那一筆。這次不改寫既有列。
 
 敏感度高於「一般」時謹慎寫入。工具細節 → [`$my-notion`](../../my-notion/SKILL.md)。
 
@@ -57,9 +57,9 @@
 - 儲存靠遺忘與去重壓低：短期該刪就刪，長期只留一筆索引，不留完整值複本。
 - 命中率靠索引正文的摘要與關鍵字（格式見 [schemas.md](schemas.md)），不靠多搜幾次。
 
-**寫改刪**：短期新增用 `infer=true`，由 Mem0 擋完全相同的句子。這一則對話已有同一事實的 id 就更新，否則直接新增，不要為去重再搜一次。單一耐久事實，寫完要驗證。使用者指定的改或刪，先顯示並取得同意。遺忘例外：權重小於等於 1 且存放滿 30 天，查到就刪除該筆。推測不得當使用者事實。語意去重、加權與遺忘只發生在查到 Mem0 的那一次，見 [`my-memory-consolidate`](../../my-memory-consolidate/SKILL.md)。
+**寫改刪**：短期新增用 `infer=true`，由 Mem0 擋完全相同的句子。這一則對話已有同一事實的 id 就更新，否則直接新增，不要為去重再搜一次。單一耐久事實，寫完要驗證。使用者指定的改或刪，先顯示並取得同意。推測不得當使用者事實。語意去重、加權與遺忘由排程 agent 的 `my-memory-consolidate` 做，對話中不做。
 
-**整理計數**（滾動流程見 [`my-memory-consolidate`](../../my-memory-consolidate/SKILL.md)）：
+**整理計數**（由排程 agent 的 `my-memory-consolidate` 維護，對話中只讀不改）：
 
 - `metadata.weight`：整數。沒有或舊值 `normal` 當 `1`，舊值 `high` 當 `3`
 - `metadata.tier`：`short`、`mid` 或 `long`（長期索引，不加權、不遺忘、不合併）

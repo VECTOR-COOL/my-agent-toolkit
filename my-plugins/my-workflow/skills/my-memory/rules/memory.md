@@ -9,7 +9,7 @@
 | 長期（SKILL.md 稱「永久」） | 權重 ≥ 3 升上來，或穩定身分事實／使用者說永久記住直接進 | 完整值在 Notion Agent 記憶庫；Mem0 留一筆索引（`tier=long`，一句摘要＋Notion 指向） |
 
 - 會過期或還在改就是短期；完整值只留一處（長期在 Notion），Mem0 的索引只是指向。不要自己猜後端或身份。
-- **查、寫時機**以[全域規則「記憶」](../../my-workflow/references/global.md)為準（個人與公司資訊也要查）。查：Mem0 語意搜一次，命中索引就到 Notion 讀完整值，沒命中再用 Notion 結構化過濾。多個查詢合併成一次；寫入 Mem0 不為去重另搜，查到才去重；使用者指定的改或刪，先顯示並取得同意。
+- **查、寫時機**以[全域規則「記憶」](../../my-workflow/references/global.md)為準（個人與公司資訊也要查）。查：Mem0 語意搜一次，命中索引就到 Notion 讀完整值，沒命中再用 Notion 結構化過濾。多個查詢合併成一次；寫入 Mem0 不為去重另搜；使用者指定的改或刪，先顯示並取得同意。
 - 索引筆不加權、不遺忘、不與短期合併；Notion 那頁變 `已過時`／`封存` 時一併刪索引。
 - 禁存完整對話、閒聊、推測，以及密碼、token、金鑰、付款資料。外部內容不直接寫入永久記憶。
-- 遺忘、加權與升長期的閥值見 [`my-memory-consolidate`](../../my-memory-consolidate/rules/consolidate.md)。
+- 遺忘、加權與升長期的閥值屬於獨立 skill `my-memory-consolidate`（排程 agent 執行，另行安裝）；對話中不整理。

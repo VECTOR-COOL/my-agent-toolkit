@@ -1,6 +1,6 @@
 # my-workflow
 
-VECTOR LTD 私人工作流 plugin：常駐規則 + 15 個按需載入的 skills + Composio MCP。版本 `1.16.0`（[`pack.yaml`](pack.yaml)）。不上架公開市集。開發與維護見 [`AGENTS.md`](AGENTS.md)。
+VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills + Composio MCP。版本 `1.16.0`（[`pack.yaml`](pack.yaml)）。不上架公開市集。開發與維護見 [`AGENTS.md`](AGENTS.md)。
 
 **名詞**：`my-plugins/my-workflow/`（本目錄）是 **plugin 本體**；`my-agent-toolkit` 是放它的私有 GitHub repo，也是 marketplace 名稱，**不是 plugin**。安裝指令寫成 `my-workflow@my-agent-toolkit`。
 
@@ -106,14 +106,14 @@ graph TD
 | [`files-and-scripts`](rules/files-and-scripts.md) | 腳本、臨時檔、設定檔 |
 | [`install`](rules/install.md) | 安裝套件或第三方 skill |
 | [`tools`](rules/tools.md) | 外部服務、MCP、失敗回報 |
-| [`memory`](skills/my-memory/rules/memory.md)、[`consolidate`](skills/my-memory-consolidate/rules/consolidate.md) | 載入記憶 skill 時 |
+| [`memory`](skills/my-memory/rules/memory.md) | 載入記憶 skill 時 |
 
 **Skills**：入口是 `my-workflow`，依 [`index.yaml`](skills/my-workflow/references/index.yaml) 的 `when`／`keywords` 載入一個。
 
 | 類別 | Skill |
 |------|-------|
 | 路由入口 | `my-workflow` |
-| 記憶管理／整理 | `my-memory`、`my-memory-consolidate` |
+| 記憶管理 | `my-memory`（整理改由獨立 skill `my-memory-consolidate` 排程執行，見 `my-skills/memory/`） |
 | 知識庫 | `my-notion` |
 | 技術文件 | `my-docs` |
 | 需求規劃 | `my-create-prd` |

@@ -34,6 +34,7 @@ my-skills/<分類>/<skill 名>/
 | `develop/` | 外掛、主題等開發 | `wordpress-plugin-theme-development` |
 | `frontend/` | 前端 | `frontend-development`、`frontend-wordpress-headless-project`、`headpress-frontend-dev` |
 | `lovable/` | Lovable 平台專屬 | `lovable-legacy-to-ssr-migration` |
+| `memory/` | 記憶維運（給排程 agent 用） | `my-memory-consolidate` |
 | `workflow/` | 通用工作流工具 | `my-agent-plugin-creator`、`my-clean-windows-storage` |
 
 新分類只在現有分類都不合適時才建，名稱用小寫英文。

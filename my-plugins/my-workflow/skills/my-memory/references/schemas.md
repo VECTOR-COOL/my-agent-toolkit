@@ -2,7 +2,7 @@
 
 讀寫 Mem0 或 Agent 記憶庫前先讀這份。欄位名、型別、選項都以此為準。沒列出來的欄位不要自創，選項不要自造。
 
-判斷與去重見 [SKILL.md](../SKILL.md)、[backends.md](backends.md)。整理流程見 [`my-memory-consolidate`](../../my-memory-consolidate/SKILL.md)。
+判斷與去重見 [SKILL.md](../SKILL.md)、[backends.md](backends.md)。整理由獨立 skill `my-memory-consolidate` 在排程執行。
 
 ## Mem0 一筆記憶
 
@@ -36,7 +36,7 @@
 - 每個 Notion 頁面只對一筆索引，不重複。
 - 寫入用 `infer=false` 保留原句；`weight` 沿用升級前的值或 `3`。索引筆不加權、不遺忘。
 
-舊的 `read_count` 不要再加。加權與遺忘的閥值見 [`my-memory-consolidate`](../../my-memory-consolidate/SKILL.md)。
+舊的 `read_count` 不要再加。加權與遺忘的閥值屬於獨立 skill `my-memory-consolidate`。
 
 新增若工具沒有 `metadata` 欄，先寫正文，再用該筆 `id` 更新 `metadata`。不要為了塞 metadata 另開一筆。
 
