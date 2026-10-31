@@ -1,6 +1,6 @@
 ---
 name: my-workflow
-description: 私人工作流的路由入口。新對話開始、任務不明確、不確定該用哪個 skill、或使用者提到工作習慣、記憶、審查、PRD、提交、文件、Notion 等工作流時載入。涉及記住／回想／偏好／決策，或問自己與公司的既有資訊（如公司地址）先載 my-memory；其餘依 references/index.yaml 的 when 或 keywords 只載一個子 skill。通用規則已由 plugin 的 SessionStart hook 常駐注入，不必再載。維護準則見 AGENTS.md。
+description: 私人工作流的路由入口。安裝或開始使用 my-workflow、新對話、任務不明確、不確定該用哪個 skill，或使用者提到工作習慣、記憶、審查、PRD、提交、文件、Notion 等工作流時載入。先讀全域規則 references/global.md（對話開頭已看到 hook 注入的才不重讀；ChatGPT、網頁、Cowork 沒有 hook，一律要讀）；涉及記住／回想／偏好／決策，或問自己與公司的既有資訊（如公司地址）再載 my-memory；其餘依 references/index.yaml 的 when 或 keywords 只載一個子 skill。維護準則見 AGENTS.md。
 ---
 
 # 工作流入口

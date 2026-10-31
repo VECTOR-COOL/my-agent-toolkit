@@ -1,9 +1,18 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "my-workflow",
-  "description": "VECTOR LTD 私人工作流：常駐規則、記憶、審查、PRD、文件與提交等 skills，附 Composio MCP。",
+  "description": "VECTOR LTD 私人工作流：常駐規則、記憶、審查、PRD、文件與提交等 skills，附 Composio MCP；支援 ChatGPT Web、Codex 與 Claude。",
   "extensions": {
     "com.openai": {
+      "onboardingSkill": "./skills/my-workflow/SKILL.md",
+      "interface": {
+        "displayName": "my-workflow",
+        "shortDescription": "VECTOR LTD 私人工作流",
+        "longDescription": "提供規則、記憶、審查、PRD、文件、提交與專案工作流的 skills；入口 skill my-workflow 先讀全域規則再分流。",
+        "developerName": "VECTOR LTD",
+        "category": "Other",
+        "capabilities": []
+      },
       "hooks": [
         "./hooks/codex.json"
       ]
