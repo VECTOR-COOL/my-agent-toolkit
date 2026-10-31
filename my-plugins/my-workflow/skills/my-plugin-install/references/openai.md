@@ -34,7 +34,9 @@
 - 要網頁版與桌面版一致：只留帳號端那份，用 ZIP 更新；本機市集那份停用或移除。
 - **網頁版 ZIP 不能帶 hook**：含 `hooks/codex.json`（要在本機跑 `node`）的包會被標成「僅限桌面版」。網頁版包排除 `hooks/`、根 `scripts/`，並只刪 `plugin.json` 裡 `extensions.com.openai.hooks`。
 - **網頁版要有入口設定**：`plugin.json` 的 `extensions.com.openai` 要保留 `onboardingSkill`（指到 `./skills/my-workflow/SKILL.md`）與 `interface`；全域規則由入口 skill 讀 `global.md`，入口 skill 的 description 不能寫「規則已由 hook 注入」。只拿掉 hook、沒有這兩項的 1.16.2 包，裝得上但不生效。
-- **已知可用的網頁版**是 1.7.3：沒有 hook、沒有 MCP，有 `onboardingSkill` 與 `interface`。帶 Composio MCP（`mcp.json`）的網頁版能否生效**待實測**；不行就改用不含 `mcp.json` 的包。
+- **網頁版 ZIP 不能帶 `mcp.json`**（2026-11-01 實測）：只差 `mcp.json`（Composio 遠端 MCP）的兩個包，帶的不生效、不帶的可用。與[社群回報](https://community.openai.com/t/remote-mcp-plugin-is-desktop-only-while-direct-mcp-works-on-web-mobile-how-can-we-deploy-it-workspace-wide/1404606)一致：ZIP 內宣告的遠端 MCP 在網頁版不會連線。網頁版包排除 `mcp.json`；桌面版、Codex、Claude 照常帶 MCP。
+- **網頁版要用 Composio**：在 ChatGPT 直接加 Composio 連線（`https://connect.composio.dev/mcp`），不經 plugin。個人帳號能否自加 MCP 連線依方案而定，**未驗證**；沒有就回報記憶、Notion 等需要 Composio 的 skill 在網頁版不能用外部服務。
+- 網頁版包的檢查清單：沒有 `hooks/`、根 `scripts/`、`mcp.json`；`plugin.json` 有 `version`（高於帳號現有版本）、`onboardingSkill`、`interface`，沒有 `extensions.com.openai.hooks`。
 - **版本號要比帳號裡的高**：ChatGPT 存檔時要求包內 `plugin.json` 的 `version` 大於目前版本（錯誤：`Bump the plugin manifest version before saving`）。包內版本用發版的 `pack.yaml` 版本；同一版要重傳就先發新版，不要只改包。
 
 ## 先選安裝目標
