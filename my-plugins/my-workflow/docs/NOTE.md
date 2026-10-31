@@ -2,11 +2,12 @@
 
 給下一位接手的人或 agent。**先讀這份再動手；做完一段工作或交接時更新。** 保持精簡，過時的刪掉，不記密碼、token、金鑰。
 
-最後更新：`2026-10-31` · 版本：`v1.16.0` · 分支：`develop` · 範圍：plugin `my-workflow`（repo 根沒有自己的 NOTE）
+最後更新：`2026-10-31` · 版本：`v1.16.2` · 分支：`develop` · 範圍：plugin `my-workflow`（repo 根沒有自己的 NOTE）
 
 ## 目前狀態
 
-- plugin `my-workflow` 最新是 `1.16.0`（`develop`）；`main` 目前是 `1.15.3`，`develop` 領先（1.15.4、1.15.8、1.16.0）。
+- plugin `my-workflow` 最新是 `1.16.2`，已合併到 `main`。
+- **ChatGPT（個人帳號）**：網頁版與桌面版的本機市集不同步；帳號端不自動更新，只能在網頁版用 ZIP 安裝（同步到桌面版），每次發版要重傳。使用者帳號那份目前是舊的 `1.7.3`，`1.16.1` 的 ZIP 已產出待上傳。
 - `1.16.0`：init 採用「B + 生態慣例優先」——根目錄只留入口與生態規定的檔，新專案交接紀錄在 `docs/NOTE.md`、打包設定在 `scripts/release.config.json`（腳本先讀同目錄，其次根目錄）；`my-docs` 新增「docs/ 結構」。
 - 結構穩定：`my-plugins/`（plugin）、`my-skills/`（獨立 skill，含 `claude/` 分類）、`skills/`（第三方）。
 - 發布流程與更新排除已文件化：`my-plugins/my-workflow/docs/RELEASE.md`，並有 `check-release.mjs` 檢查。
@@ -14,11 +15,11 @@
 ## 進行中
 
 - [ ] [docs 檔案架構定義](plans/2026-10-31-docs-structure.md)：已寫進 `my-docs`，**待使用者確認**。
-- [ ] 把 `develop`（到 `1.16.0`）合併到 `main`。
+- [ ] 使用者在 ChatGPT 網頁版用 `1.16.1` ZIP 更新帳號那份 plugin，並停用桌面版本機市集那份。
 
 ## 下一步
 
-1. 使用者同意後合併 `1.16.0` 到 `main`，跑 `check-release.mjs --remote` 確認。
+1. 發布 skill 補上：合併 `main` 後自動產出 OpenAI ZIP，並在包內 `plugin.json` 寫入版本號。
 2. 使用者帳號的 plugin 同步目前停在舊版（`1.12.2`）；需使用者在 claude.ai 外掛頁移除後重新加入，並開 Sync automatically。
 3. 使用者本機 Claude Code CLI 太舊（`claude plugin` 沒有 `marketplace`、`update`）；需 `claude update` 或重裝。
 
@@ -48,6 +49,7 @@ node --test my-plugins/my-workflow/skills/my-release-packaging/scripts/pack-rele
 
 ## 更新紀錄
 
+- `2026-10-31` Claude：記錄 ChatGPT 現況（使用者實測）——個人帳號只能在網頁版用 ZIP 安裝並同步到桌面版、不自動更新、桌面版本機市集與網頁版不同步；同步到 `openai.md`、根 `AGENTS.md`／`README.md` 與 plugin `README.md`。
 - `2026-10-31` Codex：補齊 OpenAI 安裝 reference 的 GitHub repo／main 連結、固定來源 SHA、直接叫用 skill 時檢查並更新既有 plugin；區分只讀檢查、帳號上傳更新與工作區每日同步，補充 MCP 匯入的 Desktop only 限制。僅改文件，未啟用背景同步或更新帳號 plugin。
 - `2026-10-31` Antigravity：補齊 `my-plugin-install/references/gemini.md` 與 `SKILL.md` 的 Google Antigravity（AGY：`plugins.json`、`~/.gemini/config/plugins/` 與 Language Server RPC）及 Gemini CLI（`link`／`install`／`validate` 實測通過）安裝、直接上 GitHub 檢查 `main` 差異、執行 skill 一鍵檢查並更新、`/schedule` 排程自動更新流程；明確區分 Web marketplace 限制、失敗與環境不適用引導表及跨對話交接提示。
 - `2026-10-31` Codex：更正安裝指引的目標平台分流與工具能力條件；已授權安裝／更新不重複確認。來源 commit 與安裝狀態須另取證據，搜尋不到不再判成未安裝，repo 任意新 commit 不再判成本 plugin 更新。僅修改文件。

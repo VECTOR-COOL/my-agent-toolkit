@@ -1,6 +1,6 @@
 # my-workflow — 開發準則
 
-> **版本**：`1.16.1`（[`pack.yaml`](pack.yaml)）
+> **版本**：`1.16.2`（[`pack.yaml`](pack.yaml)）
 > 版本標籤 6 處同號（manifest **不寫 version**，market 以 commit 自動更新），清單與流程見 [`docs/RELEASE.md`](docs/RELEASE.md)；用 `scripts/check-release.mjs` 檢查。
 
 給**開發這個 plugin 的人與 Agent**。使用者怎麼安裝、各平台支援程度見 [`README.md`](README.md)。

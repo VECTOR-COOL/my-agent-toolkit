@@ -28,7 +28,8 @@
 | claude.ai 網頁／Desktop 聊天／Cowork／雲端 session | [Customize > Plugins](https://claude.ai/customize/plugins) 加入 marketplace，開 **Sync automatically** |
 | Codex | `.codex/config.toml` 啟用 `my-workflow@my-agent-toolkit`（未驗證） |
 | Gemini CLI | clone 後 `gemini extensions install ./my-plugins/my-workflow`（未驗證） |
-| ChatGPT／Gemini 網頁 | 貼 `global.md`、上傳 skill（未驗證） |
+| ChatGPT 網頁／桌面版（個人帳號） | 網頁版用 ZIP 安裝，同步到桌面版；不自動更新，每次發版重傳 |
+| Gemini 網頁 | 貼 `global.md`、上傳 skill（未驗證） |
 
 ## 跨平台原則
 
