@@ -141,7 +141,8 @@ SemVer：文件或小錯修正 → patch；新 skill 或新功能 → minor；�
    | 平台 | 再排除 | 包的根必須有 |
    |------|------|------|
    | Claude | `plugin.json`、`mcp.json`、`hooks/codex.json`、`gemini-extension.json`、`GEMINI.md`、`(glob)**/agents/openai.yaml` | 恰好一個 `.claude-plugin/plugin.json` |
-   | OpenAI | `.claude-plugin`、`.mcp.json`、`hooks/hooks.json`、`gemini-extension.json`、`GEMINI.md` | `plugin.json` |
+   | OpenAI（Codex 離線） | `.claude-plugin`、`.mcp.json`、`hooks/hooks.json`、`gemini-extension.json`、`GEMINI.md` | `plugin.json` |
+   | ChatGPT 網頁 | `.claude-plugin`、`.mcp.json`、`hooks`、`scripts`、`gemini-extension.json`、`GEMINI.md` | `plugin.json`（含 `onboardingSkill`、`interface`） |
    | Gemini | `.claude-plugin`、`.mcp.json`、`mcp.json`、`hooks`、`(glob)**/agents/openai.yaml` | `gemini-extension.json`、`GEMINI.md`（`plugin.json` 留給 Antigravity） |
 
    必備檔不在 `$C` 上（例如 `main` 還沒有 `gemini-extension.json`）就不能產該平台的包，先發布再產。
@@ -166,6 +167,11 @@ SemVer：文件或小錯修正 → patch；新 skill 或新功能 → minor；�
    - `git -C my-plugins/$P grep -nIE <第 4 步的金鑰規則> "$C" -- . "${BASE[@]}" "${EXTRA[@]}"` 要沒有輸出（用 `-C` 進 plugin 目錄，排除規則才會以 plugin 根為準）。
    - 檔數 ≤ 5,000、大小 ≤ 200 MB（claude.ai 上限）。
    - 有問題就刪掉 zip，修規則或內容後重產。
+   **ChatGPT 網頁包**另要改包內 `plugin.json`（repo 裡的不動），改完才壓 zip：
+   - 加 `version` = `pack.yaml` 版本。ChatGPT 要求比帳號現有版本高，否則拒存；同一版不能重傳，要重傳就先發新版。
+   - 刪 `extensions.com.openai.hooks`；保留 `onboardingSkill`、`interface`。帶 hook 會被標「僅限桌面版」，少了入口設定則裝得上但不生效。
+   - 用 `git archive --format=tar … | tar -x` 解到暫存資料夾，改完再壓 zip；不要直接壓工作目錄。細節見 `my-plugin-install` 的 `references/openai.md`「ChatGPT 現況」。
+
 6. `sha256sum "$OUT" > "$OUT.sha256"`（PowerShell：`Get-FileHash $OUT -Algorithm SHA256`）。
 7. 交付時附：平台、來源 commit `C`、版本標籤、檔數與大小、sha256。上傳後照該平台方式在新對話實測一個 skill；沒實測就標「未驗證」。
 

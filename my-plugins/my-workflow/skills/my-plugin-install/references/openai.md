@@ -32,7 +32,9 @@
 - **不會自動更新**：帳號端 plugin 不追蹤 GitHub，每次發版都要從 `main` 重新打包再上傳。
 - **桌面版的「新增外掛市集」不會到網頁版**：在桌面版加 GitHub 市集只裝在本機（`my-workflow@my-agent-toolkit`），和帳號端那份（如 `my-workflow@openai-curated-remote`）是兩份，不同步。兩份不要同時啟用，同名 skill 會互相干擾。
 - 要網頁版與桌面版一致：只留帳號端那份，用 ZIP 更新；本機市集那份停用或移除。
-- **網頁版 ZIP 不能帶 hook**：含 `hooks/codex.json`（要在本機跑 `node`）的包會被標成「僅限桌面版」，網頁版不能用。網頁版包要排除 `hooks/`、根 `scripts/`，並刪掉 `plugin.json` 的 `extensions`；全域規則改由入口 skill 讀 `global.md`。Composio MCP（`mcp.json`）是否也會觸發此限制**待實測**。
+- **網頁版 ZIP 不能帶 hook**：含 `hooks/codex.json`（要在本機跑 `node`）的包會被標成「僅限桌面版」。網頁版包排除 `hooks/`、根 `scripts/`，並只刪 `plugin.json` 裡 `extensions.com.openai.hooks`。
+- **網頁版要有入口設定**：`plugin.json` 的 `extensions.com.openai` 要保留 `onboardingSkill`（指到 `./skills/my-workflow/SKILL.md`）與 `interface`；全域規則由入口 skill 讀 `global.md`，入口 skill 的 description 不能寫「規則已由 hook 注入」。只拿掉 hook、沒有這兩項的 1.16.2 包，裝得上但不生效。
+- **已知可用的網頁版**是 1.7.3：沒有 hook、沒有 MCP，有 `onboardingSkill` 與 `interface`。帶 Composio MCP（`mcp.json`）的網頁版能否生效**待實測**；不行就改用不含 `mcp.json` 的包。
 - **版本號要比帳號裡的高**：ChatGPT 存檔時要求包內 `plugin.json` 的 `version` 大於目前版本（錯誤：`Bump the plugin manifest version before saving`）。包內版本用發版的 `pack.yaml` 版本；同一版要重傳就先發新版，不要只改包。
 
 ## 先選安裝目標
