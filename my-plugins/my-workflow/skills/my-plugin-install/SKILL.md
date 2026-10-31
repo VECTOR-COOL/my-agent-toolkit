@@ -37,8 +37,8 @@ graph TD
 | 目標是 Claude 雲端 session | Claude 雲端 session | [claude.md](references/claude.md)「雲端 session」 |
 | 目標是 Codex | OpenAI | [openai.md](references/openai.md)「先選安裝目標」 |
 | 目標是 ChatGPT，包含對話內操作且 ChatGPT Web 可用 | ChatGPT | [openai.md](references/openai.md)「帳號端安裝與更新」 |
-| 目標是 Google Antigravity（AGY：Antigravity 2.0、IDE、`agy` CLI） | Antigravity（AGY） | [gemini.md](references/gemini.md)「先選安裝目標」「Antigravity（AGY）：對話內安裝與更新」 |
-| 目標是 Gemini CLI | Gemini CLI | [gemini.md](references/gemini.md)「Gemini CLI：本機 extension 與 skills」 |
+| 目標是 Google Antigravity（AGY：Antigravity 2.0、IDE、`agy` CLI） | Antigravity（AGY） | [gemini.md](references/gemini.md)「檢查並更新」「Antigravity（AGY）：對話內安裝與更新」 |
+| 目標是 Gemini CLI | Gemini CLI | [gemini.md](references/gemini.md)「檢查並更新」「Gemini CLI：本機 extension 與 skills」 |
 | 目標是 Gemini 網頁，或在 Gemini／Antigravity 要求安裝到支援 Web 的 market | Gemini／跨平台 Web | [gemini.md](references/gemini.md)「先選安裝目標」「失敗或環境不適用：引導下一步」 |
 | 其他沒有 plugin 機制的平台 | 需確認 | 查該平台官方支援；貼規則或上傳檔案不算 marketplace 安裝 |
 
@@ -46,17 +46,17 @@ graph TD
 
 ## 2. 檢查更新
 
-安裝或更新前先檢查；使用者只說「檢查更新」時，只讀查詢，不安裝、升版、上傳或刷新可能改動安裝內容的 marketplace。
+安裝或更新前先檢查；使用者只說「檢查更新」時，只讀查詢，不安裝、升版、上傳或刷新可能改動安裝內容的 marketplace。使用者說「更新」「檢查並更新」，或直接叫用本 skill（未限定只檢查）時，自動上 GitHub 檢查 `main` 並依目標平台一次完成更新。
 
 1. 確認目標平台、帳號／工作區與實際 plugin；不能用另一個同名項目或本機快取代替。
-2. 取得已安裝／帳號端版本、release 與可用的來源 commit，再讀來源 `main` 的目前 commit 與 plugin 內容。讀不到哪一側就明說，不能判成最新。
+2. 取得已安裝／帳號端版本、release 與可用的來源 commit，再直接上 GitHub 讀來源 `main` 的目前 commit、本 plugin 最後 commit 與內容（不拿本地未同步的 `origin/main` 當最新）。讀不到哪一側就明說，不能判成最新。
 3. 比對 plugin 本身的內容差異；repo 其他 plugin 有 commit 不代表本 plugin 有更新。版本相同也要查內容；帳號端版本可能獨立升版，不直接和 repo 標籤比較大小。
-4. 回報「已是最新／有更新／尚未安裝／無法確認」，附檢查時間、目標、兩側版本或 release／commit、差異摘要與下一步。「尚未安裝」須有目標環境的明確安裝狀態證據；搜尋不到或權限不足一律不能據此判定。詳細比對見 [claude.md](references/claude.md)「檢查更新（只讀）」、[openai.md](references/openai.md)「檢查更新」與 [gemini.md](references/gemini.md)「檢查更新（只讀）」。
+4. 回報「已是最新／有更新／尚未安裝／無法確認」，附檢查時間、目標、兩側版本或 release／commit、差異摘要與下一步。「尚未安裝」須有目標環境的明確安裝狀態證據；搜尋不到或權限不足一律不能據此判定。詳細比對與一鍵更新見 [claude.md](references/claude.md)「檢查更新（只讀）」「檢查並更新」、[openai.md](references/openai.md)「檢查更新」與 [gemini.md](references/gemini.md)「檢查更新（只讀）」「檢查並更新」。
 
 - **來源版本標籤**：來源 repo `main` 上 `my-plugins/my-workflow/pack.yaml` 的 `version`，只作人類可讀標籤。marketplace 來源 commit 改變時，仍須確認本 plugin 的內容差異，不能把 repo 任意新 commit 都當成本 plugin 有更新。
 - **目前版本**：依平台方法查（Claude Code 先確認 CLI 版本再 `claude plugin list`，分清本機 `@my-agent-toolkit` 與帳號同步 `@synced`；claude.ai 帳號端看 Customize > Plugins；Antigravity 查 `plugins.json`、`~/.gemini/config/plugins/` 或 `GetAllPlugins` 過濾 `jq` 並讀實際路徑的 `pack.yaml`／commit；Gemini CLI 用 `gemini extensions list`）。
 - **各平台版本欄位差異**：版本標籤只在發布時升，標籤相同但內容不同是正常的。`.claude-plugin/plugin.json` 與 `plugin.json`（Codex／Antigravity 共用）刻意不寫 `version`（見 `docs/RELEASE.md`）；OpenAI 帳號上傳產物的版本與 release 依 [openai.md](references/openai.md) 處理；`gemini-extension.json` 則與 `pack.yaml` 同步寫入版本號，檢查更新時仍須比對來源 `main` commit 與檔案差異（見 [gemini.md](references/gemini.md)）。
-- **自動／連結更新建議**：Claude Code 第三方 marketplace 預設不自動更新，要到 `/plugin` → Marketplaces 開 **Enable auto-update**；claude.ai 開 **Sync automatically**；Antigravity 建議用 `plugins.json` 指到本地 repo、Gemini CLI 建議用 `gemini extensions link`，讓本地 `git pull origin main` 直接反映更新。
+- **自動／連結更新建議**：Claude Code 第三方 marketplace 預設不自動更新，要到 `/plugin` → Marketplaces 開 **Enable auto-update**；claude.ai 開 **Sync automatically**；Antigravity 建議用 `plugins.json` 指到本地 repo、Gemini CLI 建議用 `gemini extensions link`（共用同一個追蹤 `main` 的目錄），並可在 Antigravity 用 `/schedule`／`/automation` 排程定時執行本 skill 自動從 GitHub `main` 拉取更新。
 
 ## 3. 執行與驗證
 
