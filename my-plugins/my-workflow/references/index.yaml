@@ -58,7 +58,7 @@ rules:
   - name: git
     file: rules/git.md
     when: commit、push、branch、merge、rebase、發版、tag、解衝突
-    keywords: [commit, push, git, 分支, 合併, merge, rebase, 發版, release, tag, 衝突, force push]
+    keywords: [commit, push, pull, 同步, stash, git, 分支, 合併, merge, rebase, 發版, release, tag, 衝突, force push]
   - name: code-review
     file: rules/code-review.md
     when: 審查原始碼、變更檔案、Git Diff 或 PR

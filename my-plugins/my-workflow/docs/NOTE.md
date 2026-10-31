@@ -2,7 +2,7 @@
 
 給下一位接手的人或 agent。**先讀這份再動手；做完一段工作或交接時更新。** 保持精簡，過時的刪掉，不記密碼、token、金鑰。
 
-最後更新：`2026-10-31` · 版本：`v1.16.0` · 分支：`develop`
+最後更新：`2026-10-31` · 版本：`v1.16.0` · 分支：`develop` · 範圍：plugin `my-workflow`（repo 根沒有自己的 NOTE）
 
 ## 目前狀態
 
@@ -13,7 +13,7 @@
 
 ## 進行中
 
-- [ ] [docs 檔案架構定義](docs/plans/2026-10-31-docs-structure.md)：已寫進 `my-docs`，**待使用者確認**。
+- [ ] [docs 檔案架構定義](plans/2026-10-31-docs-structure.md)：已寫進 `my-docs`，**待使用者確認**。
 - [ ] 把 `develop`（到 `1.16.0`）合併到 `main`。
 
 ## 下一步
@@ -24,6 +24,7 @@
 
 ## 已決定
 
+- **每個 plugin 是自己的專案**：repo 根的 `AGENTS.md`、`CLAUDE.md` 只做目錄導覽，不放 `NOTE.md`、`docs/`、`scripts/`；plugin 的入口、交接紀錄、計畫都在 `my-plugins/my-workflow/` 內（2026-10-31）。
 - skill 一律平鋪；Claude 專屬的 skill 放 `my-skills/claude/`，不隨 plugin 安裝。
 - `my-skills/` 內每個 skill 獨立，不互相連結；`skills/` 只放第三方、不改內容。
 - plugin 不做 Cursor 相容層；Claude 是第一個支援的客戶端（記憶 `user_id=claude`）。
@@ -33,7 +34,6 @@
 ## 待確認／阻礙
 
 - docs/ 檔案架構定義（`specs/`、`guides/`、`adr/`、`plans/`、`diagrams/`、`archived/`）是否確認。
-- 本 repo 自己的根目錄 `NOTE.md` 還沒照新結構搬到 `docs/`（要搬需同步改 `AGENTS.md`、`CLAUDE.md` 引用），待使用者決定。
 - `user_id=claude` 是沿用 `gpt`、`cursor` 的命名自訂的，需使用者確認；舊的 `user_id=cursor` 記憶不會自動轉移。
 - 帳號端為何沒自動同步新版：Sync automatically 是否開啟、私有 repo 授權是否有效。
 - `my-release-packaging` 沒在使用者的 PHP 專案實跑過；使用者 Windows 的 Git 版本是否支援 `--add-virtual-file` 未確認。
@@ -48,6 +48,7 @@ node --test my-plugins/my-workflow/skills/my-release-packaging/scripts/pack-rele
 
 ## 更新紀錄
 
+- `2026-10-31` Claude：撤回根目錄 init 產物——`AGENTS.md`、`CLAUDE.md` 改寫成純目錄導覽，`NOTE.md` 與 `docs/plans/` 搬進 plugin 的 `docs/`；清掉未追蹤雜物（`.cursor/`、`.playwright-mcp/`、`dist/`、舊版 zip、`.codex-plugin/`、`my-skills/my-workflow/`）。
 - `2026-10-31` Claude：`1.16.0` 落地 init codebase 結構（B + 生態慣例優先）與 docs/ 結構定義；實測新專案、舊格式搬家、打包排除三項通過。
 - `2026-10-31` Claude：記錄 init codebase 結構討論到 `docs/plans/`。
 - `2026-10-30` Claude：補齊根目錄 `AGENTS.md`、`CLAUDE.md`、`NOTE.md`；README 版本移到標題正下方。

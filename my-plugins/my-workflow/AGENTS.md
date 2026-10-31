@@ -34,7 +34,7 @@ graph TD
 | 路徑 | 用途 |
 |------|------|
 | `.claude-plugin/plugin.json` | Claude Code manifest |
-| `plugin.json` | Codex 可攜 manifest；hooks 指向 `hooks/codex.json` |
+| `plugin.json` | Codex 讀的可攜 manifest（agent-plugins 格式，`extensions.com.openai.hooks` 指向 `hooks/codex.json`）。舊式 `.codex-plugin/plugin.json` 只是相容 fallback，不放（Codex 實機**未驗證**） |
 | `.mcp.json` / `mcp.json` | Composio MCP（Claude／Codex 各一份格式） |
 | `hooks/hooks.json` / `hooks/codex.json` | SessionStart 注入 rules（Claude 用 `${CLAUDE_PLUGIN_ROOT}`，Codex 用 `${PLUGIN_ROOT}`） |
 | `rules/global.md` | 全域規則，hook 常駐注入（SSOT） |
@@ -44,6 +44,10 @@ graph TD
 | `references/index.yaml` | 入口路由索引（`when`、`keywords`） |
 | `scripts/` | `inject-rules.mjs`（注入 rules + 入口 skill + 索引，相對路徑改為絕對路徑）、`check-release.mjs`（發布前檢查） |
 | `docs/RELEASE.md` | 發布流程與「無法更新」排除 |
+| `docs/NOTE.md` | 這個 plugin 的交接紀錄：目前狀態、進行中、待確認。接手先讀，做完一段更新 |
+| `docs/plans/` | 計畫（`YYYY-MM-DD-<主題>.md`），照 `my-docs` 的 docs/ 結構 |
+
+repo 根的 `AGENTS.md`／`CLAUDE.md` 只做目錄導覽；每個 plugin 是自己的專案，開發準則與交接紀錄都在這裡。
 
 Claude Code plugin **無法提供 rules**，plugin 內的 `CLAUDE.md` 不會載入，所以改用 SessionStart hook 注入 `additionalContext`。hook 不能呼叫 Skill 工具，為了「開對話就載入入口、不用斜線命令」，同一個腳本也注入入口 `SKILL.md` 與 `index.yaml`（全域規則拆小後約 4,500 字元，每次對話固定成本）。改入口或索引後不用另外同步，腳本每次直接讀檔。
 
@@ -51,7 +55,7 @@ Claude Code plugin **無法提供 rules**，plugin 內的 `CLAUDE.md` 不會載�
 
 - 只改 `my-plugins/my-workflow/`。
 - 新 skill：建立 `skills/<name>/SKILL.md`（`name` 與資料夾名一致），在 `references/index.yaml` 補 `when`、`keywords`，並更新 README 的元件表。
-- 版本寫 `pack.yaml`，同步上面列的其他四處。各 `SKILL.md` 頂層不手寫 `version`。
+- 版本以 `pack.yaml` 為準，其餘 7 處見 [`docs/RELEASE.md`](docs/RELEASE.md)。各 `SKILL.md` 頂層不手寫 `version`。
 - 常駐規則寫成事實陳述（hook 注入的內容，官方建議不用命令式）；改規則只改對應的規則檔；新增規則要在 `index.yaml` 的 `rules` 區補 `when`、`keywords`。
 - skill 之間用相對連結（`../my-memory/SKILL.md`）。`rules/`、`references/` 在 plugin 根目錄，從 `skills/<name>/` 用 `../../` 指到。
 - 金鑰、token、`.env` 不進 repo。MCP 優先用 OAuth；必須用金鑰時走 `userConfig`（`sensitive: true`）或使用者端設定。
@@ -63,7 +67,7 @@ Claude Code plugin **無法提供 rules**，plugin 內的 `CLAUDE.md` 不會載�
 
 | 環境 | rules | skills | MCP | 驗證狀態 |
 |------|-------|--------|-----|----------|
-| Claude Code | SessionStart hook | plugin | `.mcp.json` | 靜態檢查；實際安裝與 hook 注入**未驗證** |
+| Claude Code | SessionStart hook | plugin | `.mcp.json` | **已實測**（雲端 Claude Code）：marketplace 加入、安裝、`claude plugin validate`、hook 注入；Desktop 介面操作、Composio OAuth **未驗證** |
 | Codex | SessionStart hook（`hooks/codex.json`） | plugin | `mcp.json` | **未驗證**；hook 輸出格式、OAuth（`dcr`）登入需實機確認 |
 | ChatGPT 網頁 | 不支援 hook；手動貼 `rules/global.md` 到自訂指示 | 上傳 skill 資料夾 | — | 未驗證 |
 

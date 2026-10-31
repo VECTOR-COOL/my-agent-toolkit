@@ -96,7 +96,7 @@ graph TD
 |------|------|------|
 | `AGENTS.md` | 所有 agent 的專案入口 | 角色指引、指令、目錄架構、規範、禁止事項，開頭寫「接手三步」。200 行內，超過拆到 `docs/` |
 | `README.md` | 給人看的專案說明 | **標題正下方一行寫目前版本**（``**版本：`v0.1.0`**``）；再來定位、技術棧、快速啟動 |
-| `docs/NOTE.md` | 交接紀錄 | 目前狀態、進行中、下一步、已決定、待確認、怎麼驗證、更新紀錄。做完一段工作或交接時更新；不記機密 |
+| `docs/NOTE.md` | 交接紀錄，也是專案本地記憶 | 目前狀態、進行中、下一步、已決定、偏好、待確認、怎麼驗證、更新紀錄。做完一段工作、使用者說「記住」、做出影響後續的決定或交接時更新；只記本專案（跨專案偏好走 `my-memory`），約 100 行內，已決定被推翻要註明取代者；不記機密 |
 | `.agents/skills/<name>/SKILL.md` | 專案專屬 skill，跨編輯器共用 | 從模板複製貼近業務的 skill，加上專案自己的；`name` 與資料夾名一致 |
 | `.gitignore` | 忽略清單 | **一律建立**：`.env`、`.env.*`（保留 `!.env.example`）、`dist/`、`node_modules/`、`.claude/settings.local.json`、`CLAUDE.local.md`、`*.log` |
 | `.gitattributes` | 發佈排除（`export-ignore`） | **僅「以打包檔部署」的專案**才建（見下）；函式庫、公開開源專案不要建 |
@@ -126,7 +126,7 @@ graph TD
 |------|-----------|----------------|
 | `AGENTS.md` | 沒有「接手三步」；指令、目錄、規範、禁止事項散在各處；內容超過 200 行；含平台專屬內容 | 重組成範本結構（接手三步、專案、指令、目錄架構、規範、禁止事項、發佈、各 agent 平台備註）。舊條目逐條歸位；平台專屬內容移到最後一節或對應入口；過長就拆到 `docs/` 並在這裡留連結 |
 | `README.md` | 版本只在徽章或內文、不在標題正下方；沒有版本 | **標題正下方一行** ``**版本：`vX.Y.Z`**``，版本取自專案版本來源（徽章若是靜態文字就以版本來源為準）；其餘內容保留；缺的「技術棧」「快速啟動」「文件」依實際補上 |
-| `docs/NOTE.md` | 沒有；在根目錄的 `NOTE.md`；或叫 `TODO.md`、`HANDOFF.md`、`MEMORY.md`、`STATUS.md` 的交接／進度檔 | 用 `git mv` 搬到 `docs/NOTE.md`，轉成 `NOTE.md` 結構（目前狀態、進行中、下一步、已決定、待確認、怎麼驗證、更新紀錄）。舊檔內容併入後，舊檔若只剩重複內容就刪除（git 歷史留底），並更新所有引用 |
+| `docs/NOTE.md` | 沒有；在根目錄的 `NOTE.md`；或叫 `TODO.md`、`HANDOFF.md`、`MEMORY.md`、`STATUS.md` 的交接／進度檔 | 用 `git mv` 搬到 `docs/NOTE.md`，轉成 `NOTE.md` 結構（目前狀態、進行中、下一步、已決定、偏好、待確認、怎麼驗證、更新紀錄；舊檔裡的偏好歸「偏好」，決策歸「已決定」）。舊檔內容併入後，舊檔若只剩重複內容就刪除（git 歷史留底），並更新所有引用 |
 | `CLAUDE.md` | 內容和 `AGENTS.md` 重複；或沒有 `@AGENTS.md` | 第一行 `@AGENTS.md`；和 `AGENTS.md` 重複的段落移除（先確認 `AGENTS.md` 已有）；只留 Claude 專屬內容 |
 | `.cursorrules`、`.cursor/rules/*.mdc`、`.github/copilot-instructions.md`、`GEMINI.md`、`.windsurfrules` | 各平台各寫一份規則 | **不刪、不改壞**。把其中**通用內容**收斂進 `AGENTS.md`；原檔保留，需要時在開頭註明「以 AGENTS.md 為準」。要轉成 Claude 最佳實踐（`.claude/rules/` 等）用 `my-claude-codebase-convert` |
 | `.agents/skills/`、`.claude/skills/`、`.cursor/skills/` | 專案 skill 在多處各有一份 | 以 `.agents/skills/` 為唯一來源，其他指向它（symlink 或複製並在 `docs/NOTE.md` 記下同步方式） |

@@ -23,6 +23,7 @@ graph TD
 ### 1. 變更狀態與安全預檢
 
 執行 `git status` 與 `git diff --cached` / `git diff`：
+- **只帶自己的變更**：專案常有多個 session 同時在改。逐一確認每個變動檔是不是這次任務改的；不是的（別的 session、未追蹤的檔）不加入，並在回報時列出。
 - **機敏資訊檢查**：嚴禁提交 `.env`、API Key、Token、私鑰或密碼。若有發現，立即中止並通知使用者。
 - **暫存產物檢查**：確認無遺留的測試暫存檔（如 `scripts/tmp/`、`.log`、無用 dump 檔）。
 - **分支檢查**：確認當前分支。嚴禁在 `main`／`master`、`develop`、`release/*` 執行任何 force push。
@@ -37,22 +38,12 @@ graph TD
 [選填：詳細條列變更要點 what & why]
 ```
 
-- **Type 定義**：
-  - `feat`：新增功能
-  - `fix`：修復 Bug
-  - `docs`：文件變更
-  - `style`：格式調整（不影響邏輯）
-  - `refactor`：重構（無新增功能亦無修 Bug）
-  - `perf`：效能優化
-  - `test`：增加或修改測試
-  - `chore`：建置流程、輔助工具或依賴變更
-- **規範要求**：
-  - 主旨使用繁體中文、動詞開頭、不超過 50 字元、結尾不加句號。
-  - 若有破壞性變更，在 type 後加 `!`（例如 `feat!: ...`）或在 body 註明 `BREAKING CHANGE:`。
+- type 清單、主旨格式（祈使句、50 字元內、不加句號）與破壞性變更標記，以 [`rules/git.md`](../../rules/git.md) 為準，不在這裡另列。
+- 主旨使用繁體中文。
 
 ### 3. 執行提交與推送
 
-1. 將目標變更加入暫存：`git add <files>` 或 `git add .`（確認 `.gitignore` 正常生效）。
+1. 只把自己改的檔加入暫存：`git add <files>`。不用 `git add .`／`git add -A`，避免帶進別人的變更。
 2. 建立提交：`git commit -m "<訊息>"`。
 3. 推送至遠端追蹤分支：`git push origin <當前分支>`。
 4. 回報結果：輸出 Commit SHA、分支名稱、推送狀態與變更檔案數量。

@@ -1,6 +1,6 @@
 # 定義：docs/ 檔案架構
 
-日期：`2026-10-31` · 狀態：**已採用，`1.16.0` 落地** · 落地位置：[`my-docs`](../../my-plugins/my-workflow/skills/my-docs/SKILL.md) 的「docs/ 結構」一節（plugin 內唯一完整定義）
+日期：`2026-10-31` · 狀態：**已採用，`1.16.0` 落地** · 落地位置：[`my-docs`](../../skills/my-docs/SKILL.md) 的「docs/ 結構」一節（plugin 內唯一完整定義）
 
 ## 背景
 
@@ -42,7 +42,7 @@ docs/
 
 ## 誰治理
 
-**`docs/` 整個由 [`my-docs`](../../my-plugins/my-workflow/skills/my-docs/SKILL.md) 治理**：位置、命名、生命週期、索引都以它為準，其他 skill 只能照放，不另訂。
+**`docs/` 整個由 [`my-docs`](../../skills/my-docs/SKILL.md) 治理**：位置、命名、生命週期、索引都以它為準，其他 skill 只能照放，不另訂。
 
 - `my-docs` 自己建：`specs/`、`guides/`、`adr/`、`plans/`、`diagrams/`、`archived/`、`README.md` 索引。
 - 內容結構歸別的 skill、位置歸 `my-docs`：`NOTE.md`（`my-codebase-init`）、`specs/prd-*.md`（`my-create-prd`）、`RELEASE_SPEC.md`（`my-release-packaging`）。

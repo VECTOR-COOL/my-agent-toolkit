@@ -32,7 +32,7 @@ graph TD
 1. **全域規則** — [`rules/global.md`](../../rules/global.md)，plugin 已注入；沒有注入的客戶端（見 README）先讀這份。
 2. **[`../my-memory/SKILL.md`](../my-memory/SKILL.md)** — 在「記住、回想、偏好、決策、歷史脈絡」，或使用者問自己、公司、團隊的既有資訊（公司地址、聯絡方式、偏好、先前決定）而對話裡沒有答案時，且優先於其他子 skill。
 3. **[`references/index.yaml`](../../references/index.yaml)** — 用 `when` 或 `keywords` 對上**一筆**後，只載 `../<name>/SKILL.md`。
-4. **其他規則** — `index.yaml` 的 `rules` 區：任務碰到 `when` 的情境（如 commit、Code Review、收尾、寫腳本、安裝套件、用 MCP）才讀對應檔，可與一個 skill 並行；沒碰到不讀。記憶規則在 `my-memory`、`my-memory-consolidate` 的 `rules/`，載入該 skill 時一併讀。
+4. **其他規則** — `index.yaml` 的 `rules` 區：任務碰到 `when` 的情境（如 commit、Code Review、收尾、寫腳本、安裝套件、用 MCP）才讀對應檔，可與一個 skill 並行；沒碰到不讀。Git 的工作習慣（先 pull、只 commit 自己的、提交與發布分開）在 [`rules/git.md`](../../rules/git.md)。記憶規則在 `my-memory`、`my-memory-consolidate` 的 `rules/`，載入該 skill 時一併讀。
 5. 查到 Mem0、或要升長期、或要遺忘時，改載 `../my-memory-consolidate/SKILL.md`。寫入不另搜；去重、加權與遺忘以那份的查詢時機為準。
 
 同一對話已讀過的檔不必重讀。超過約 200 行的檔先讀摘要或索引，不要一次載整包。
@@ -47,15 +47,6 @@ graph TD
 | 對不上 | 先釐清需求；不要猜一個 skill 硬做 |
 
 完整清單與版本號以 `index.yaml` 為準（與 `pack.yaml`、toolkit `project.json` 同號）。
-
-## 工作習慣
-
-只列習慣，細節在 [`rules/git.md`](../../rules/git.md) 與專案的 `AGENTS.md`。
-
-- **動手前先同步**：先 `git pull`。專案常有多個 session 同時在改；本地有未提交改動就先暫存，撞到衝突先給使用者看，不自行決定。
-- **commit 只帶自己的**：commit 前看 `git status`，只加自己改的檔，不帶別的 session 或未追蹤的檔。
-- **提交與發布分開**：「commit」只推開發分支；合併 `main`（對外發布）要使用者明說才做。
-- **改 plugin 先檢查**：改完跑 `check-release.mjs`，通過才 commit；發布才升版，未發布的版本內直接累積。
 
 ## 不要做的事
 
