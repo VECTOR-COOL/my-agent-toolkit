@@ -152,6 +152,21 @@ graph TD
 
 **最後**：版本升 `1.16.0`（8 處同號）。
 
+## 連動的 skill
+
+結構定了，別的 skill 要跟著用同一套路徑，不各自為政。
+
+| skill | 連動內容 | 狀態 |
+|-------|----------|------|
+| [`my-docs`](../../my-plugins/my-workflow/skills/my-docs/SKILL.md) | `docs/` 內部結構與命名的唯一定義（見 [docs 檔案架構定義](2026-10-31-docs-structure.md)） | 已改 |
+| [`my-create-prd`](../../my-plugins/my-workflow/skills/my-create-prd/SKILL.md) | PRD 存 `docs/specs/prd-<主題>.md` | 已改 |
+| [`my-release-packaging`](../../my-plugins/my-workflow/skills/my-release-packaging/SKILL.md) | 腳本與設定在 `scripts/`、規格書在 `docs/RELEASE_SPEC.md`；舊專案根目錄設定檔另補 `export-ignore` | 已改 |
+| [`my-codebase-init-claude`](../../my-skills/claude/my-codebase-init-claude/SKILL.md) | 引用 `docs/NOTE.md` | 已改 |
+| [`my-codebase-clear`](../../my-plugins/my-workflow/skills/my-codebase-clear/SKILL.md) | 清理時保護 `docs/`、`scripts/`、入口檔、生態規定檔；候選清單改放 `scripts/tmp/`；發現根目錄散檔只回報，轉交 init 轉換 | 已改 |
+| `rules/files-and-scripts.md`、`my-commit-all-and-push` | 臨時目錄用 `scripts/tmp/`，與上述一致 | 不用改 |
+
+之後新增會碰檔案位置的 skill，先對照 `my-docs` 的「docs/ 結構」與這份的 codebase 結構，再在這張表補一列。
+
 ## 驗證計畫
 
 - `node my-plugins/my-workflow/scripts/check-release.mjs` 通過；`pack-release.test.mjs` 全過（含新測試）。
