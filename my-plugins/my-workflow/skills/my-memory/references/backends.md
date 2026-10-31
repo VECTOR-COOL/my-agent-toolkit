@@ -19,7 +19,15 @@
 
 永久記憶，短期不寫這裡。
 
-- **查**：(a) Mem0 命中 `tier=long`：用隔離鍵找那頁讀 `目前值`；找不到或 `狀態` 不是 `有效`，回報不一致並問使用者，不自己補寫。(b) 沒命中或不夠：`狀態=有效` 且 `AI 可用`，依 `scope`／`user_id`／`agent_id` 過濾，可一併讀 `scope=global` 且 `user_id` 空的列。禁整庫拉。
+- **查**：(a) Mem0 命中 `tier=long`：用隔離鍵找那頁讀 `目前值`；找不到或 `狀態` 不是 `有效`，回報不一致並問使用者，不自己補寫。(b) 沒命中或不夠：用下方 `notion_filter` 過濾，禁整庫拉。
+```yaml
+notion_filter:
+  狀態: 有效
+  AI 可用: true
+  scope: <依身份>          # 加 user_id、agent_id 同條件
+  also: {scope: global, user_id: ""}   # 可一併讀全域列
+```
+
 - **寫**：欄位與值只用 schemas.md。寫入並讀回成功後在 Mem0 留索引；沒索引的舊頁面查到時補。從短期升進來（排程建議經使用者同意）先去重合併，再更新同一隔離鍵：先對新鍵 `scope|user_id|agent_id|記憶鍵`，沒有再對舊鍵 `user_id|agent_id|記憶鍵`，對到就更新那一筆，不改寫既有列。
 - 敏感度高於「一般」時謹慎寫入。工具細節見 [`my-notion`](../../my-notion/SKILL.md)。
 
@@ -35,11 +43,19 @@
 
 **配額與速度**（免費方案，額度以 [Mem0 定價頁](https://mem0.ai/pricing) 為準，**需確認**）：
 
-- 每題只搜一次：原話加 1～2 個同義詞合成一句，不拆多次、不逐筆補讀、不列整庫、不 `rerank`，`fields` 只留必要欄，`top_k` 通常 5～10。
+- 每題只搜一次，不拆多次、不逐筆補讀、不列整庫、不 `rerank`：
+
+```yaml
+mem0_search:
+  query: "<原話> <同義詞1> <同義詞2>"   # 合成一句
+  top_k: 5                            # 通常 5～10
+  user_id: <依身份>                    # 私人、全域不帶
+  fields: [id, memory, user_id, agent_id, created_at, metadata]
+```
 - 回答自足就不搜；同一對話沿用前次結果。
 - 寫入批次：同組 metadata 更新一次、重複 id 一次批次刪；不為「確認寫成」再搜。
 - 儲存靠遺忘與去重壓低；長期只留索引不留複本。命中率靠索引正文的摘要與關鍵字（schemas.md），不靠多搜。
 
 **寫改刪**：短期 `infer=true`，由 Mem0 擋完全相同的句子；同一對話已有同一事實的 id 就更新，否則直接新增。單一耐久事實寫完要驗證。使用者指定的改或刪先顯示並取得同意。推測不當事實。去重、加權、遺忘由排程 agent 的 `my-memory-consolidate` 做。
 
-**整理計數**（排程維護，對話中只讀不改）：`metadata.weight` 整數（沒有或 `normal` 當 `1`，`high` 當 `3`）；`metadata.tier` `short`／`mid`／`long`（long 不加權、不遺忘、不合併）；存放時間用 `created_at`，沒有就不遺忘。新增工具若沒有 metadata 欄，寫入成功後再更新，不另開一筆。
+**整理計數**（排程維護，對話中只讀不改）：`metadata` 格式見 [schemas.md](schemas.md)；`long` 不加權、不遺忘、不合併；存放時間用 `created_at`，沒有就不遺忘。新增工具若沒有 metadata 欄，寫入成功後再更新，不另開一筆。

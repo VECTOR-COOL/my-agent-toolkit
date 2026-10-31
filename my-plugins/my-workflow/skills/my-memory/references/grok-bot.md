@@ -13,7 +13,13 @@
 
 ## 範圍
 
-先判斷短、中、永久（見主 skill）。短期 Mem0 用下表。整理進永久時抄同一組身份：一般是 `scope=general`、`user_id=xiaoan`、`agent_id` 為該 bot UUID；私人與全域兩欄留空，`scope` 分別是 `private`、`global`。
+先判斷短、中、永久（見主 skill）。短期 Mem0 用下表。整理進永久時抄同一組身份（沒列的欄留空）：
+
+```yaml
+general: {scope: general, user_id: xiaoan, agent_id: <bot UUID>}
+private: {scope: private}
+global:  {scope: global}
+```
 
 | 範圍 | 庫與身份 | 放什麼 |
 |------|----------|--------|

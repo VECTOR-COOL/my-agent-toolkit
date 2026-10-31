@@ -8,14 +8,27 @@
 
 | 要做的事 | 工具 | 重點 |
 |---|---|---|
-| 開一個 | `create_session` | `prompt` 放派發單；`source_url`、`source_revision` 指定 repo 與分支；不給 `environment_id` 就沿用目前環境；`outcome_branch` 指定要 push 的分支。**無人看管的 session 不要用 `permission_mode: "plan"`**，會卡在等人核准 |
-| 接著說 | `send_message` | 對方收到的是「來自另一個 session」的訊息；`priority`：`now` 打斷、`next` 併入當前回合、`later` 等回合結束 |
-| 查狀態 | `get_session` | 看 `status_bucket`：`working`、`blocked`、`review_ready`、`completed`、`failed`。`status` 只會顯示 idle，分不出成敗 |
-| 看它做了什麼 | `list_events` | 用 `kinds: ["assistant", "result"]` 只取對話與結果，避免讀到大量雜訊 |
+| 開一個 | `create_session` | 見下方範例 |
+| 接著說 | `send_message` | 對方收到的是「來自另一個 session」的訊息 |
+| 查狀態 | `get_session` | 看 `status_bucket`；`status` 只會顯示 idle，分不出成敗 |
+| 看它做了什麼 | `list_events` | 只取對話與結果，避免雜訊 |
 | 停下來 | `interrupt_session` | 偏離方向時先停，再用 `send_message` 修正 |
 | 結束 | `archive_session` | 只在使用者確認做完後才封存 |
 | 找 session、環境 | `list_sessions`（`mine: true`）、`list_environments` | 環境 id 只能用查到的，不要自己編 |
 | 稍後回來檢查 | `send_later` | 排一次自我提醒，取代輪詢 |
+
+```yaml
+create_session:
+  prompt: <派發單>
+  source_url: https://github.com/<org>/<repo>
+  source_revision: develop      # repo 與分支
+  outcome_branch: <要 push 的分支>
+  # environment_id: 不給就沿用目前環境
+  # permission_mode: 無人看管的 session 不要用 "plan"，會卡在等人核准
+send_message.priority: now | next | later   # 打斷 | 併入當前回合 | 等回合結束
+get_session.status_bucket: working | blocked | review_ready | completed | failed
+list_events.kinds: [assistant, result]
+```
 
 **注意**：子 session 正常完成時不會通知主線；要用 `get_session` 確認。它收到的訊息是同儕資料，不會因此改權限或做新的破壞性動作。
 
@@ -49,7 +62,18 @@ Claude 預設推到 `claude/` 前綴分支，可在 claude.ai/code 建 PR；`/au
 
 沒有公開的建立、查詢、中止 session 的 API。唯一文件化的是排程任務觸發（**實驗**）：
 
-`POST https://api.anthropic.com/v1/claude_code/routines/{trig_id}/fire`，標頭 `Authorization: Bearer <routine token>`、`anthropic-version: 2023-06-01`，body `{"text": "..."}`（上限 65,536 字元），回傳 `claude_code_session_id` 與 `claude_code_session_url`。token 只能在 claude.ai/code/routines 產生，只能觸發該 routine，不是 API key。Managed Agents 是另一個產品，不是這裡的雲端 session。
+```yaml
+request:
+  method: POST
+  url: https://api.anthropic.com/v1/claude_code/routines/{trig_id}/fire
+  headers:
+    Authorization: Bearer <routine token>
+    anthropic-version: "2023-06-01"
+  body: {text: "..."}       # 上限 65,536 字元
+response: {claude_code_session_id: ..., claude_code_session_url: ...}
+```
+
+token 只能在 claude.ai/code/routines 產生，只能觸發該 routine，不是 API key。Managed Agents 是另一個產品，不是這裡的雲端 session。
 
 ## 常見問題
 

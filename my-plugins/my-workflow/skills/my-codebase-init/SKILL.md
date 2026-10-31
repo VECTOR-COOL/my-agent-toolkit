@@ -95,8 +95,22 @@ graph TD
 | `README.md` | 給人看 | **標題正下方一行寫版本**（``**版本：`v0.1.0`**``）；再定位、技術棧、快速啟動 |
 | `docs/NOTE.md` | 交接紀錄，專案本地記憶 | 目前狀態、進行中、下一步、已決定、偏好、待確認、怎麼驗證、更新紀錄。做完一段、使用者說「記住」、做出影響後續的決定或交接時更新；只記本專案（跨專案走 `my-memory`），約 100 行內，已決定被推翻要註明取代者；不記機密 |
 | `.agents/skills/<name>/SKILL.md` | 專案 skill，跨編輯器共用 | 從模板複製貼近業務的，加專案自己的；`name` 與資料夾名一致 |
-| `.gitignore` | 忽略清單 | **一律建立**：`.env`、`.env.*`（保留 `!.env.example`）、`dist/`、`scripts/tmp/`、`log/*`（或框架的 log 路徑）、`node_modules/`、`.claude/settings.local.json`、`CLAUDE.local.md`、`*.log` |
+| `.gitignore` | 忽略清單 | **一律建立**，至少含下方範例 |
 | `.gitattributes` | `export-ignore` | **僅打包部署的專案**在步驟 7 建；函式庫、公開開源不要建 |
+
+```gitignore
+.env
+.env.*
+!.env.example
+dist/
+scripts/tmp/
+# 或框架的 log 路徑
+log/*
+node_modules/
+.claude/settings.local.json
+CLAUDE.local.md
+*.log
+```
 
 - **版本**：初始 `v0.1.0`（使用者另有指定照指定）。已有版本來源（`package.json`、`VERSION`、tag）就與它一致，改版同步。
 - `.agents/skills/` 是各編輯器共用位置（Codex 會發現）。其他編輯器讀自己的路徑（如 `.claude/skills/`）時以 symlink 或複製指到這裡，不維護兩份；發現路徑以官方文件為準，沒查證不斷言。
@@ -112,7 +126,7 @@ graph TD
 | 通用（Codex、Copilot coding agent、Zed、Warp、Windsurf 等） | `AGENTS.md` 本身 | 不另建 |
 | **Claude Code** | `CLAUDE.md` | 第一行 `@AGENTS.md`，下面只放 Claude 專屬（範本 [`templates/CLAUDE.md`](templates/CLAUDE.md)）。Claude 只在沒有任何 `CLAUDE.md` 時才直接讀 `AGENTS.md`，保留引用最保險 |
 | **Cursor** | 原生讀 `AGENTS.md` | 不需要。使用者要才建 `.cursor/rules/agents.mdc`，`alwaysApply: true`，只指向 `AGENTS.md`（範本 [`templates/cursor-agents.mdc`](templates/cursor-agents.mdc)）；必須是 `.mdc`，`.md` 會被忽略；規則裡以路徑引用的檔是 Agent 用工具讀的，不內嵌 |
-| Gemini CLI | `.gemini/settings.json` | context 檔名設為 `AGENTS.md` |
+| Gemini CLI | `.gemini/settings.json` | `{"context": {"fileName": "AGENTS.md"}}`（舊版是頂層 `"contextFileName"`） |
 | Aider | `.aider.conf.yml` | `read: AGENTS.md` |
 | 其他 | 官方文件 | 沒查證不斷言 |
 

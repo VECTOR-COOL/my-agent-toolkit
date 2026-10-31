@@ -54,10 +54,10 @@ graph TD
 
 **方法**：
 
-1. Mem0 語意搜一次：查詢詞用使用者原話加 1～2 個同義詞合成一句，`top_k` 用這題需要的筆數；帶上表身份；Composio 用別名選帳。只查一次，不為整理再搜或逐筆補讀。
+1. Mem0 語意搜一次，參數照 [backends.md](references/backends.md) 的 `mem0_search`；帶上表身份；Composio 用別名選帳。只查一次，不為整理再搜或逐筆補讀。
 2. 命中 `tier=long`：用索引的隔離鍵到 Agent 記憶庫讀那頁 `目前值`。找不到或 `狀態` 不是 `有效`，回報不一致，問使用者刪索引還是恢復頁面。
 3. 命中短期或中期：照常回答，不整理。
-4. 沒命中或不夠：Agent 記憶庫結構化過濾（`狀態=有效` 且 `AI 可用`，再依 `scope`／`user_id`／`agent_id`，可一併讀 `scope=global` 且 `user_id` 空的列），不整庫拉。查到而 Mem0 沒索引的頁面補一筆。
+4. 沒命中或不夠：Agent 記憶庫照 backends.md 的 `notion_filter` 過濾，不整庫拉。查到而 Mem0 沒索引的頁面補一筆。
 5. 沒有工具或 MCP 失敗：說哪個後端、什麼失敗；不貼 token；不改讀別種充數。
 
 ## 寫入

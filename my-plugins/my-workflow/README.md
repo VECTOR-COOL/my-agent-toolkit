@@ -39,7 +39,14 @@ VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills 
 
 規則沒生效就把 [`global.md`](skills/my-workflow/references/global.md) 貼到個人偏好。
 
-**Codex**：專案 `.codex/config.toml` 加 `[plugins."my-workflow@my-agent-toolkit"]` `enabled = true`；marketplace 在 [`.agents/plugins/marketplace.json`](../../.agents/plugins/marketplace.json)。會要求信任 hooks。**未驗證**。
+**Codex**：專案 `.codex/config.toml` 加：
+
+```toml
+[plugins."my-workflow@my-agent-toolkit"]
+enabled = true
+```
+
+marketplace 在 [`.agents/plugins/marketplace.json`](../../.agents/plugins/marketplace.json)。會要求信任 hooks。**未驗證**。
 
 **Gemini CLI**：clone 後 `gemini extensions install ./my-plugins/my-workflow`。repo 根是多 plugin marketplace，不支援 URL 直裝。更新：`git pull` 後重新 install。**未驗證**。
 

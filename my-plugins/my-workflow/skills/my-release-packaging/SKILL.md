@@ -66,17 +66,19 @@ graph TD
 - 複製 [`scripts/pack-release.mjs`](scripts/pack-release.mjs) 到專案 `scripts/`（只用 Node 內建、`git`、`tar`）。
 - 專案差異全放 `scripts/release.config.json`（範例 [`references/release.config.example.json`](references/release.config.example.json)）；沒有也能跑（版本取自 `package.json` 或 `VERSION`）。腳本先找同目錄，其次 repo 根（舊專案相容），`--config` 可指定。
 
-| 設定 | 用途 |
-|------|------|
-| `name` | 檔名前綴 |
-| `version.file` + `version.regex` | 從任意檔取版本；regex 要有一個擷取群組 |
-| `lint` | 前置檢查指令陣列，失敗即中止 |
-| `forbiddenExtra` | 專案特有禁則（regex 字串），疊加內建 |
-| `forbiddenRemove` | 放行的內建禁則（子字串比對），如 `["AGENTS"]` |
-| `contentScan` | `{ "enabled": false, "allow": ["regex"] }` |
-| `requireClean`、`strict` | `true` 等同每次加對應旗標 |
-| `placeholders` | 內容不發佈、目錄要存在的 base path，見「占位目錄」 |
-| `outDir` | 輸出目錄，預設 `dist` |
+```jsonc
+{
+  "name": "my-project",                       // 檔名前綴
+  "version": { "file": "index.php", "regex": "Version: (\\S+)" },  // 從任意檔取版本；regex 要有一個擷取群組
+  "lint": ["node", "scripts/lint.mjs"],       // 前置檢查指令陣列，失敗即中止
+  "forbiddenExtra": ["^config/secret"],       // 專案特有禁則（regex），疊加內建
+  "forbiddenRemove": ["AGENTS"],              // 放行的內建禁則（子字串比對）
+  "contentScan": { "enabled": true, "allow": [] },  // allow 放 regex
+  "requireClean": false, "strict": false,      // true 等同每次加對應旗標
+  "placeholders": ["img", "log"],             // 內容不發佈、目錄要存在，見「占位目錄」
+  "outDir": "dist"                            // 預設 dist
+}
+```
 
 **腳本流程**：前置檢查 → 工作區檢查（未追蹤檔警告；`--strict` 失敗；`--require-clean` 要求全乾淨；未提交修改會進包並標 `includesUncommittedChanges`）→ `git stash create` 快照 → `git archive --worktree-attributes`（未 commit 的 `.gitattributes` 也生效）→ **審核** → `.sha256`。審核有洩漏就刪 zip、結束碼 1。
 
@@ -118,7 +120,7 @@ node scripts/pack-release.mjs --out dist/custom.zip --force
 
 ### 5. 驗證
 
-實際執行，不推測：結束碼 0；JSON 摘要 `leakedSensitiveOrDevFiles: 0`，`topLevelIncluded` 只有正式環境需要的；`git status -s` 確認 `dist/*.zip`、`*.sha256`、`*.CHANGES.txt` 被忽略；想確認審核有效，可暫時加一個機敏檔試跑，應失敗並刪 zip。
+實際執行，不推測：結束碼 0；JSON 摘要符合 `{"leakedSensitiveOrDevFiles": 0, "topLevelIncluded": [<只有正式環境需要的>]}`；`git status -s` 確認 `dist/*.zip`、`*.sha256`、`*.CHANGES.txt` 被忽略；想確認審核有效，可暫時加一個機敏檔試跑，應失敗並刪 zip。
 
 ## 常見錯誤
 
