@@ -37,12 +37,35 @@ claude.ai 帳號與 Claude Code 是兩個來源，裝在一處不一定出現在
    第二行是**最後一次動到本 plugin 的 commit**；repo 其他目錄有新 commit 不算本 plugin 有更新。版本標籤看 `main` 的 `my-plugins/my-workflow/pack.yaml`。
 
 2. **已安裝版本**：
-   - Claude Code：先確認 CLI 夠新（見下節），再 `claude plugin list`，看 `my-workflow@my-agent-toolkit`（本機）與 `my-workflow@synced`（帳號同步）各自的 `Version`。本機版本是 12 碼 commit SHA（manifest 不寫 `version` 的緣故）。
+   - Claude Code：先確認 CLI 夠新（見下節），再 `claude plugin list`，看 `my-workflow@my-agent-toolkit`（本機）與 `my-workflow@synced`（帳號同步）各自的 `Version`。本機版本是 12 碼 commit SHA（manifest 不寫 `version` 的緣故）。PATH 上沒有 `claude` 時，改讀 `~/.claude/plugins/installed_plugins.json` 裡 `my-workflow@my-agent-toolkit` 的 `gitCommitSha`。
+   - 這個 session 實際載入哪一份：看對話開頭 hook 注入的 plugin 根目錄。在 `~/.claude/plugins/cache/` 下是本機那份；在 Desktop 的 `AppData\Roaming\Claude\rpm\`（Windows）下是帳號同步那份，本機更新不會動到它。
    - 帳號端（網頁／Cowork）：打開 [Customize > Plugins](https://claude.ai/customize/plugins) 的 `my-workflow` 讀畫面上的版本或更新時間（實際欄位**需確認**）；在 Claude Code 也可讀 `~/.claude/plugins/synced/` 下的 my-workflow。沒有對話內工具能讀帳號就照實說，請使用者截圖或念給你。
 
-3. **判定**：已安裝 SHA 等於第 1 步任一 SHA，或兩者間 `my-plugins/my-workflow/` 無差異 →「已是最新」；確認有差異 →「有更新」並摘要差異；讀不到任一側 →「無法確認」；只有目標環境明確顯示沒裝才報「尚未安裝」。
+3. **判定**：已安裝 SHA 等於第 1 步任一 SHA，或兩者間 `my-plugins/my-workflow/` 無差異 →「已是最新」；確認有差異 →「有更新」並摘要差異；讀不到任一側 →「無法確認」；只有目標環境明確顯示沒裝才報「尚未安裝」。比對兩者間有沒有動到本 plugin（`<SHA>` 填已安裝的完整或 12 碼 SHA）：
+
+   ```bash
+   gh api "repos/VECTOR-COOL/my-agent-toolkit/compare/<SHA>...main" --jq '[.status, .ahead_by, ([.files[].filename | select(startswith("my-plugins/my-workflow/"))] | length)]'
+   gh api "repos/VECTOR-COOL/my-agent-toolkit/commits?sha=main&path=my-plugins/my-workflow&per_page=10" --jq '.[] | .sha[0:7] + " " + (.commit.message | split("\n")[0])'
+   ```
+
+   第一行回 `identical`，或第三個值（plugin 檔案數）為 0 →已是最新；`ahead` 且檔案數大於 0 →有更新，用第二行列出最近改動當差異摘要；`diverged` 或 404 →已安裝 SHA 不在 `main` 上，當有更新。compare 最多回 300 個檔案，落後很多時檔案數會少算，以第二行有沒有比已安裝 SHA 新的 commit 為準。
 
 4. **回報**：檢查時間、目標（帳號／本機）、兩側版本或 SHA、差異摘要、下一步。沒取得的欄位寫「未取得」。
+
+## 檢查並更新（執行這個 skill 時一次做完）
+
+使用者說「更新」「檢查並更新」，或沒指定只叫用這個 skill 時，照下面一次做完。只說「檢查」時停在上一節的回報。
+
+1. 做「檢查更新（只讀）」。已是最新或無法確認就回報並停止，不盲目更新。
+2. 有更新時依載入的那一份處理：
+   - **本機那份**（`@my-agent-toolkit`）：跑「Claude Code 本機 marketplace」的兩行更新指令。
+   - **帳號那份**（`@synced`、網頁、Cowork）：走「對話內：安裝到帳號 marketplace」的「更新」，按 **Check for updates**。
+   - 兩份都裝：兩邊都更新，並提醒本機那份會蓋過 synced（見「先選安裝目標」）。
+3. 再做一次「檢查更新（只讀）」，確認判定變成「已是最新」；沒變就照「失敗或環境不適用」排除，不重複按。
+4. 提醒 `/reload-plugins` 或開新 session／新對話才載入新版。
+5. 回報：更新前後 SHA、這次帶進來的 commit 摘要、驗證結果。
+
+**不用手動跑的做法**：本機開 **Enable auto-update**（見「Claude Code 本機 marketplace」），帳號端開 **Sync automatically**。開了之後 `main` 有新 commit 就會自動拉；這個 skill 用來確認真的拉到了。
 
 ## 對話內：安裝到帳號 marketplace
 
