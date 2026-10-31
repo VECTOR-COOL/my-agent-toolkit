@@ -1,9 +1,7 @@
-# 全域規則（同目錄 global.md）在 Claude Code／Codex 由 SessionStart hook 注入，其他平台載入入口 skill 時讀，不在索引內。記憶相關先載 my-memory。然後只讀 when 或 keywords 對得上的那一筆。不要一次全載。
-# rules 區的檔案路徑相對於 plugin 根目錄；碰到 when 的情境才讀，沒碰到不讀。平台讀不到 rules/ 時略過，以 global.md 為準。
-# 記憶規則在 skills/my-memory/rules/，載入該 skill 時一併讀。記憶整理是獨立 skill my-memory-consolidate（my-skills/memory/），由排程 agent 執行，不在此索引。
-# 記憶：依客戶端只讀 my-memory/references/ 對應那一份。
-# version 與 pack.yaml、toolkit project.json 同一個號。
-# keywords 是使用者會說的詞，用來提高命中。不要把整段說明抄進來。
+# 全域規則（同目錄 global.md）由 hook 注入或入口 skill 讀，不在索引內。記憶相關先載 my-memory；其餘只讀 when 或 keywords 對上的那一筆，不一次全載。
+# rules 的 file 相對於 plugin 根目錄；碰到 when 才讀。讀不到 rules/ 時以 global.md 為準。
+# 記憶規則在 skills/my-memory/rules/，載入該 skill 時一併讀；整理是獨立 skill my-memory-consolidate（my-skills/memory/，排程執行），不在此索引。
+# version 與 pack.yaml、toolkit project.json 同號。keywords 是使用者會說的詞，不抄說明。
 
 version: 1.16.0
 

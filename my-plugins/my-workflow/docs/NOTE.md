@@ -48,6 +48,7 @@ node --test my-plugins/my-workflow/skills/my-release-packaging/scripts/pack-rele
 
 ## 更新紀錄
 
+- `2026-10-31` Claude：plugin 文件瘦身（`AGENTS.md`、`README.md`、`RELEASE.md`、`global.md`、入口與各 skill）；規則與觸發條件不變，`my-codebase-init` 的「既有檔案轉換」拆到 `references/convert.md`。
 - `2026-10-31` Claude：撤回根目錄 init 產物——`AGENTS.md`、`CLAUDE.md` 改寫成純目錄導覽，`NOTE.md` 與 `docs/plans/` 搬進 plugin 的 `docs/`；清掉未追蹤雜物（`.cursor/`、`.playwright-mcp/`、`dist/`、舊版 zip、`.codex-plugin/`、`my-skills/my-workflow/`）。
 - `2026-10-31` Claude：`1.16.0` 落地 init codebase 結構（B + 生態慣例優先）與 docs/ 結構定義；實測新專案、舊格式搬家、打包排除三項通過。
 - `2026-10-31` Claude：記錄 init codebase 結構討論到 `docs/plans/`。
