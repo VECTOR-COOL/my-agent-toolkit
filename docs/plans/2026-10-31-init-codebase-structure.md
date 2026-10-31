@@ -1,6 +1,6 @@
 # 計畫：my-codebase-init 的 codebase 結構
 
-日期：`2026-10-31` · 狀態：**討論中，待決定 A 或 B** · 對象：[`my-plugins/my-workflow/skills/my-codebase-init`](../../my-plugins/my-workflow/skills/my-codebase-init/SKILL.md)
+日期：`2026-10-31` · 狀態：**建議 B（加生態慣例優先），待使用者確認** · 對象：[`my-plugins/my-workflow/skills/my-codebase-init`](../../my-plugins/my-workflow/skills/my-codebase-init/SKILL.md)
 
 ## 背景與問題
 
@@ -41,7 +41,7 @@
 ## 已決定
 
 - **AGENTS.md 是通用規則的 SSOT**；**CLAUDE.md 只引用它**（第一行 `@AGENTS.md`），用 Claude 才建。
-- **根目錄只留入口**：`AGENTS.md`、`README.md`、`CLAUDE.md`。
+- **根目錄只留入口**：`AGENTS.md`、`README.md`、`CLAUDE.md`（修正見下方「建議」：語言生態規定的檔照放根目錄）。
 - **通用核心、保持簡單**：這次只做通用那層，型態細節（PHP 打包等）走既有的步驟 7。
 - **不新增 `STRUCTURE.md`**；結構寫進 `AGENTS.md` 的「目錄架構」節。
 - **不寫結構檢查腳本**，只在 init 驗證步驟人工對照 `ls` 與 `AGENTS.md`。
@@ -93,11 +93,38 @@
 | 發佈排除 | 一行 `/project` | `docs`、`scripts` 兩行 |
 | 符合一般慣例 | 否 | 是 |
 
-**建議：選 B。**
+## 建議：B + 生態慣例優先
+
+目標是**通用、最接地氣、每個 agent 和工程師一看就懂**。最可靠的不是自創結構，而是大家早就在用的慣例：`README` 給人看、`docs/` 放文件、`scripts/` 放腳本、`src/`、`tests/` 放程式。
+
+```text
+<專案>/
+├─ README.md   AGENTS.md   CLAUDE.md     ← 入口（CLAUDE.md 只在用 Claude）
+├─ package.json / composer.json …       ← 語言生態規定放根目錄的，照放
+├─ LICENSE  CHANGELOG.md  .gitignore     ← 業界慣例的根目錄檔，照放
+├─ docs/                                  ← 所有文件
+│  ├─ NOTE.md            交接紀錄
+│  ├─ adr/               架構決策（有才建）
+│  ├─ plans/             計畫（有才建）
+│  └─ RELEASE_SPEC.md    發佈規格（僅打包部署）
+├─ scripts/                               ← 所有腳本與其設定
+│  ├─ pack-release.mjs
+│  └─ release.config.json
+└─ src/ tests/  或框架自己的結構           ← 跟語言／框架慣例，不改
+```
+
+**兩條原則**
+
+1. **生態慣例優先**：「根目錄只留入口」修正為「**根目錄只留入口與生態規定的檔**」。`package.json`、`composer.json`、`LICENSE`、`.gitignore` 等必須在根目錄，工具才找得到，硬搬會壞。程式目錄跟語言與框架慣例（Node 用 `src/`、WordPress 照外掛結構、Laravel 照 `app/`），不重新發明。
+2. **我們只加兩個目錄**：`docs/`、`scripts/`。名字人人懂，不需要解釋。
+
+**取捨**：`release.config.json` 放 `scripts/` 旁（腳本與設定在一起，好懂）；比較正統的是設定檔放根目錄，但會讓根目錄變亂，和目標衝突。
+
+**為什麼不選 A**：`project/` 要額外說明，和既有 `docs/` 會出現兩個文件目錄，也不是任何框架的慣例。
 
 ## 待決定
 
-- [ ] 選 A 或 B。
+- [ ] 確認採用「B + 生態慣例優先」，確認後依下方實作清單執行。
 
 ## 實作清單
 
@@ -112,7 +139,7 @@ graph TD
 
 **共同**
 - `my-codebase-init/SKILL.md`：新增「codebase 結構」一節（文字結構圖、五層）；步驟 3 補「讀出實際目錄樹與各頂層目錄用途」；驗證步驟補「`ls` 對照 `AGENTS.md` 目錄架構」。
-- `templates/AGENTS.md`：「目錄架構」改成通用核心樹範本。
+- `templates/AGENTS.md`：「目錄架構」改成通用核心樹範本，並寫明「根目錄只留入口與生態規定的檔；程式結構跟語言與框架慣例」。
 - 「既有檔案：轉換」補：根目錄舊檔搬到新位置、更新所有引用、不搬動專案原有目錄。
 
 **B 專屬**

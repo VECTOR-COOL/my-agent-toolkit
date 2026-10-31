@@ -12,7 +12,7 @@
 
 ## 進行中
 
-- [ ] `my-codebase-init` 的 codebase 結構：討論與選項 A／B 已記錄在 [`docs/plans/2026-10-31-init-codebase-structure.md`](docs/plans/2026-10-31-init-codebase-structure.md)，**待使用者決定**（建議 B：慣例 `docs/` + `scripts/`）。
+- [ ] `my-codebase-init` 的 codebase 結構：討論與選項 A／B 已記錄在 [`docs/plans/2026-10-31-init-codebase-structure.md`](docs/plans/2026-10-31-init-codebase-structure.md)，**建議 B + 生態慣例優先，待使用者確認**。
 - [ ] 把 `1.15.4`（placeholders 保留目錄既有內容）與 `1.15.8`（根目錄 AGENTS.md 等）合併到 `main`。
 
 ## 下一步
@@ -31,7 +31,7 @@
 
 ## 待確認／阻礙
 
-- init 的 codebase 結構選 A（`project/` 包裝）還是 B（`docs/` + `scripts/`）。
+- init 的 codebase 結構是否採用「B + 生態慣例優先」（見計畫文件「建議」一節）。
 - `user_id=claude` 是沿用 `gpt`、`cursor` 的命名自訂的，需使用者確認；舊的 `user_id=cursor` 記憶不會自動轉移。
 - 帳號端為何沒自動同步新版：Sync automatically 是否開啟、私有 repo 授權是否有效。
 - `my-release-packaging` 沒在使用者的 PHP 專案實跑過；使用者 Windows 的 Git 版本是否支援 `--add-virtual-file` 未確認。
