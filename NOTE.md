@@ -2,7 +2,7 @@
 
 給下一位接手的人或 agent。**先讀這份再動手；做完一段工作或交接時更新。** 保持精簡，過時的刪掉，不記密碼、token、金鑰。
 
-最後更新：`2026-10-30` · 版本：`v1.15.8` · 分支：`develop`
+最後更新：`2026-10-31` · 版本：`v1.15.8` · 分支：`develop`
 
 ## 目前狀態
 
@@ -12,6 +12,7 @@
 
 ## 進行中
 
+- [ ] `my-codebase-init` 的 codebase 結構：討論與選項 A／B 已記錄在 [`docs/plans/2026-10-31-init-codebase-structure.md`](docs/plans/2026-10-31-init-codebase-structure.md)，**待使用者決定**（建議 B：慣例 `docs/` + `scripts/`）。
 - [ ] 把 `1.15.4`（placeholders 保留目錄既有內容）與 `1.15.8`（根目錄 AGENTS.md 等）合併到 `main`。
 
 ## 下一步
@@ -30,6 +31,7 @@
 
 ## 待確認／阻礙
 
+- init 的 codebase 結構選 A（`project/` 包裝）還是 B（`docs/` + `scripts/`）。
 - `user_id=claude` 是沿用 `gpt`、`cursor` 的命名自訂的，需使用者確認；舊的 `user_id=cursor` 記憶不會自動轉移。
 - 帳號端為何沒自動同步新版：Sync automatically 是否開啟、私有 repo 授權是否有效。
 - `my-release-packaging` 沒在使用者的 PHP 專案實跑過；使用者 Windows 的 Git 版本是否支援 `--add-virtual-file` 未確認。
@@ -44,4 +46,5 @@ node --test my-plugins/my-workflow/skills/my-release-packaging/scripts/pack-rele
 
 ## 更新紀錄
 
+- `2026-10-31` Claude：記錄 init codebase 結構討論到 `docs/plans/`。
 - `2026-10-30` Claude：補齊根目錄 `AGENTS.md`、`CLAUDE.md`、`NOTE.md`；README 版本移到標題正下方。
