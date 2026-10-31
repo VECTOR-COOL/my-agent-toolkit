@@ -2,21 +2,21 @@
 
 給下一位接手的人或 agent。**先讀這份再動手；做完一段工作或交接時更新。** 保持精簡，過時的刪掉，不記密碼、token、金鑰。
 
-最後更新：`2026-10-30` · 版本：`v1.15.5` · 分支：`develop`
+最後更新：`2026-10-30` · 版本：`v1.15.6` · 分支：`develop`
 
 ## 目前狀態
 
-- plugin `my-workflow` 最新是 `1.15.5`（`develop`）；`main` 目前是 `1.15.3`，`develop` 多 2 個 commit（1.15.4、1.15.5）。
+- plugin `my-workflow` 最新是 `1.15.6`（`develop`）；`main` 目前是 `1.15.3`，`develop` 多 2 個 commit（1.15.4、1.15.6）。
 - 結構穩定：`my-plugins/`（plugin）、`my-skills/`（獨立 skill，含 `claude/` 分類）、`skills/`（第三方）。
 - 發布流程與更新排除已文件化：`my-plugins/my-workflow/docs/RELEASE.md`，並有 `check-release.mjs` 檢查。
 
 ## 進行中
 
-- [ ] 把 `1.15.4`（placeholders 保留目錄既有內容）與 `1.15.5`（根目錄 AGENTS.md 等）合併到 `main`。
+- [ ] 把 `1.15.4`（placeholders 保留目錄既有內容）與 `1.15.6`（根目錄 AGENTS.md 等）合併到 `main`。
 
 ## 下一步
 
-1. 合併 `1.15.5` 到 `main`，跑 `check-release.mjs --remote` 確認。
+1. 合併 `1.15.6` 到 `main`，跑 `check-release.mjs --remote` 確認。
 2. 使用者帳號的 plugin 同步目前停在舊版（`1.12.2`）；需使用者在 claude.ai 外掛頁移除後重新加入，並開 Sync automatically。
 3. 使用者本機 Claude Code CLI 太舊（`claude plugin` 沒有 `marketplace`、`update`）；需 `claude update` 或重裝。
 

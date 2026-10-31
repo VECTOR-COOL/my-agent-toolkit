@@ -53,4 +53,4 @@
 
 ## 各 agent 平台備註
 
-<只有特定平台才需要的設定放這裡；通用內容留在上面。例如 Claude 見 `CLAUDE.md`。>
+`AGENTS.md` 是唯一來源。各平台入口只引用本檔，不重複內容：Claude Code 用 `CLAUDE.md`（第一行 `@AGENTS.md`）；Cursor 原生讀本檔；只對單一平台有意義的設定才寫在這裡。
