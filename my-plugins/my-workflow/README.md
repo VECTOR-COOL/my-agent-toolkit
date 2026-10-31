@@ -1,6 +1,6 @@
 # my-workflow
 
-VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills + Composio MCP。版本 `1.16.0`（[`pack.yaml`](pack.yaml)）。不上架公開市集。開發見 [`AGENTS.md`](AGENTS.md)。
+VECTOR LTD 私人工作流 plugin：常駐規則 + 14 個按需載入的 skills + Composio MCP。版本 `1.16.1`（[`pack.yaml`](pack.yaml)）。不上架公開市集。開發見 [`AGENTS.md`](AGENTS.md)。
 
 **名詞**：本目錄是 **plugin 本體**；`my-agent-toolkit` 是放它的私有 repo，也是 marketplace 名稱。安裝 id：`my-workflow@my-agent-toolkit`。
 

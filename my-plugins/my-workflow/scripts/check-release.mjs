@@ -98,12 +98,14 @@ const untrackedFiles = String(untracked.stdout || '').split(/\r?\n/).filter(Bool
 if (untrackedFiles.length > 0) warnings.push(`以下檔案還沒 git add：\n${untrackedFiles.map((f) => `    ${f}`).join('\n')}`);
 
 // 3. claude plugin validate
-const probe = spawnSync('claude', ['--version'], { encoding: 'utf8' });
+// Windows 上 claude 是 .cmd，Node 不經 shell 跑不了；參數都是固定字串，開 shell 沒有注入風險
+const viaShell = { encoding: 'utf8', shell: process.platform === 'win32' };
+const probe = spawnSync('claude', ['--version'], viaShell);
 if (probe.error || probe.status !== 0) {
   warnings.push('找不到 claude 指令，略過 claude plugin validate');
 } else {
   for (const target of ['./my-plugins/my-workflow', '.']) {
-    const v = spawnSync('claude', ['plugin', 'validate', target], { cwd: repoRoot, encoding: 'utf8' });
+    const v = spawnSync('claude', ['plugin', 'validate', target], { ...viaShell, cwd: repoRoot });
     const out = `${v.stdout || ''}${v.stderr || ''}`;
     if (v.status !== 0 || /Validation failed/i.test(out)) errors.push(`claude plugin validate ${target} 失敗：\n${out.trim()}`);
     else ok.push(`claude plugin validate ${target} 通過`);
@@ -113,10 +115,11 @@ if (probe.error || probe.status !== 0) {
 // 4. 遠端 main
 if (argv.includes('--remote')) {
   spawnSync('git', ['fetch', '-q', 'origin', 'main'], { cwd: repoRoot });
-  const remote = spawnSync('git', ['show', 'origin/main:my-plugins/my-workflow/.claude-plugin/plugin.json'], { cwd: repoRoot, encoding: 'utf8' });
-  if (remote.status !== 0) warnings.push('讀不到 origin/main 的 plugin.json');
+  // 版本標籤以 pack.yaml 為準；manifest 刻意不寫 version，不能從那裡讀
+  const remote = spawnSync('git', ['show', 'origin/main:my-plugins/my-workflow/pack.yaml'], { cwd: repoRoot, encoding: 'utf8' });
+  const mainVersion = remote.status === 0 ? (remote.stdout.match(/^version:\s*(\S+)/m) || [])[1] : undefined;
+  if (!mainVersion) warnings.push('讀不到 origin/main 的 pack.yaml 版本');
   else {
-    const mainVersion = JSON.parse(remote.stdout).version;
     if (mainVersion === version) ok.push(`origin/main 已是 ${mainVersion}，使用者更新會拿到這版`);
     else warnings.push(`origin/main 是 ${mainVersion}，本機是 ${version}：合併到 main 前使用者拿不到新版`);
   }
