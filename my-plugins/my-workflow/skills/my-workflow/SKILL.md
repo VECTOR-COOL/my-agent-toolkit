@@ -45,7 +45,9 @@ graph TD
 
 ## 需要工具時
 
-外部服務、App 或 MCP **先找 Composio**：`COMPOSIO_SEARCH_TOOLS` 搜 → `COMPOSIO_MANAGE_CONNECTIONS` 確認連線 → `COMPOSIO_MULTI_EXECUTE_TOOL` 執行；工具名以當下連上的為準。沒有、沒接上或失敗，先說結果再改用該服務自己的 MCP 或其他已接上的工具。本機檔案、Git、專案腳本不走 Composio。細節見 [`rules/tools.md`](../../rules/tools.md)。
+外部服務、App 或 MCP **先找 Composio**：`COMPOSIO_SEARCH_TOOLS` 搜 → `COMPOSIO_MANAGE_CONNECTIONS` 確認連線 → `COMPOSIO_MULTI_EXECUTE_TOOL` 執行；工具名以當下連上的為準。沒有、沒接上或失敗，先說結果再改用該服務自己的 MCP 或其他已接上的工具。本機檔案、Git、專案腳本不走 Composio。
+
+工具沒接上、要授權或報錯**不可靜默**：明講哪個工具、什麼狀態、哪步沒做；能拿到授權連結就給使用者點（Composio 用 `COMPOSIO_MANAGE_CONNECTIONS`），拿不到就說去哪授權。細節見 [`rules/tools.md`](../../rules/tools.md)。
 
 ## 不要做
 

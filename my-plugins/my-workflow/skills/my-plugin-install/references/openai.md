@@ -2,6 +2,30 @@
 
 方法見 [SKILL.md](../SKILL.md)。2026-10-31 核對官方文件與本回合工具契約；Codex 命令已核對本機新版 CLI help，帳號端建立、更新與 Web 執行仍須實測。
 
+## GitHub 更新來源與觸發方式
+
+| 項目 | 固定來源 |
+|------|------|
+| 私有 repo | [VECTOR-COOL/my-agent-toolkit](https://github.com/VECTOR-COOL/my-agent-toolkit) |
+| 更新分支 | `main`；不用 `develop` 或本地未提交修改當正式更新 |
+| Plugin 目錄 | [my-plugins/my-workflow](https://github.com/VECTOR-COOL/my-agent-toolkit/tree/main/my-plugins/my-workflow) |
+| 來源標籤 | [pack.yaml](https://github.com/VECTOR-COOL/my-agent-toolkit/blob/main/my-plugins/my-workflow/pack.yaml) |
+| Marketplace | [.agents/plugins/marketplace.json](https://github.com/VECTOR-COOL/my-agent-toolkit/blob/main/.agents/plugins/marketplace.json)，名稱 `my-agent-toolkit` |
+
+- 使用者直接執行本 skill（未限定只檢查），或說「更新」「檢查並更新」：**當次主動上 GitHub 查 `main`，有適用更新就接著更新既有 plugin，不停在詢問要不要更新**。這不包含只是讀取、審查或修改本 skill 文件的任務。
+- 使用者說「只檢查」「先不要更新」：只查 GitHub 並回報，不寫入。
+- 既有 plugin 的 ID、帳號／工作區、分享範圍與 Web 目標保持不變。尚未安裝時回報並引導首次安裝；不能把一次更新操作擴大為建立副本、遷移管理方式或移除功能。
+- skill 本身不會在對話結束後持續執行。無人操作的背景更新須有已設定的工作區 GitHub 同步或其他經授權的排程；不能把寫入這段指引說成已啟用背景自動更新。
+
+## 檢查並更新（執行本 skill 的預設流程）
+
+1. 確認目標與現有 plugin，依下節讀取實際 release／安裝內容；先探索可用的 GitHub 連線，私有 repo 優先用已授權 connector。能力不足且可用 shell 時，才用已登入的 GitHub CLI／Git 讀取；沒有權限就按失敗表引導，不用公開搜尋結果猜內容。
+2. 每次向 GitHub 取得 `main` 的完整 commit SHA，記為本次目標。後續讀 `pack.yaml`、manifest、檔案清單、內容及下載來源時都固定到這個 SHA，避免查版本與打包時混入不同提交。可另查該 SHA 下 `my-plugins/my-workflow/` 的最後變更 commit，但時間戳與版本標籤都不能代替內容比對。
+3. 完成「檢查更新（只讀）」的內容比較。沒有差異就結束；有適用更新就依來源接續：可編輯帳號項目呼叫 `update_plugin`；受 GitHub 管理的工作區項目走同步；只有明確選擇本機目標才走 Codex marketplace upgrade。只檢查模式在此回報，不執行更新。
+4. 帳號上傳型以固定 SHA 的 plugin 子目錄準備更新，保留既有 Web 相容調整、App 綁定與使用者自訂內容。遇到衝突或新增本機依賴時先解決範圍問題，不直接用原始 repo 覆蓋；讀回當前 release 並按「更新同一個 plugin」提交與驗證。GitHub 端只讀，不改使用者的開發 checkout。
+5. 更新後回讀實際 release／安裝內容，與目標來源比對；平台同步若已前進到另一 SHA，重新查該 SHA 的差異並如實回報，不能沿用舊 SHA 宣稱驗證通過。最後依 Web 驗證步驟確認實際任務；需要新對話或使用者操作時，標記已更新與仍待驗證的部分。
+6. 在結果附上來源 repo、分支、完整 SHA、plugin ID、前後 release／版本與更新摘要，供下次追蹤。沒有持久保存的紀錄不能假定下次讀得到；沒有基準就重新比較實際內容。失敗沿用下方引導，保留原安裝，不盲目重試寫入。
+
 ## 先選安裝目標
 
 已確認目標是 OpenAI，且使用者要求「在對話內安裝／更新」「ChatGPT Web 也能用」時，優先走**帳號端的私人或工作區 marketplace**，即使目前對話是 Codex 也一樣。安裝整個 plugin，不逐一安裝子 skill，不以貼規則或本機 cache 代替。目標若是其他產品的 Web，改讀該產品的 reference，不套用本節。
@@ -27,10 +51,10 @@
 
 ### 檢查更新（只讀）
 
-安裝或更新前先做；使用者只要求檢查時，到回報結果為止，不呼叫 `create_plugin`、`update_plugin` 或本機 marketplace upgrade。
+這是預設「檢查並更新」的只讀階段。安裝或更新前先做；使用者只要求檢查時，到回報結果為止，不呼叫 `create_plugin`、`update_plugin` 或本機 marketplace upgrade。
 
 1. 依前節找到目標。用 `get_plugin_metadata`／`get_plugin_files` 讀取有權限存取的帳號端 metadata／檔案，只採用實際回傳的版本、scope 與 `current_release_id`；缺少欄位就標未取得。這些工具不保證回傳 Git 來源 commit、同步方式或安裝狀態：來源對應需從已查證的發布紀錄、同步設定或檔案內容補查；安裝狀態需由目標環境的工具或 Plugins 介面另行確認。帳號端 release 不代表目前對話已載入該版本。
-2. 透過已授權的 GitHub 工具或唯讀 Git 查詢，取得來源 repo `main` 的確切 commit、`pack.yaml` 與 `my-plugins/my-workflow/` 內容。遠端讀取失敗時，本地 `origin/main` 只能算舊快照，不能宣稱是最新。
+2. 依「GitHub 更新來源與觸發方式」主動讀取遠端 `main` 並固定 SHA，取得該 SHA 的 `pack.yaml` 與 `my-plugins/my-workflow/` 內容；本次已取到就沿用，不重複查。遠端讀取失敗時，本地 `origin/main` 只能算舊快照，不能宣稱是最新。
 3. 已有來源 commit 紀錄時，比對兩個 commit 間本 plugin 的檔案；沒有對應紀錄時，讀取目前 release 的必要檔案，與 `main` 對應內容比較。排除已知的封裝版本、平台相容轉換差異，另外標出帳號端自訂修改；不能把自訂內容直接當成應被覆蓋的舊版。
 4. GitHub 同步項目另外比對來源 commit 與平台實際同步結果；只看到 repo 已更新不能判定帳號已同步。`list_plugin_releases` 可補查歷史，但回傳項目可能尚未發布，不能把清單第一筆當作目前已生效版本。
 5. 證據完整且有效內容一致才報「已是最新」；確認來源有尚未套用的更新才報「有更新」，並列出影響與應走的流程。只有差異但無法辨識更新方向時，報「內容不同，更新狀態無法確認」。只有目標帳號／工作區的工具或介面明確證明未安裝，才報「尚未安裝」。`search_plugins` 並非完整安裝清單，搜尋不到、列表範圍不符、權限不足、來源無法讀取或證據不足，均報「無法確認」並引導補足。
@@ -54,7 +78,7 @@
 4. release 衝突時重新讀取並整合，不拿舊 ZIP 換個 expected ID 強送。權限拒絕、打包失敗、上傳失敗分開回報。
 5. 成功後讀回版本、release 與變更內容，回傳原 plugin 的連結。更新同一項目，不重建，也不自行擴大分享範圍。
 
-帳號端手動上傳不等於追蹤 GitHub；repo `main` 更新後仍須執行上述更新。GitHub 同步型項目則修改原來源並驗證同步結果，不用 archive editor 覆蓋。
+帳號端手動上傳不等於追蹤 GitHub；每次執行本 skill 會重新讀取遠端 `main`，有適用更新就執行上述流程。GitHub 同步型項目則讀取原來源並要求平台同步、驗證結果，不用 archive editor 覆蓋，也不在安裝 skill 中修改來源 repo。
 
 ### Web 驗證與回報
 
@@ -65,7 +89,13 @@
 
 ## 工作區 GitHub marketplace 同步
 
-有管理權限時，可依官方「Import and sync plugins from GitHub」匯入來源 repo 的 marketplace，授權存取私有 repo，驗證所選分支與 plugin。更新走來源 `main` 與平台同步；確認同步 commit、release、安裝及 Web 行為。缺少管理工具或權限時，帶管理員完成官方介面步驟，不聲稱本機 `marketplace add` 已設定工作區同步。
+這是平台背景同步，與每次執行 skill 時查 GitHub 分開。設定前先核對 Web 相容性：官方說明 GitHub 匯入的 MCP plugin 可能標成 **Desktop only**，即使是遠端 HTTPS MCP 也一樣。本 repo 的 `my-workflow` 含 Composio MCP，不能直接承諾匯入後可在 Web 使用；需先準備、確認相容方案，不能默默刪掉整合。
+
+適用且已授權設定時，由工作區管理員在 **Admin > Plugins > Add > Import marketplace** 使用：Source 為上述 repo URL、Path 留空（marketplace 在 repo 根）、Branch 填 `main`。匯入會處理 marketplace 的全部有效項目，須確認範圍。新 marketplace 預設每日同步；手動立即更新在 **Admin > Plugins > Marketplaces > 選取來源 > Sync now**。
+
+每次讀同步報告與個別 plugin 結果，再驗證 release／內容及 Web 行為；整體完成不代表每個 plugin 成功。沒有管理工具或權限時，提供上述入口請管理員接續，不能宣稱已設定。已存在的帳號上傳 plugin 不自動改成 GitHub 管理；需要遷移時另確認並依官方流程保留 ID。未設定背景同步的個人／帳號上傳項目，使用前述「執行 skill 時檢查並更新」。
+
+依據：[Import and sync plugins from GitHub](https://learn.chatgpt.com/docs/enterprise/plugin-management)。
 
 ## Codex 本機 marketplace
 

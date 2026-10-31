@@ -72,5 +72,5 @@ rules:
     keywords: [安裝, install, npm, pip, brew, 套件, 第三方 skill, 授權]
   - name: tools
     file: rules/tools.md
-    when: 使用外部服務、App 或 MCP，或 MCP 連線失敗
-    keywords: [Composio, MCP, 外部服務, 連線失敗, 重新登入, Notion, Linear]
+    when: 使用外部服務、App 或 MCP，或工具沒接上、要授權、連線失敗
+    keywords: [Composio, MCP, 外部服務, 連線失敗, 沒接上, 授權, 授權連結, 重新登入, Notion, Linear]

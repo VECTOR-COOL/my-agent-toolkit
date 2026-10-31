@@ -48,6 +48,7 @@ node --test my-plugins/my-workflow/skills/my-release-packaging/scripts/pack-rele
 
 ## 更新紀錄
 
+- `2026-10-31` Codex：補齊 OpenAI 安裝 reference 的 GitHub repo／main 連結、固定來源 SHA、直接叫用 skill 時檢查並更新既有 plugin；區分只讀檢查、帳號上傳更新與工作區每日同步，補充 MCP 匯入的 Desktop only 限制。僅改文件，未啟用背景同步或更新帳號 plugin。
 - `2026-10-31` Antigravity：補齊 `my-plugin-install/references/gemini.md` 與 `SKILL.md` 的 Google Antigravity（AGY：`plugins.json`、`~/.gemini/config/plugins/` 與 Language Server RPC）及 Gemini CLI（`link`／`install`／`validate` 實測通過）安裝、直接上 GitHub 檢查 `main` 差異、執行 skill 一鍵檢查並更新、`/schedule` 排程自動更新流程；明確區分 Web marketplace 限制、失敗與環境不適用引導表及跨對話交接提示。
 - `2026-10-31` Codex：更正安裝指引的目標平台分流與工具能力條件；已授權安裝／更新不重複確認。來源 commit 與安裝狀態須另取證據，搜尋不到不再判成未安裝，repo 任意新 commit 不再判成本 plugin 更新。僅修改文件。
 - `2026-10-31` Codex：安裝 skill 加入唯讀檢查更新、來源內容與帳號 release 比對、四種結果狀態；補上失敗／環境不適用的具體引導表與跨對話交接提示。未執行帳號端安裝或更新。
