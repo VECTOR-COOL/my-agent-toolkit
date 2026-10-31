@@ -48,6 +48,14 @@ graph TD
 
 完整清單與版本號以 `index.yaml` 為準（與 `pack.yaml`、toolkit `project.json` 同號）。
 
+## 需要工具時
+
+任務需要外部服務、App 或 MCP 工具時，**先找 Composio 有沒有提供**，有就用。細節與失敗回報見 [`rules/tools.md`](../../rules/tools.md)。
+
+- 先 `COMPOSIO_SEARCH_TOOLS` 搜對應工具，再 `COMPOSIO_MANAGE_CONNECTIONS` 確認已連線，最後 `COMPOSIO_MULTI_EXECUTE_TOOL` 執行；工具名稱以當下連上的 Composio 為準，不憑記憶。
+- Composio 沒有、沒接上或呼叫失敗，先說這步的結果，再改用該服務自己的 MCP 或其他已接上的工具。
+- 本機檔案、Git、專案腳本不走 Composio。
+
 ## 不要做的事
 
 - 不要一次載入 index 裡全部 skill 或全部 rules。
