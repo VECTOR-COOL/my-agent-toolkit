@@ -1,6 +1,6 @@
 ---
 name: my-docs
-description: 建立與維護言簡意賅的技術文件、架構規格（SPEC）、操作指南（Guide）、架構決策（ADR）與手冊，並確保專案根目錄 AGENTS.md 與 README.md 完整一致。用於寫文件、技術規格、SPEC、操作手冊、ADR、撰寫文檔、檢查 Agent 入口文件時。
+description: 建立與維護言簡意賅的技術文件、架構規格（SPEC）、操作指南（Guide）、架構決策（ADR）、計畫（Plan）與手冊，治理 docs/ 的目錄結構與命名，並確保專案根目錄 AGENTS.md 與 README.md 完整一致。用於寫文件、技術規格、SPEC、操作手冊、ADR、寫計畫、文件放哪、docs 結構、撰寫文檔、檢查 Agent 入口文件時。
 ---
 
 # my-docs — 技術文件與規格管理
@@ -13,6 +13,7 @@ graph TD
   B -->|系統規格 / 協定| C[Spec 技術規格]
   B -->|操作步驟 / 教程| D[Guide 使用指南]
   B -->|重大架構取捨| E[ADR 架構決策]
+  B -->|要做什麼、怎麼做、待確認| P[Plan 計畫]
   B -->|團隊規範| F[Standard 標準手冊]
   B -->|Agent / 人類入口| G[AGENTS.md / README.md]
 ```
@@ -28,13 +29,23 @@ graph TD
 3. **架構決策記錄 (ADR)**：
    - 結構：標題 → 狀態（提議/已採納/已廢棄）→ 背景與問題 → 備選方案比較 → 最終決策與理由 → 產生的後果與影響。
    - 適用：更換框架、儲存引擎選型、重大通訊協定變更。
-4. **根目錄核心入口 (SSOT)**：
+4. **計畫 (Plan)**：
+   - 結構：標題 → 日期、狀態（提議／已採用／已完成／已取消）、對象 → 背景與問題 → 方案或結構 → 規則或取捨 → 待決定（核取清單）。
+   - 適用：動手前要先對齊的設計、重構、遷移與討論結論。已定案的重大取捨另寫 ADR，計畫保留過程。
+5. **根目錄核心入口 (SSOT)**：
    - **`README.md`**：人類工程師的導讀手冊。說明專案定位、快速啟動、架構簡圖與目錄指引。
    - **`AGENTS.md`**：AI Agent 的最高行為準則。說明專案結構、治理規則、執行約定與嚴禁事項。
 
 ## docs/ 結構
 
-文件放哪、叫什麼名字，以這節為準（`my-codebase-init`、`my-create-prd`、`my-release-packaging` 都照這裡）。
+文件放哪、叫什麼名字，以這節為準（`my-codebase-init`、`my-create-prd`、`my-release-packaging` 都照這裡）。**`docs/` 由 `my-docs` 治理**：位置、命名、生命週期都在這裡定，其他 skill 只能照放，不另訂。
+
+| 文件 | 誰建 |
+|------|------|
+| `NOTE.md` | `my-codebase-init`（內容結構歸它） |
+| `specs/prd-<主題>.md` | `my-create-prd`（內容結構歸它） |
+| `RELEASE_SPEC.md` | `my-release-packaging`（內容結構歸它） |
+| 其餘（`specs/`、`guides/`、`adr/`、`plans/`、`diagrams/`、`archived/`、`README.md` 索引） | `my-docs` |
 
 ```text
 docs/

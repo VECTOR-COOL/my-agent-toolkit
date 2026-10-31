@@ -24,8 +24,8 @@ skills:
     when: 操作 Notion 知識庫、資料庫、頁面與 View
     keywords: [Notion, 資料庫, 知識庫, 頁面, View, notion kb, 資料結構]
   - name: my-docs
-    when: 撰寫技術規格（SPEC）、操作指南、ADR 或檢查 AGENTS/README
-    keywords: [文件, 規格, SPEC, 操作手冊, AGENTS, README, ADR, 技術文件, API 規格, 撰寫文檔, 架構決策]
+    when: 撰寫技術規格（SPEC）、操作指南、ADR、計畫，決定文件放哪與 docs/ 結構，或檢查 AGENTS/README
+    keywords: [文件, 規格, SPEC, 操作手冊, AGENTS, README, ADR, 技術文件, API 規格, 撰寫文檔, 架構決策, 計畫, plan, docs 結構, 文件放哪, 文件命名, 歸檔]
   - name: my-ui-ux
     when: 做網站或介面設計、定義 DESIGN.md 與視覺方向
     keywords: [UI, UX, 新網站, 版面, 視覺, 案例, DESIGN.md, frontend-design, 前端設計, 切版, 設計系統]

@@ -1,6 +1,6 @@
 # 定義：docs/ 檔案架構
 
-日期：`2026-10-31` · 狀態：**提議，待確認** · 落地位置：[`my-docs`](../../my-plugins/my-workflow/skills/my-docs/SKILL.md) 的「docs/ 結構」一節（plugin 內唯一完整定義）
+日期：`2026-10-31` · 狀態：**已採用，`1.16.0` 落地** · 落地位置：[`my-docs`](../../my-plugins/my-workflow/skills/my-docs/SKILL.md) 的「docs/ 結構」一節（plugin 內唯一完整定義）
 
 ## 背景
 
@@ -35,22 +35,30 @@ docs/
 | 產品需求（PRD） | `docs/specs/` | `prd-<主題>.md` | `my-create-prd` |
 | 操作指南、SOP | `docs/guides/` | `<主題>.md` | `my-docs` |
 | 架構決策（ADR） | `docs/adr/` | `0001-<主題>.md` | `my-docs` |
-| 計畫 | `docs/plans/` | `2026-10-31-<主題>.md` | 討論計畫時 |
-| 獨立圖檔 | `docs/diagrams/` | `<主題>.mmd` | 需要時 |
+| 計畫 | `docs/plans/` | `2026-10-31-<主題>.md` | `my-docs` |
+| 獨立圖檔 | `docs/diagrams/` | `<主題>.mmd` | `my-docs` |
 | 發佈規格 | `docs/RELEASE_SPEC.md` | 固定 | `my-release-packaging` |
 | 介面設計 | 根目錄 `DESIGN.md` | 固定 | `my-ui-ux`（設計工具慣例放根目錄，照放） |
+
+## 誰治理
+
+**`docs/` 整個由 [`my-docs`](../../my-plugins/my-workflow/skills/my-docs/SKILL.md) 治理**：位置、命名、生命週期、索引都以它為準，其他 skill 只能照放，不另訂。
+
+- `my-docs` 自己建：`specs/`、`guides/`、`adr/`、`plans/`、`diagrams/`、`archived/`、`README.md` 索引。
+- 內容結構歸別的 skill、位置歸 `my-docs`：`NOTE.md`（`my-codebase-init`）、`specs/prd-*.md`（`my-create-prd`）、`RELEASE_SPEC.md`（`my-release-packaging`）。
+- 計畫補了固定結構（日期、狀態、對象 → 背景 → 方案 → 規則 → 待決定），寫在 `my-docs` 的「計畫 (Plan)」。
 
 ## 規則
 
 1. **有才建**：子目錄有第一份文件時才建，不建空目錄。
 2. **一份文件一個主題**；檔名英文小寫、用 `-` 連接。例外：`NOTE.md`、`README.md`、`RELEASE_SPEC.md`。
-3. **內文結構照 `my-docs`**（Spec、Guide、ADR 各自的段落）；這份只管位置與命名。
+3. **內文結構照 `my-docs`**（Spec、Guide、ADR、Plan 各自的段落）；這份只管位置與命名。
 4. **圖**：文件內的 mermaid 直接寫在文件裡；只有獨立維護的圖檔才放 `diagrams/`。
 5. **生命週期**：
    - 計畫做完把狀態改「已完成」，留在 `plans/`，當作歷史。
    - ADR 不刪、不改號；被取代就把狀態改「已取代」，連到新的那份。
    - 其他過時文件移到 `archived/`，開頭註明歸檔日期與取代者，並修好所有連結。
-6. **已有專案**：沿用既有的 `docs/` 子目錄名（例如本 repo 的 `docs/mermaid-charts/`），寫進 `AGENTS.md` 的目錄架構即可，不強制搬。
+6. **已有專案**：沿用既有的 `docs/` 子目錄名（例如舊專案的 `docs/design/`），寫進 `AGENTS.md` 的目錄架構即可，不強制搬。
 7. 文件不放密碼、token、本機絕對路徑。
 
 ## 為什麼這樣定
@@ -61,4 +69,4 @@ docs/
 
 ## 待決定
 
-- [ ] 確認這份定義；確認後與 codebase 結構一起在 `1.16.0` 落地（已寫進 `my-docs`，待確認後合併 `main`）。
+- [x] 確認這份定義（2026-10-31 使用者確認），與 codebase 結構一起在 `1.16.0` 落地，`docs/` 由 `my-docs` 治理。
