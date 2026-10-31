@@ -48,6 +48,15 @@ graph TD
 
 完整清單與版本號以 `index.yaml` 為準（與 `pack.yaml`、toolkit `project.json` 同號）。
 
+## 工作習慣
+
+只列習慣，細節在 [`rules/git.md`](../../rules/git.md) 與專案的 `AGENTS.md`。
+
+- **動手前先同步**：先 `git pull`。專案常有多個 session 同時在改；本地有未提交改動就先暫存，撞到衝突先給使用者看，不自行決定。
+- **commit 只帶自己的**：commit 前看 `git status`，只加自己改的檔，不帶別的 session 或未追蹤的檔。
+- **提交與發布分開**：「commit」只推開發分支；合併 `main`（對外發布）要使用者明說才做。
+- **改 plugin 先檢查**：改完跑 `check-release.mjs`，通過才 commit；發布才升版，未發布的版本內直接累積。
+
 ## 不要做的事
 
 - 不要一次載入 index 裡全部 skill 或全部 rules。
