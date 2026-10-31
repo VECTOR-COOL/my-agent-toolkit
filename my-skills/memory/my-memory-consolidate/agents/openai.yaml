@@ -1,0 +1,4 @@
+interface:
+  display_name: "記憶整理"
+  short_description: "排程整理 Mem0：去重、升中期、遺忘，並列出升長期建議"
+  default_prompt: "使用 $my-memory-consolidate。有界掃描最多 100 筆：同一事實去重合併、升中期、刪除低權重且存放滿 30 天的筆。升長期只列建議，不要寫入。最後照回報格式輸出。"

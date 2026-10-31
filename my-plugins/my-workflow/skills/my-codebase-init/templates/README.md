@@ -26,5 +26,5 @@
 ## 文件
 
 - [`AGENTS.md`](AGENTS.md)：給 agent 與維護者的專案指引
-- [`NOTE.md`](NOTE.md)：目前進度與交接紀錄
-- `docs/`：規格與設計文件
+- [`docs/NOTE.md`](docs/NOTE.md)：目前進度與交接紀錄
+- `docs/`：規格、計畫與設計文件

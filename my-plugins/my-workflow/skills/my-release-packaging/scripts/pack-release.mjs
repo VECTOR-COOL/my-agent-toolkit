@@ -8,7 +8,7 @@
  *                        列出刪除項目（解壓覆蓋不會刪檔，需在正式機手動移除）
  *
  * 流程：前置檢查 → 工作區狀態檢查 → git stash create 快照 → git archive → 審核（檔名禁則 + 內容掃描）→ sha256
- * 專案差異全放設定檔（預設 repo 根目錄 release.config.json），腳本不含專案專屬內容。
+ * 專案差異全放設定檔 release.config.json（預設先找腳本同目錄，其次 repo 根目錄），腳本不含專案專屬內容。
  */
 
 import { spawn, spawnSync } from 'node:child_process';
@@ -16,6 +16,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, dirname, join, relative, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const HELP = [
   '用法: node scripts/pack-release.mjs [選項]',
@@ -25,7 +26,7 @@ const HELP = [
   '  --since <ref>       增量更新檔：只打包自 <ref>（tag、commit、分支）以來新增與修改的發佈檔',
   '  --out <path>        輸出 .zip 路徑（預設 <outDir>/<name>-<version>-<YYYYMMDD>[-patch-<ref>].zip）',
   '  --name <slug>       檔名前綴（優先於設定檔與 package.json）',
-  '  --config <path>     設定檔（預設 repo 根目錄 release.config.json，不存在就用預設值）',
+  '  --config <path>     設定檔（預設先找腳本同目錄的 release.config.json，其次 repo 根目錄；都沒有就用預設值）',
   '  --strict            有未追蹤檔（不在快照內）就失敗，而不只是警告',
   '  --require-clean     工作區有任何未提交修改或未追蹤檔就失敗',
   '  --skip-lint         略過前置檢查',
@@ -109,7 +110,12 @@ function readJson(path, label) {
   }
 }
 
-const configPath = args.config ? resolve(process.cwd(), args.config) : join(repoRoot, 'release.config.json');
+function defaultConfigPath() {
+  const besideScript = join(dirname(fileURLToPath(import.meta.url)), 'release.config.json');
+  return existsSync(besideScript) ? besideScript : join(repoRoot, 'release.config.json');
+}
+
+const configPath = args.config ? resolve(process.cwd(), args.config) : defaultConfigPath();
 if (args.config && !existsSync(configPath)) fail(`找不到設定檔：${configPath}`, 2);
 const config = existsSync(configPath) ? readJson(configPath, '設定檔') : {};
 
@@ -157,7 +163,7 @@ function todayStr() {
   return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
 }
 
-// 占位目錄：內容不發佈（如上傳圖檔 img/），但目錄本身要存在。以 git archive --add-virtual-file 放入空的 .gitkeep。
+// 占位目錄：設定檔只寫上傳目錄的 base path（如 img）；包裡該目錄沒有任何內容時，才以 git archive --add-virtual-file 放入空的 .gitkeep。
 function readPlaceholders() {
   const list = Array.isArray(config.placeholders) ? config.placeholders : [];
   const dirs = list.map((raw) => {
@@ -408,24 +414,22 @@ async function main() {
     if (pathspecs.join('').length > 100000) fail('變更檔案過多，超出命令列長度限制；請改打完整發佈包。');
   }
 
-  // 占位目錄：完整包補上缺的；更新檔只補「上一版發佈包裡沒有」的（正式機已有的目錄不重複放）
+  // 占位目錄：只管 base path。該目錄在包裡已有檔案或子目錄就原樣保留、什麼都不加；
+  // 完全沒有內容時，才補一個空的 .gitkeep 讓目錄存在。
+  // 更新檔：上一版發佈包裡已有該目錄（正式機就有了），或本次更新檔自己帶了該目錄的檔案，都不放。
   const placeholderFiles = readPlaceholders();
   let virtualFiles = [];
   let placeholdersToCreate = [];
   if (placeholderFiles.length > 0) {
-    const current = new Set(await listFiles(treeRef, pathspecs));
-    const missing = placeholderFiles.filter((f) => !current.has(f));
-    if (args.since) {
-      const prior = await listFiles(sinceSha);
-      const newDirs = missing.filter((f) => {
-        const dir = f.slice(0, -'/.gitkeep'.length);
-        return !prior.some((p) => p === f || p.startsWith(`${dir}/`));
-      });
-      if (pathspecs.length > 0) virtualFiles = newDirs;
-      else placeholdersToCreate = newDirs.map((f) => f.slice(0, -'/.gitkeep'.length));
-    } else {
-      virtualFiles = missing;
-    }
+    const current = await listFiles(treeRef, pathspecs);
+    const prior = args.since ? await listFiles(sinceSha) : [];
+    const hasContent = (list, dir) => list.some((p) => p.startsWith(`${dir}/`));
+    const missing = placeholderFiles.filter((f) => {
+      const dir = f.slice(0, -'/.gitkeep'.length);
+      return !hasContent(current, dir) && !(args.since && hasContent(prior, dir));
+    });
+    if (args.since && pathspecs.length === 0) placeholdersToCreate = missing.map((f) => f.slice(0, -'/.gitkeep'.length));
+    else virtualFiles = missing;
   }
 
   const outDir = config.outDir || 'dist';

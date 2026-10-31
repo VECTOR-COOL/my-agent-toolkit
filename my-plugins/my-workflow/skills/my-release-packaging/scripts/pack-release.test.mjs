@@ -185,6 +185,27 @@ describe('設定與參數', () => {
     assert.equal(run(dir, ['--skip-lint']).status, 0);
   });
 
+  it('設定檔預設先讀腳本同目錄（scripts/release.config.json），優先於 repo 根目錄', () => {
+    const dir = makeRepo({
+      'scripts/release.config.json': JSON.stringify({ name: 'beside' }),
+      'release.config.json': JSON.stringify({ name: 'root' }),
+      '.gitattributes': '/docs export-ignore\n/scripts export-ignore\n/AGENTS.md export-ignore\n/package.json export-ignore\n/.gitattributes export-ignore\n/.gitignore export-ignore\n/release.config.json export-ignore\n',
+    });
+    copyFileSync(SCRIPT, join(dir, 'scripts/pack-release.mjs'));
+    const r = spawnSync(process.execPath, ['scripts/pack-release.mjs'], { cwd: dir, encoding: 'utf8' });
+    assert.equal(r.status, 0, r.stderr);
+    assert.match(JSON.parse(r.stdout).output, /^dist\/beside-v2\.3\.4-/);
+  });
+
+  it('腳本同目錄沒有設定檔時，退回 repo 根目錄的 release.config.json', () => {
+    const dir = makeRepo({ 'release.config.json': JSON.stringify({ name: 'root' }) });
+    mkdirSync(join(dir, 'scripts'), { recursive: true });
+    copyFileSync(SCRIPT, join(dir, 'scripts/pack-release.mjs'));
+    const r = spawnSync(process.execPath, ['scripts/pack-release.mjs'], { cwd: dir, encoding: 'utf8' });
+    assert.equal(r.status, 0, r.stderr);
+    assert.match(JSON.parse(r.stdout).output, /^dist\/root-v2\.3\.4-/);
+  });
+
   it('壞的設定檔：結束碼 2', () => {
     const dir = makeRepo({ 'release.config.json': '{bad' });
     assert.equal(run(dir).status, 2);
@@ -332,6 +353,33 @@ describe('占位目錄 placeholders', () => {
     assert.equal(r.status, 0, r.stderr);
     assert.deepEqual(r.json.placeholdersAdded, ['content/user_files']);
     assert.equal(r.json.totalEntries, 4); // app/index.php、app/lib.php、.env.example、content/user_files/.gitkeep
+  });
+
+  it('目錄裡已有檔案與子目錄：原樣保留，不再加 .gitkeep', () => {
+    const dir = makeRepo({ 'img/a.png': 'x', 'img/sub/b.png': 'y', 'release.config.json': JSON.stringify({ placeholders: ['img'] }) });
+    const r = run(dir, ['--dry-run']);
+    assert.equal(r.status, 0, r.stderr);
+    assert.deepEqual(r.json.placeholdersAdded, []);
+    assert.equal(r.json.totalEntries, 5); // app 2、.env.example 1、img/a.png、img/sub/b.png
+  });
+
+  it('子目錄是空的（只有 .gitkeep）：保留，不重複加', () => {
+    const dir = makeRepo({ 'img/sub/.gitkeep': '', 'release.config.json': JSON.stringify({ placeholders: ['img'] }) });
+    const r = run(dir, ['--dry-run']);
+    assert.equal(r.status, 0, r.stderr);
+    assert.deepEqual(r.json.placeholdersAdded, []);
+    assert.equal(r.json.totalEntries, 4);
+  });
+
+  it('更新檔本身帶了該目錄的檔案：不再加 .gitkeep', () => {
+    const dir = makeRepo({ 'release.config.json': JSON.stringify({ placeholders: ['img'] }) });
+    sh(dir, 'git', ['tag', 'v1']);
+    write(dir, 'img/new.png', 'x');
+    sh(dir, 'git', ['add', '-A']);
+    sh(dir, 'git', ['commit', '-qm', 'c']);
+    const r = run(dir, ['--since', 'v1']);
+    assert.equal(r.status, 0, r.stderr);
+    assert.deepEqual(r.json.placeholdersAdded, []);
   });
 
   it('不合法的路徑：結束碼 2', () => {

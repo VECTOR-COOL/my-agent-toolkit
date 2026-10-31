@@ -1,31 +1,26 @@
-# 全域規則（rules/global.md）由 plugin 的 SessionStart hook 常駐注入，不在索引內。記憶相關先載 my-memory。然後只讀 when 或 keywords 對得上的那一筆。不要一次全載。
-# rules 區的檔案路徑相對於 plugin 根目錄；碰到 when 的情境才讀，沒碰到不讀。
-# 記憶規則在 skills/my-memory/rules/ 與 skills/my-memory-consolidate/rules/，載入該 skill 時一併讀。
-# 記憶：依客戶端只讀 my-memory/references/ 對應那一份。
-# version 與 pack.yaml、toolkit project.json 同一個號。
-# keywords 是使用者會說的詞，用來提高命中。不要把整段說明抄進來。
+# 全域規則（同目錄 global.md）由 hook 注入或入口 skill 讀，不在索引內。記憶相關先載 my-memory；其餘只讀 when 或 keywords 對上的那一筆，不一次全載。
+# rules 的 file 相對於 plugin 根目錄；碰到 when 才讀。讀不到 rules/ 時以 global.md 為準。
+# 記憶規則在 skills/my-memory/rules/，載入該 skill 時一併讀；整理是獨立 skill my-memory-consolidate（my-skills/memory/，排程執行），不在此索引。
+# version 與 pack.yaml、toolkit project.json 同號。keywords 是使用者會說的詞，不抄說明。
 
-version: 1.15.3
+version: 1.16.0
 
 skills:
   - name: my-workflow
     when: 新對話開始、不確定該用哪個 skill 時
     keywords: [my-workflow, 不知道用哪個 skill, 工作習慣, 入口, 怎麼做, 選 skill]
   - name: my-plugin-install
-    when: 安裝、更新、檢查或移除 plugin；依平台（Claude Code、Claude 網頁與 Cowork、雲端 session、Codex、ChatGPT）自動選方法
-    keywords: [安裝, 更新, 檢查更新, plugin, 外掛, 版本, 看不到新版, 沒生效, marketplace, install, update, Cowork, claude.ai]
+    when: 安裝、更新、檢查或移除 plugin；依平台（Claude Code、Claude 網頁與 Cowork、雲端 session、Codex、ChatGPT、Antigravity、Gemini）自動選方法
+    keywords: [安裝, 更新, 檢查更新, plugin, 外掛, 版本, 看不到新版, 沒生效, marketplace, install, update, Cowork, claude.ai, Antigravity, AGY, Gemini]
   - name: my-memory
     when: 記住／回想偏好、決策或查詢歷史脈絡；使用者問自己、公司、團隊的既有資訊而對話裡沒有答案時
     keywords: [記住, 回想, 偏好, 決策, 記憶, 永久記憶, Mem0, 歷史紀錄, 個人習慣, 查詢記憶, 記一下, 我的, 公司地址, 公司資料, 聯絡方式, 電話, 統編, 你記得, 之前說過, 先前決定]
-  - name: my-memory-consolidate
-    when: 查到 Mem0 時用該次命中去重、升中期並加權；權重達到 3 升長期；低權重且存放滿 30 天必須刪除。寫入不另搜
-    keywords: [記憶整理, 整理記憶, 升長期, 中期, 去重, 合併, 閥值, 權重, 遺忘, 刪短期, consolidate]
   - name: my-notion
     when: 操作 Notion 知識庫、資料庫、頁面與 View
     keywords: [Notion, 資料庫, 知識庫, 頁面, View, notion kb, 資料結構]
   - name: my-docs
-    when: 撰寫技術規格（SPEC）、操作指南、ADR 或檢查 AGENTS/README
-    keywords: [文件, 規格, SPEC, 操作手冊, AGENTS, README, ADR, 技術文件, API 規格, 撰寫文檔, 架構決策]
+    when: 撰寫技術規格（SPEC）、操作指南、ADR、計畫，決定文件放哪與 docs/ 結構，或檢查 AGENTS/README
+    keywords: [文件, 規格, SPEC, 操作手冊, AGENTS, README, ADR, 技術文件, API 規格, 撰寫文檔, 架構決策, 計畫, plan, docs 結構, 文件放哪, 文件命名, 歸檔]
   - name: my-ui-ux
     when: 做網站或介面設計、定義 DESIGN.md 與視覺方向
     keywords: [UI, UX, 新網站, 版面, 視覺, 案例, DESIGN.md, frontend-design, 前端設計, 切版, 設計系統]
@@ -58,7 +53,7 @@ rules:
   - name: git
     file: rules/git.md
     when: commit、push、branch、merge、rebase、發版、tag、解衝突
-    keywords: [commit, push, git, 分支, 合併, merge, rebase, 發版, release, tag, 衝突, force push]
+    keywords: [commit, push, pull, 同步, stash, git, 分支, 合併, merge, rebase, 發版, release, tag, 衝突, force push]
   - name: code-review
     file: rules/code-review.md
     when: 審查原始碼、變更檔案、Git Diff 或 PR
@@ -77,5 +72,5 @@ rules:
     keywords: [安裝, install, npm, pip, brew, 套件, 第三方 skill, 授權]
   - name: tools
     file: rules/tools.md
-    when: 使用外部服務、App 或 MCP，或 MCP 連線失敗
-    keywords: [Composio, MCP, 外部服務, 連線失敗, 重新登入, Notion, Linear]
+    when: 使用外部服務、App 或 MCP，或工具沒接上、要授權、連線失敗
+    keywords: [Composio, MCP, 外部服務, 連線失敗, 沒接上, 授權, 授權連結, 重新登入, Notion, Linear]

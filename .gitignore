@@ -19,7 +19,10 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 .cursor/plans/
+.claude/settings.local.json
+CLAUDE.local.md
 AGENTS.md
+!/AGENTS.md
 !my-plugins/my-workflow/AGENTS.md
 !my-skills/AGENTS.md
 !skills/AGENTS.md

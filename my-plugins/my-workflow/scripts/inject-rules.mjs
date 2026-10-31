@@ -9,8 +9,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 if (process.argv.includes('--help') || process.argv.includes('-h')) {
   console.log(
     'Usage: node scripts/inject-rules.mjs\n\n' +
-      'Print SessionStart additionalContext JSON: rules/global.md, the my-workflow router skill\n' +
-      'and references/index.yaml, so they are loaded without a slash command. Read-only.',
+      'Print SessionStart additionalContext JSON: references/global.md, the my-workflow router skill\n' +
+      'and references/index.yaml (all under skills/my-workflow), so they are loaded without a slash command. Read-only.',
   );
   process.exit(0);
 }
@@ -25,8 +25,8 @@ function read(...parts) {
   }
 }
 
-const rules = read('rules', 'global.md').replaceAll('](../', '](' + root + '/');
-const index = read('references', 'index.yaml');
+const rules = read('skills', 'my-workflow', 'references', 'global.md').replaceAll('](../', '](' + root + '/');
+const index = read('skills', 'my-workflow', 'references', 'index.yaml');
 // 入口 skill 的相對路徑在注入後沒有基準，改成 plugin 的絕對路徑
 const router = read('skills', 'my-workflow', 'SKILL.md')
   .replace(/^---\n[\s\S]*?\n---\n\n?/, '')
