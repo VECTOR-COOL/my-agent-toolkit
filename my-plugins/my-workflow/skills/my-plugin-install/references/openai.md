@@ -32,12 +32,26 @@
 - **不會自動更新**：帳號端 plugin 不追蹤 GitHub，每次發版都要從 `main` 重新打包再上傳。
 - **桌面版的「新增外掛市集」不會到網頁版**：在桌面版加 GitHub 市集只裝在本機（`my-workflow@my-agent-toolkit`），和帳號端那份（如 `my-workflow@openai-curated-remote`）是兩份，不同步。兩份不要同時啟用，同名 skill 會互相干擾。
 - 要網頁版與桌面版一致：只留帳號端那份，用 ZIP 更新；本機市集那份停用或移除。
-- **網頁版 ZIP 不能帶 hook**：含 `hooks/codex.json`（要在本機跑 `node`）的包會被標成「僅限桌面版」。網頁版包排除 `hooks/`、根 `scripts/`，並只刪 `plugin.json` 裡 `extensions.com.openai.hooks`。
-- **網頁版要有入口設定**：`plugin.json` 的 `extensions.com.openai` 要保留 `onboardingSkill`（指到 `./skills/my-workflow/SKILL.md`）與 `interface`；全域規則由入口 skill 讀 `global.md`，入口 skill 的 description 不能寫「規則已由 hook 注入」。只拿掉 hook、沒有這兩項的 1.16.2 包，裝得上但不生效。
+- **hook 在 ChatGPT 沒作用**（2026-11-01 實測）：帶 hook、不帶 `mcp.json` 的包，網頁版照常可用，但網頁版與桌面版都**不執行** hook；只有 Claude Code 會執行。hook 不擋網頁版，帶了也沒用處，所以網頁包仍排除 `hooks/`、根 `scripts/`，並刪 `plugin.json` 的 `extensions.com.openai.hooks`。測法：要模型逐字貼出注入內容裡「plugin 根目錄：」後的路徑，沒執行就答「沒有」。
+- **網頁版要有入口設定**：`plugin.json` 的 `extensions.com.openai` 要保留 `onboardingSkill`（指到 `./skills/my-workflow/SKILL.md`）與 `interface`；全域規則由入口 skill 讀 `global.md`，入口 skill 的 description 不能寫「規則已由 hook 注入」。1.16.2、1.16.3 不生效的主因是 `mcp.json`（見下一條），這兩項是 1.7.3 起就有的正式欄位，照樣保留。
 - **網頁版 ZIP 不能帶 `mcp.json`**（2026-11-01 實測）：只差 `mcp.json`（Composio 遠端 MCP）的兩個包，帶的不生效、不帶的可用。與[社群回報](https://community.openai.com/t/remote-mcp-plugin-is-desktop-only-while-direct-mcp-works-on-web-mobile-how-can-we-deploy-it-workspace-wide/1404606)一致：ZIP 內宣告的遠端 MCP 在網頁版不會連線。網頁版包排除 `mcp.json`；桌面版、Codex、Claude 照常帶 MCP。
 - **網頁版要用 Composio**：在 ChatGPT 直接加 Composio 連線（`https://connect.composio.dev/mcp`），不經 plugin。個人帳號能否自加 MCP 連線依方案而定，**未驗證**；沒有就回報記憶、Notion 等需要 Composio 的 skill 在網頁版不能用外部服務。
 - 網頁版包的檢查清單：沒有 `hooks/`、根 `scripts/`、`mcp.json`；`plugin.json` 有 `version`（高於帳號現有版本）、`onboardingSkill`、`interface`，沒有 `extensions.com.openai.hooks`。
 - **版本號要比帳號裡的高**：ChatGPT 存檔時要求包內 `plugin.json` 的 `version` 大於目前版本（錯誤：`Bump the plugin manifest version before saving`）。包內版本用發版的 `pack.yaml` 版本；同一版要重傳就先發新版，不要只改包。
+
+### 常駐規則：安裝後設定自訂指令
+
+ChatGPT 對話（網頁、桌面、手機）**沒有 hook**：plugin 的 skill 是用到才載入（依描述自動選，或打 `@` 指定），不會每次開對話就套用全域規則。hook 只在 Codex（桌面版裡的 Codex、Codex CLI）執行，且要先信任（[Hooks](https://learn.chatgpt.com/docs/hooks)、[Plugins](https://learn.chatgpt.com/docs/plugins)）。
+
+補法：用 ChatGPT 的**自訂指令**當常駐層，官方說明它套用到所有對話（[Custom Instructions](https://help.openai.com/en/articles/8096356-chatgpt-custom-instructions)）。安裝或更新 plugin 後，引導使用者到 ChatGPT 設定的自訂指令（介面位置以當下版本為準），在「希望 ChatGPT 如何回應」貼上：
+
+```text
+每次新對話開始，先使用 my-workflow plugin 的 my-workflow skill（可用 @my-workflow 指定），讀取並遵守它的全域規則 references/global.md，再依 references/index.yaml 只載入一個對應的子 skill。自訂指令與全域規則衝突時，以全域規則為準。
+```
+
+- 自訂指令只放這段引導，**不貼 `global.md` 全文**：規則正文只在 skill 裡一份，改規則不用改自訂指令。
+- 驗證：開新對話問「全域規則的第一條是什麼」，應答出 `global.md`「回覆與可信度」的內容；答不出或要你先指定 plugin，回報未生效。
+- 自訂指令能否讓 ChatGPT 自動載入 plugin skill **未驗證**；字數上限**需確認**，這段遠低於常見上限。
 
 ## 先選安裝目標
 
