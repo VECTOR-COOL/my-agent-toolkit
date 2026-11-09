@@ -25,8 +25,11 @@ skills:
     when: 做網站或介面設計、定義 DESIGN.md 與視覺方向
     keywords: [UI, UX, 新網站, 版面, 視覺, 案例, DESIGN.md, frontend-design, 前端設計, 切版, 設計系統]
   - name: my-review
-    when: 審查計畫架構、程式碼（Code Review / PR）或驗收收尾
+    when: 審查程式碼（Code Review / PR）、拉回目標或驗收收尾；只審計畫用 my-plan-review
     keywords: [review, 審查, code review, 程式碼審查, PR 審查, 檢查代碼, 檢查 PR, 拉回目標, 收尾, 驗收, 偏離目標]
+  - name: my-plan-review
+    when: 審查計畫（實作計畫、docs/plans、SPEC 執行步驟、對話中的 plan）：找矛盾、查安全，直接修正計畫
+    keywords: [plan review, 審查計畫, 計畫審查, 檢查計畫, review plan, 找矛盾, 矛盾, 計畫安全, 安全性檢查, 執行前把關, 實作計畫]
   - name: my-create-prd
     when: 需求訪談、撰寫或補強產品需求文件（PRD）
     keywords: [PRD, 產品需求, 需求訪談, 需求文件, 功能規格, 產品規格, 寫 PRD]

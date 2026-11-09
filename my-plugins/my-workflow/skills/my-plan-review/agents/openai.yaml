@@ -1,0 +1,4 @@
+interface:
+  display_name: "my-plan-review"
+  short_description: "審查計畫：找矛盾、查安全、直接修正計畫"
+  default_prompt: "使用 $my-plan-review 審查這份計畫，找出矛盾與安全問題並直接修正。"
