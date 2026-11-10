@@ -43,6 +43,10 @@ graph TD
 
 清單與版本以 `index.yaml` 為準（與 `pack.yaml`、toolkit `project.json` 同號）。
 
+## 執行計畫
+
+照計畫執行時，盡量用 `my-subagent`：互不依賴的步驟平行派給 subagent，主線驗收。步驟有先後依賴、要改同一個檔，或只是小事，主線自己做。
+
 ## 需要工具時
 
 外部服務、App 或 MCP **先找 Composio**：`COMPOSIO_SEARCH_TOOLS` 搜 → `COMPOSIO_MANAGE_CONNECTIONS` 確認連線 → `COMPOSIO_MULTI_EXECUTE_TOOL` 執行；工具名以當下連上的為準。沒有、沒接上或失敗，先說結果再改用該服務自己的 MCP 或其他已接上的工具。本機檔案、Git、專案腳本不走 Composio。
