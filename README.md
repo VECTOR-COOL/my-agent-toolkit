@@ -1,6 +1,6 @@
 # My Agent Toolkit
 
-**版本：`v1.16.6`**
+**版本：`v1.17.0`**
 
 > VECTOR LTD 可攜式 Agent Skills 套件庫
 
@@ -33,14 +33,16 @@
 | [`my-create-PRD`](./my-plugins/my-workflow/skills/my-create-prd/SKILL.md) | 透過主動多輪需求訪談，建立足以讓所有 Agent 理解、實作與驗收的繁體中文 PRD。 | v1.2.0 |
 | [`my notion`](./my-plugins/my-workflow/skills/my-notion/SKILL.md) | 在 Codex 與 ChatGPT Web 操作 Notion，設計、建立、查詢與維護適合人機協作及 RAG 擷取的資料結構。 | v1.2.0 |
 | [`my-memory`](./my-plugins/my-workflow/skills/my-memory/SKILL.md) | 分流使用 Agent 記憶庫、Notion Memory 與 Mem0 讀寫外部記憶。 | v1.2.0 |
-| [`my-review`](./my-plugins/my-workflow/skills/my-review/SKILL.md) | 以專案／架構視角嚴格審查計畫與實作，拉回目標並收尾更新文件。 | v1.2.0 |
+| [`my-review`](./my-plugins/my-workflow/skills/my-review/SKILL.md) | 以專案／架構視角審查程式碼變更，拉回目標並收尾更新文件。 | v1.2.0 |
+| [`my-plan-review`](./my-plugins/my-workflow/skills/my-plan-review/SKILL.md) | 審查計畫的矛盾、安全規則與慣例，直接更正，有疑問先問使用者。 | v1.17.0 |
+| [`my-testing`](./my-plugins/my-workflow/skills/my-testing/SKILL.md) | 建立 TDD 四層測試體系（單元、煙測、整合、E2E）、測試 SPEC 與 Agent 測試規則。 | v1.17.0 |
 | [`my-codebase-clear`](./my-plugins/my-workflow/skills/my-codebase-clear/SKILL.md) | 掃描可清理檔案、review candidates，經同意後安全刪除並收尾。 | v1.2.0 |
 | [`my-codebase-init`](./my-plugins/my-workflow/skills/my-codebase-init/SKILL.md) | 從 project-templates 初始化專案並建立 VECTOR-COOL 私有 repo。 | v1.2.0 |
 | [`my-commit-all-and-push`](./my-plugins/my-workflow/skills/my-commit-all-and-push/SKILL.md) | 全部 commit 並 push，說明用繁體中文。 | v1.2.0 |
 | [`my-cloud-agent`](./my-plugins/my-workflow/skills/my-cloud-agent/SKILL.md) | 開、續、查、停雲端 agent session，派任務並驗收（Claude 支援工具與 CLI）。 | v1.2.0 |
 | [`my-release-packaging`](./my-plugins/my-workflow/skills/my-release-packaging/SKILL.md) | 建立正式發佈包與增量更新檔（--since）的 export-ignore 規則、打包腳本與規格書，審核機敏檔洩漏（檔名＋內容）。 | v1.16.0 |
 | [`my-docs`](./my-plugins/my-workflow/skills/my-docs/SKILL.md) | 建立精簡技術文件並確保 AGENTS.md／README 齊備。 | v1.2.0 |
-| [`my-subagent`](./my-plugins/my-workflow/skills/my-subagent/SKILL.md) | 主線調度平行 subagent 並負責驗收。 | v1.2.0 |
+| [`my-subagent`](./my-plugins/my-workflow/skills/my-subagent/SKILL.md) | 主線調度平行 subagent：指定模型與思考程度、驗收、完成後關閉。 | v1.2.0 |
 
 不在 my-workflow 包裡：
 

@@ -3,7 +3,7 @@
 # 記憶規則在 skills/my-memory/rules/，載入該 skill 時一併讀；整理是獨立 skill my-memory-consolidate（my-skills/memory/，排程執行），不在此索引。
 # version 與 pack.yaml、toolkit project.json 同號。keywords 是使用者會說的詞，不抄說明。
 
-version: 1.16.6
+version: 1.17.0
 
 skills:
   - name: my-workflow

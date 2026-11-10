@@ -2,12 +2,12 @@
 
 給下一位接手的人或 agent。**先讀這份再動手；做完一段工作或交接時更新。** 保持精簡，過時的刪掉，不記密碼、token、金鑰。
 
-最後更新：`2026-11-01` · 版本：`v1.16.6` · 分支：`develop` · 範圍：plugin `my-workflow`（repo 根沒有自己的 NOTE）
+最後更新：`2026-11-11` · 版本：`v1.17.0` · 分支：`develop` · 範圍：plugin `my-workflow`（repo 根沒有自己的 NOTE）
 
 ## 目前狀態
 
-- plugin `my-workflow` 最新是 `1.16.6`，已合併到 `main`。
-- **ChatGPT（個人帳號）**：網頁版與桌面版的本機市集不同步；帳號端不自動更新，只能在網頁版用 ZIP 安裝（同步到桌面版），每次發版要重傳。使用者帳號那份目前是舊的 `1.7.3`，`1.16.1` 的 ZIP 已產出待上傳。
+- plugin `my-workflow` 最新是 `1.17.0`，已合併到 `main`。
+- **ChatGPT（個人帳號）**：網頁版與桌面版的本機市集不同步；帳號端不自動更新，只能在網頁版用 ZIP 安裝（同步到桌面版），每次發版要重傳。使用者帳號目前是測試包 `1.16.7`，`1.17.0` 網頁包待上傳。
 - `1.16.0`：init 採用「B + 生態慣例優先」——根目錄只留入口與生態規定的檔，新專案交接紀錄在 `docs/NOTE.md`、打包設定在 `scripts/release.config.json`（腳本先讀同目錄，其次根目錄）；`my-docs` 新增「docs/ 結構」。
 - 結構穩定：`my-plugins/`（plugin）、`my-skills/`（獨立 skill，含 `claude/` 分類）、`skills/`（第三方）。
 - 發布流程與更新排除已文件化：`my-plugins/my-workflow/docs/RELEASE.md`，並有 `check-release.mjs` 檢查。
@@ -15,7 +15,7 @@
 ## 進行中
 
 - [ ] [docs 檔案架構定義](plans/2026-10-31-docs-structure.md)：已寫進 `my-docs`，**待使用者確認**。
-- [ ] 使用者在 ChatGPT 網頁版用 `1.16.6` 網頁包更新帳號那份 plugin，並停用桌面版本機市集那份；Composio 在 ChatGPT 直接加連線（未驗證）。
+- [ ] 使用者在 ChatGPT 網頁版用 `1.17.0` 網頁包更新帳號那份 plugin，並停用桌面版本機市集那份；Composio 在 ChatGPT 直接加連線（未驗證）。
 
 ## 下一步
 
@@ -61,6 +61,7 @@ node --test my-plugins/my-workflow/skills/my-release-packaging/scripts/pack-rele
 
 ## 更新紀錄
 
+- `2026-11-11` Claude：`1.17.0` 新增 `my-plan-review`（矛盾、安全、慣例，直接更正，有疑問先問）與 `my-testing`；`my-subagent` 由主線指定模型與思考程度、驗收後關閉；入口加「執行計畫盡量用 my-subagent」；`my-codebase-init` 測試集中 `tests/`。
 - `2026-11-01` Claude：測試包 1.16.7（1.16.6 加回 hook、不帶 `mcp.json`）網頁版可用；ChatGPT 網頁與桌面都不執行 hook，只有 Claude Code 會。更正 `openai.md` 與發布 skill：hook 不擋網頁版但沒作用，擋網頁版的只有 `mcp.json`。使用者帳號目前是 1.16.7，下次上傳至少 1.16.8。
 - `2026-11-01` Claude：`1.16.6` 確定 ChatGPT 網頁版不生效的主因是 ZIP 內的 `mcp.json`。除錯分支 `debug/chatgpt-web-1.7.3`（本機，未推）實測：1.16.4（1.7.3 內容）可用、1.16.5（1.16.3 只拿掉 `mcp.json`）可用。網頁包改為排除 `mcp.json`，寫進 `openai.md` 與發布 skill；1.16.4、1.16.5 版號已用於除錯包。
 - `2026-11-01` Claude：`1.16.3` 修 ChatGPT 網頁版不生效。比對 stash 裡可用的 1.7.3：網頁版要有 `plugin.json` 的 `onboardingSkill`、`interface`，不能帶 hook，入口 skill 的 description 不能說「規則已由 hook 注入」。repo 的 `plugin.json` 補回這兩項；發布 skill 加「ChatGPT 網頁包」。帶 Composio MCP 的網頁版待使用者實測。
