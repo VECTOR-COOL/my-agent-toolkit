@@ -169,7 +169,7 @@ SemVer：文件或小錯修正 → patch；新 skill 或新功能 → minor；�
    - 有問題就刪掉 zip，修規則或內容後重產。
    **ChatGPT 網頁包**另要改包內 `plugin.json`（repo 裡的不動），改完才壓 zip：
    - 加 `version` = `pack.yaml` 版本。ChatGPT 要求比帳號現有版本高，否則拒存；同一版不能重傳，要重傳就先發新版。
-   - 刪 `extensions.com.openai.hooks`；保留 `onboardingSkill`、`interface`。帶 hook 會被標「僅限桌面版」；帶 `mcp.json` 或少了入口設定，裝得上但不生效（2026-11-01 實測）。
+   - 刪 `extensions.com.openai.hooks`（ChatGPT 網頁與桌面都不執行 hook，帶了沒用）；保留 `onboardingSkill`、`interface`。帶 `mcp.json` 網頁版就不生效（2026-11-01 實測）。
    - 用 `git archive --format=tar … | tar -x` 解到暫存資料夾，改完再壓 zip；不要直接壓工作目錄。細節見 `my-plugin-install` 的 `references/openai.md`「ChatGPT 現況」。
 
 6. `sha256sum "$OUT" > "$OUT.sha256"`（PowerShell：`Get-FileHash $OUT -Algorithm SHA256`）。

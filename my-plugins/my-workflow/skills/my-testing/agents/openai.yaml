@@ -1,0 +1,4 @@
+interface:
+  display_name: "my-testing"
+  short_description: "建立 TDD 四層測試體系、測試 SPEC 與 Agent 測試規則"
+  default_prompt: "使用 $my-testing 為專案建立單元、煙測、整合與 E2E 測試，寫測試 SPEC 與 .agents/rules/testing.md。"

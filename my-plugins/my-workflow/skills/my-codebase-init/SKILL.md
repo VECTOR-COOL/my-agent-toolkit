@@ -45,13 +45,16 @@ graph TD
 │  └─ tmp/               開發期臨時產物：測試檔、一次性腳本、agent 跑指令的 error log（<用途>-<日期>.log）；不進版控，任務結束清掉
 ├─ dist/                                  ← 打包輸出（僅打包部署）；不進版控，my-codebase-clear 預設不清
 ├─ log/  或框架規定的路徑                  ← 程式執行期日誌（正式機也寫）；內容不進版控、不進包，打包列 placeholders
-└─ src/ tests/  或框架自己的結構           ← 跟語言／框架慣例，不改
+├─ src/  或框架自己的結構                  ← 跟語言／框架慣例，不改
+└─ tests/                                 ← 所有測試；框架有慣例就沿用
+   └─ e2e/                                 E2E（Playwright 等）放這裡；自帶 package.json 與設定也留在 e2e/ 內，不獨立在根目錄
 ```
 
 1. **生態慣例優先**：根目錄只留入口與生態規定的檔（`package.json`、`LICENSE`、`.gitignore`、`.gitattributes` 等），硬搬會壞。程式目錄跟語言與框架慣例（Node `src/`、Laravel `app/`、WordPress 外掛結構）。
 2. **只加兩個目錄**：`docs/`、`scripts/`。已有就沿用；不建空目錄。`dist/`、`scripts/tmp/` 由腳本或任務產生，不預建；執行期 log 跟框架慣例（Laravel `storage/logs/`、WordPress 自己的），沒慣例才用 `log/`。
-3. 隱藏工具目錄（`.agents/`、`.claude/`、`.cursor/`、`.github/`）照各工具規定。
-4. 實際結構寫進 `AGENTS.md`「目錄架構」，不另建結構文件。
+3. **測試集中在 `tests/`**：Unit、Scenario、E2E 同屬 `tests/`，E2E 放 `tests/e2e/`，不在根目錄另開 `e2e/`。E2E 為獨立 Node 專案時，`package.json`、`playwright.config.*`、`node_modules` 留在 `tests/e2e/` 內，`.gitignore` 與腳本路徑跟著寫。既有專案的 `e2e/` 搬動前先列出受影響的檔案（測試對照表、腳本、`.gitignore`、文件），經使用者確認再搬。
+4. 隱藏工具目錄（`.agents/`、`.claude/`、`.cursor/`、`.github/`）照各工具規定。
+5. 實際結構寫進 `AGENTS.md`「目錄架構」，不另建結構文件。
 
 ## 執行流程
 

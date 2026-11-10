@@ -3,7 +3,7 @@
 # 記憶規則在 skills/my-memory/rules/，載入該 skill 時一併讀；整理是獨立 skill my-memory-consolidate（my-skills/memory/，排程執行），不在此索引。
 # version 與 pack.yaml、toolkit project.json 同號。keywords 是使用者會說的詞，不抄說明。
 
-version: 1.16.6
+version: 1.17.0
 
 skills:
   - name: my-workflow
@@ -25,8 +25,11 @@ skills:
     when: 做網站或介面設計、定義 DESIGN.md 與視覺方向
     keywords: [UI, UX, 新網站, 版面, 視覺, 案例, DESIGN.md, frontend-design, 前端設計, 切版, 設計系統]
   - name: my-review
-    when: 審查計畫架構、程式碼（Code Review / PR）或驗收收尾
+    when: 審查程式碼（Code Review / PR）、拉回目標或驗收收尾；只審計畫用 my-plan-review
     keywords: [review, 審查, code review, 程式碼審查, PR 審查, 檢查代碼, 檢查 PR, 拉回目標, 收尾, 驗收, 偏離目標]
+  - name: my-plan-review
+    when: 審查計畫（實作計畫、docs/plans、SPEC 執行步驟、對話中的 plan）：找矛盾、查安全，直接修正計畫
+    keywords: [plan review, 審查計畫, 計畫審查, 檢查計畫, review plan, 找矛盾, 矛盾, 計畫安全, 安全性檢查, 執行前把關, 實作計畫]
   - name: my-create-prd
     when: 需求訪談、撰寫或補強產品需求文件（PRD）
     keywords: [PRD, 產品需求, 需求訪談, 需求文件, 功能規格, 產品規格, 寫 PRD]
@@ -39,6 +42,9 @@ skills:
   - name: my-release-packaging
     when: 建立正式發佈包與增量更新檔的打包規則與流程：.gitattributes export-ignore、打包腳本、發佈規格書、審核有無洩漏機敏檔、解壓覆蓋部署
     keywords: [打包, 發佈包, 更新檔, 增量更新, 部署包, 占位, 空目錄, img, 上傳目錄, release, packaging, zip, 正式環境, export-ignore, gitattributes, 發佈規格, 洩漏, 解壓覆蓋, since, 部署 SOP]
+  - name: my-testing
+    when: 為專案或多個目錄建立／補齊測試體系（單元、煙測、整合、E2E）、撰寫測試計畫或測試 SPEC、TDD、設定 .agents/rules 測試規則並讓 CLAUDE.md 引用
+    keywords: [測試, 測試計畫, 測試 SPEC, TDD, 單元測試, 煙測, smoke, 整合測試, E2E, 端對端, 測試覆蓋, 補測試, 測試規範, .agents/rules, 測試驗收, Playwright, PHPUnit]
   - name: my-commit-all-and-push
     when: 安全檢查變更並以 Conventional Commits 提交與推送
     keywords: [commit, push, 提交, 推送, 全部提交, commit all, 一鍵提交, git push, 推上去, 提交變更]
@@ -47,7 +53,7 @@ skills:
     keywords: [雲端 agent, Cloud Agent, 開雲端, 派到雲端, 背景 session, 雲端對話, 冷啟動, 雲端環境, claude --cloud, teleport, create_session, remote-env]
   - name: my-subagent
     when: 拆解大任務、派發平行 subagent 與調度驗收
-    keywords: [平行, 多線, subagent, 派發, 驗收, 多代理, 平行任務, 分工處理, 分工, 開 subagent, 叫幾個 agent, 一起做, 派出去]
+    keywords: [平行, 多線, subagent, 派發, 驗收, 多代理, 平行任務, 分工處理, 分工, 開 subagent, 叫幾個 agent, 一起做, 派出去, 選模型, 思考程度, effort, 關閉 subagent]
 
 rules:
   - name: git
