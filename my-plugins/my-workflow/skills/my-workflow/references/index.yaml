@@ -42,6 +42,9 @@ skills:
   - name: my-release-packaging
     when: 建立正式發佈包與增量更新檔的打包規則與流程：.gitattributes export-ignore、打包腳本、發佈規格書、審核有無洩漏機敏檔、解壓覆蓋部署
     keywords: [打包, 發佈包, 更新檔, 增量更新, 部署包, 占位, 空目錄, img, 上傳目錄, release, packaging, zip, 正式環境, export-ignore, gitattributes, 發佈規格, 洩漏, 解壓覆蓋, since, 部署 SOP]
+  - name: my-testing
+    when: 為專案或多個目錄建立／補齊測試體系（單元、煙測、整合、E2E）、撰寫測試計畫或測試 SPEC、TDD、設定 .agents/rules 測試規則並讓 CLAUDE.md 引用
+    keywords: [測試, 測試計畫, 測試 SPEC, TDD, 單元測試, 煙測, smoke, 整合測試, E2E, 端對端, 測試覆蓋, 補測試, 測試規範, .agents/rules, 測試驗收, Playwright, PHPUnit]
   - name: my-commit-all-and-push
     when: 安全檢查變更並以 Conventional Commits 提交與推送
     keywords: [commit, push, 提交, 推送, 全部提交, commit all, 一鍵提交, git push, 推上去, 提交變更]

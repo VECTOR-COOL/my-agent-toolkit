@@ -85,6 +85,7 @@ manifest **不寫 `version`**，Claude 以 commit 當版本，`main` 每次更�
 | 需求 | `my-create-prd` |
 | 介面 | `my-ui-ux` |
 | 審查 | `my-review`（程式碼）、`my-plan-review`（計畫） |
+| 測試 | `my-testing` |
 | 程式庫 | `my-codebase-clear`、`my-codebase-init`（Claude 可搭配 `my-skills/claude/` 的 `my-codebase-init-claude`） |
 | 提交 | `my-commit-all-and-push` |
 | 發佈打包 | `my-release-packaging` |

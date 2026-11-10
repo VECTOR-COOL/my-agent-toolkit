@@ -35,7 +35,8 @@ README.md  AGENTS.md  CLAUDE.md   入口
 <package.json 等>                 生態規定的根目錄檔
 docs/                             文件：NOTE.md 交接紀錄、specs/、guides/、adr/、plans/（有才建）
 scripts/                          腳本與其設定
-<src/ tests/ 或框架結構>          <用途>
+<src/ 或框架結構>                <用途>
+tests/                            測試；E2E 放 tests/e2e/（有才建）
 ```
 
 ## 發佈（若有）
