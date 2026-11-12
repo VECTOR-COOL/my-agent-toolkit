@@ -2,12 +2,12 @@
 
 給下一位接手的人或 agent。**先讀這份再動手；做完一段工作或交接時更新。** 保持精簡，過時的刪掉，不記密碼、token、金鑰。
 
-最後更新：`2026-11-12` · 版本：`v1.17.1` · 分支：`develop` · 範圍：plugin `my-workflow`（repo 根沒有自己的 NOTE）
+最後更新：`2026-11-12` · 版本：`v1.18.0` · 分支：`develop` · 範圍：plugin `my-workflow`（repo 根沒有自己的 NOTE）
 
 ## 目前狀態
 
-- plugin `my-workflow` 最新是 `1.17.1`，已合併到 `main`。
-- **ChatGPT（個人帳號）**：網頁版與桌面版的本機市集不同步；帳號端不自動更新，只能在網頁版用 ZIP 安裝（同步到桌面版），每次發版要重傳。使用者帳號目前是測試包 `1.16.7`，`1.17.1` 網頁包待上傳。
+- plugin `my-workflow` 最新是 `1.18.0`，已合併到 `main`。
+- **ChatGPT（個人帳號）**：網頁版與桌面版的本機市集不同步；帳號端不自動更新，只能在網頁版用 ZIP 安裝（同步到桌面版），每次發版要重傳。使用者帳號目前是測試包 `1.16.7`，`1.18.0` 網頁包待上傳。
 - `1.16.0`：init 採用「B + 生態慣例優先」——根目錄只留入口與生態規定的檔，新專案交接紀錄在 `docs/NOTE.md`、打包設定在 `scripts/release.config.json`（腳本先讀同目錄，其次根目錄）；`my-docs` 新增「docs/ 結構」。
 - 結構穩定：`my-plugins/`（plugin）、`my-skills/`（獨立 skill，含 `claude/` 分類）、`skills/`（第三方）。
 - 發布流程與更新排除已文件化：`my-plugins/my-workflow/docs/RELEASE.md`，並有 `check-release.mjs` 檢查。
@@ -61,7 +61,7 @@ node --test my-plugins/my-workflow/skills/my-release-packaging/scripts/pack-rele
 
 ## 更新紀錄
 
-- `2026-11-12` Claude：新增 `rules/dual-session.md`（僅 Claude Code：本機＋雲端雙 session 開發流程，沒雲端環境就只派本機；監看用 `ls-remote` 取值並檢查非空），索引規則區與 README 規則清單同步。來自 vector-admin-ui-kit 的實測，已泛化。尚未發版，建議下版 1.18.0。
+- `2026-11-12` Claude：新增 `rules/dual-session.md`（僅 Claude Code：本機＋雲端雙 session 開發流程，沒雲端環境就只派本機；監看用 `ls-remote` 取值並檢查非空），索引規則區與 README 規則清單同步。來自 vector-admin-ui-kit 的實測，已泛化。已於 1.18.0 發版。
 - `2026-11-12` Claude：`1.17.1` 使用者說「/subtask」就是要派 subagent，`my-subagent` 觸發詞與索引關鍵字補上；`/subtask` 是否為 Claude Code 內建指令未確認，底層仍用 `Agent` 工具。
 - `2026-11-11` Claude：`1.17.0` 新增 `my-plan-review`（矛盾、安全、慣例，直接更正，有疑問先問）與 `my-testing`；`my-subagent` 由主線指定模型與思考程度、驗收後關閉；入口加「執行計畫盡量用 my-subagent」；`my-codebase-init` 測試集中 `tests/`。
 - `2026-11-01` Claude：測試包 1.16.7（1.16.6 加回 hook、不帶 `mcp.json`）網頁版可用；ChatGPT 網頁與桌面都不執行 hook，只有 Claude Code 會。更正 `openai.md` 與發布 skill：hook 不擋網頁版但沒作用，擋網頁版的只有 `mcp.json`。使用者帳號目前是 1.16.7，下次上傳至少 1.16.8。
