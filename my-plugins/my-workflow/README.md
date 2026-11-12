@@ -72,7 +72,7 @@ manifest **不寫 `version`**，Claude 以 commit 當版本，`main` 每次更�
 
 ## 內容
 
-**規則**：[`global.md`](skills/my-workflow/references/global.md) 常駐（Claude Code、Codex 由 hook 連同入口 skill 與 `index.yaml` 一併注入）。其餘碰到情境才讀：[`git`](rules/git.md)、[`code-review`](rules/code-review.md)、[`wrap-up`](rules/wrap-up.md)、[`files-and-scripts`](rules/files-and-scripts.md)、[`install`](rules/install.md)、[`tools`](rules/tools.md)、[`memory`](skills/my-memory/rules/memory.md)（載入記憶 skill 時）。
+**規則**：[`global.md`](skills/my-workflow/references/global.md) 常駐（Claude Code、Codex 由 hook 連同入口 skill 與 `index.yaml` 一併注入）。其餘碰到情境才讀：[`git`](rules/git.md)、[`code-review`](rules/code-review.md)、[`wrap-up`](rules/wrap-up.md)、[`files-and-scripts`](rules/files-and-scripts.md)、[`install`](rules/install.md)、[`tools`](rules/tools.md)、[`dual-session`](rules/dual-session.md)（僅 Claude Code）、[`memory`](skills/my-memory/rules/memory.md)（載入記憶 skill 時）。
 
 **Skills**：入口 `my-workflow` 依 [`index.yaml`](skills/my-workflow/references/index.yaml) 載入一個。
 

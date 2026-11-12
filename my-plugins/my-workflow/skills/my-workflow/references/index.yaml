@@ -72,6 +72,10 @@ rules:
     file: rules/files-and-scripts.md
     when: 寫腳本、產生測試檔或臨時檔、編輯設定檔
     keywords: [腳本, script, .mjs, 臨時檔, scripts/tmp, 設定檔, JSONC, 清理暫存]
+  - name: dual-session
+    file: rules/dual-session.md
+    when: 僅 Claude Code（有 mcp__ccd_session__start_session 工具才讀，其他平台略過）：主對話開本機與雲端 session 分工開發、派發、等完成訊號、驗收
+    keywords: [雙 session, 本機 session, 雲端 session, 本機＋雲端, 開 session, 分工開發, start_session, 雙環境]
   - name: install
     file: rules/install.md
     when: 安裝套件、第三方 skill 或 rule

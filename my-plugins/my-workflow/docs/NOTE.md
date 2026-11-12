@@ -61,6 +61,7 @@ node --test my-plugins/my-workflow/skills/my-release-packaging/scripts/pack-rele
 
 ## 更新紀錄
 
+- `2026-11-12` Claude：新增 `rules/dual-session.md`（僅 Claude Code：本機＋雲端雙 session 開發流程，沒雲端環境就只派本機；監看用 `ls-remote` 取值並檢查非空），索引規則區與 README 規則清單同步。來自 vector-admin-ui-kit 的實測，已泛化。尚未發版，建議下版 1.18.0。
 - `2026-11-12` Claude：`1.17.1` 使用者說「/subtask」就是要派 subagent，`my-subagent` 觸發詞與索引關鍵字補上；`/subtask` 是否為 Claude Code 內建指令未確認，底層仍用 `Agent` 工具。
 - `2026-11-11` Claude：`1.17.0` 新增 `my-plan-review`（矛盾、安全、慣例，直接更正，有疑問先問）與 `my-testing`；`my-subagent` 由主線指定模型與思考程度、驗收後關閉；入口加「執行計畫盡量用 my-subagent」；`my-codebase-init` 測試集中 `tests/`。
 - `2026-11-01` Claude：測試包 1.16.7（1.16.6 加回 hook、不帶 `mcp.json`）網頁版可用；ChatGPT 網頁與桌面都不執行 hook，只有 Claude Code 會。更正 `openai.md` 與發布 skill：hook 不擋網頁版但沒作用，擋網頁版的只有 `mcp.json`。使用者帳號目前是 1.16.7，下次上傳至少 1.16.8。
