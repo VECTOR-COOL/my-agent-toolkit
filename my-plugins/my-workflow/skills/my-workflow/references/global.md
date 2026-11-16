@@ -34,6 +34,7 @@ my-workflow 的常駐規則，每個任務都套用。Claude Code、Codex 由 Se
 ## 載入其他規則與 skill
 
 - 碰到情境才讀對應規則：Git（`rules/git.md`）、Code Review（`rules/code-review.md`）、收尾（`rules/wrap-up.md`）、腳本／臨時檔／設定檔（`rules/files-and-scripts.md`）、安裝套件或第三方 skill（`rules/install.md`）、外部服務或 MCP（`rules/tools.md`）。
+- 使用者說「列入排程任務」「加入排程任務」或同義說法：讀 `rules/schedule-task.md`，整理成 GitHub issue 加 `agent-ready`，交給雲端排程自動接手。
 - skill 由入口 `my-workflow` 依索引載入，只載 `when` 或 `keywords` 對上的那一個。介面任務才載 `my-ui-ux`，有 `DESIGN.md` 就沿用。
 - 已讀過的檔不重讀；超過約 200 行先讀摘要或索引；啟動時不讀完整套件。README 給人看，任務需要才讀。
 - 與第三方 plugin 規則衝突，以專案根 `AGENTS.md` 為準。
