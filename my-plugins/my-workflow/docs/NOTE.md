@@ -15,7 +15,7 @@
 ## 進行中
 
 - [ ] [docs 檔案架構定義](plans/2026-10-31-docs-structure.md)：已寫進 `my-docs`，**待使用者確認**。
-- [ ] 使用者在 ChatGPT 網頁版用 `1.17.0` 網頁包更新帳號那份 plugin，並停用桌面版本機市集那份；Composio 在 ChatGPT 直接加連線（未驗證）。
+- [ ] 使用者在 ChatGPT 網頁版用 `1.19.0` 網頁包更新帳號那份 plugin，並停用桌面版本機市集那份；Composio 在 ChatGPT 直接加連線（未驗證）。
 
 ## 下一步
 
