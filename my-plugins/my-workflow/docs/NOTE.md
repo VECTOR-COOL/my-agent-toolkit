@@ -62,6 +62,7 @@ node --test my-plugins/my-workflow/skills/my-release-packaging/scripts/pack-rele
 ## 更新紀錄
 
 - `2026-11-12` Claude：新增 `rules/dual-session.md`（僅 Claude Code：本機＋雲端雙 session 開發流程，沒雲端環境就只派本機；監看用 `ls-remote` 取值並檢查非空），索引規則區與 README 規則清單同步。來自 vector-admin-ui-kit 的實測，已泛化。已於 1.18.0 發版。
+- `2026-11-17` Claude：`1.20.1` 排程規則補「問題卡」：執行 agent 有疑問時開【待回覆】Draft PR、任務改待回覆，審查 routine 推播並在固定審查 session 收擁有者回覆後自動重派；建好任務列即可不管。routine 端同步改版（派工改固定 session 後，vCloud Cloud 環境子 session 跑完被刪的問題未再出現；派工／審查都加 GitHub 判讀備援）。
 - `2026-11-16` Claude：`1.20.0` 排程任務改為 Notion 版：說「列入排程任務」→ 目標 repo 寫 `docs/plans/` 計畫並 push 工作分支（小任務可寫在 Notion 頁內文）→ 在 Notion「排程中心」的「排程任務」DB 建一列 `待執行`（目標 repo 須在「repo 對照表」且「啟用」有勾）；之後由派工 routine（:46）開雲端 session 實作開 Draft PR、審查 routine（:16）審查並自動合併或改 `待回覆`。暫停＝取消對照表「全部」列「啟用」。GitHub Issues＋`agent-ready` 流程已停用並自 rule 移除（下一行為舊紀錄）。global.md 觸發行與索引同步。已於 1.20.0 發版。
 - `2026-11-16` Claude：新增 `rules/schedule-task.md`（說「列入排程任務」就把事項整理成 GitHub issue 加 `agent-ready`，交給 Claude 雲端排程 routine「GitHub Issues 待辦自動消化」每小時 :46 接手；掛載 5 個 vCloud repo，只接 `VECTOR-54308483` 開的單；沒 GitHub 工具給草稿），global.md 加一行觸發、索引規則區與 README 同步。改用 GitHub Issues 是因 Linear 免費 issue 額度已滿。已於 1.19.0 發版。
 - `2026-11-12` Claude：`1.17.1` 使用者說「/subtask」就是要派 subagent，`my-subagent` 觸發詞與索引關鍵字補上；`/subtask` 是否為 Claude Code 內建指令未確認，底層仍用 `Agent` 工具。
