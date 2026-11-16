@@ -1,6 +1,6 @@
 # My Agent Toolkit
 
-**版本：`v1.20.1`**
+**版本：`v1.20.2`**
 
 > VECTOR LTD 可攜式 Agent Skills 套件庫
 
