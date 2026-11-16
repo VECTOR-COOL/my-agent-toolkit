@@ -1,23 +1,35 @@
-# 排程任務（GitHub Issues 交給雲端排程）
+# 排程任務（Notion 排程中心交給雲端排程）
 
-使用者說「列入排程任務」「加入排程任務」「排進排程」「丟給排程做」或同義說法時讀。平台中立：Claude、Codex、ChatGPT、Gemini 都照這份做；差別只在有沒有能開 GitHub issue 的工具。
+使用者說「列入排程任務」「加入排程任務」「排進排程」「丟給排程做」或同義說法時讀。平台中立：Claude、Codex、ChatGPT、Gemini 都照這份做；差別只在有沒有能寫 Notion 的工具。
 
 ```mermaid
 graph LR
-  Say[使用者：列入排程任務] --> Issue[開 issue + agent-ready]
-  Issue --> Routine[雲端排程每小時 :46 接手]
-  Routine --> PR[Draft PR + agent-review]
-  Routine --> Blocked[卡住 agent-blocked]
+  Say[使用者：列入排程任務] --> Plan[目標 repo 寫計畫並 push]
+  Plan --> Row[排程任務 DB 新增一列 待執行]
+  Row --> Dispatch[派工 routine 每小時 :46]
+  Dispatch --> PR[雲端 session 實作 + Draft PR]
+  PR --> Review[審查 routine 每小時 :16]
+  Review --> Merge[可自動合併就合併]
+  Review --> Ask[待回覆：推播並問擁有者]
 ```
+
+## 位置
+
+| 項目 | 位置 |
+|------|------|
+| 排程中心（Notion 頁） | <https://app.notion.com/p/41abde09f6fe81feb744eb6443f6eece> |
+| 排程任務 DB | `41abde09-f6fe-81d8-beef-dd0b224e986b` |
+| repo 對照表 DB | `41abde09-f6fe-8171-9562-d53032f9a286` |
 
 ## 對話中要做的事
 
-只負責**開單**，不在對話裡動手做該事項（除非使用者另外要求）。
+只**寫計畫與建任務列**，不在對話裡動手做該任務本身（除非使用者另外要求）。
 
-1. **整理 issue**，內容用繁體中文：
+1. **先問再寫**：目標 repo、範圍或驗收標準不明時先問，**最多 3 題**；能從對話與專案檔推得出的不問。
+2. **寫計畫**：在目標 repo 建 `docs/plans/YYYY-MM-DD-<主題>.md`（格式照 `my-docs`），至少包含：
 
    ```markdown
-   標題：<動詞開頭、一句話說清楚要做什麼>
+   # <動詞開頭、一句話說清楚要做什麼>
 
    ## 背景
    為什麼要做、現況、相關連結（檔案路徑、PR、文件）。
@@ -32,38 +44,46 @@ graph LR
    - [ ] 可檢查的完成條件（測試、指令輸出、畫面）
    ```
 
-2. **選 repo**：開在 `VECTOR-COOL` 組織下對應的 repo。排程目前只掛這 5 個：
+   commit 並 push 到該 repo 的**工作分支**（repo 對照表「工作分支」欄）。小任務可不建檔，把同樣四段寫在 Notion 任務頁內文，「計畫路徑」留空。
+3. **確認 repo 已掛排程**：查 repo 對照表，目標 repo 要有一列且「啟用」有勾。
+   - 沒有這一列：先跟使用者確認後新增（`repo`＝`VECTOR-COOL/<repo>`、`環境 ID`、`環境名稱`、`工作分支`、`自動合併`、`啟用`）；環境 ID 不知道就問，不猜。
+   - 有列但「啟用」沒勾：告知使用者「這個 repo 暫停中，不會被接手」，使用者要求才勾。
+4. **新增任務列**：在排程任務 DB 新增一列：
 
-   | repo | 放什麼 |
-   |------|--------|
-   | `VECTOR-COOL/vcloud-platform` | 治理、規格、L1 文件、開發環境編排 |
-   | `VECTOR-COOL/vcloud-backend` | 後端 host 與各服務 |
-   | `VECTOR-COOL/vcloud-gateway` | API gateway |
-   | `VECTOR-COOL/vCloud-admin` | 管理後台前端 |
-   | `VECTOR-COOL/vector-admin-ui-kit` | 後台 UI 元件庫 |
+   | 欄位 | 值 |
+   |------|----|
+   | `名稱` | 計畫標題 |
+   | `狀態` | `待執行` |
+   | `目標 repo` | `VECTOR-COOL/<repo>`（select，與對照表 `repo` 同字） |
+   | `計畫路徑` | `docs/plans/YYYY-MM-DD-<主題>.md`（寫在頁內文時留空） |
+   | `優先度` | 使用者有說才填 |
 
-   要開在其他 repo：先提醒使用者「這個 repo 沒掛排程，不會被自動接手」，使用者仍要開才開。
+   其餘欄（`PR`、`執行 session`、`審查 session`、`結果`）留給排程填。完成後**回報任務頁連結**與計畫 commit。
+5. **工具**：Notion 先走 Composio（`rules/tools.md`），沒有再用 Notion 自己的 MCP。
 
-3. **先問再開**：repo、範圍或驗收標準不明時先問，**最多 3 題**，問完再開；能從對話與專案檔推得出的不問。
-4. **開 issue 並加 `agent-ready` 標籤**，回報 issue 連結。
-5. **帳號**：排程只接手 GitHub 帳號 `VECTOR-54308483` 開的 issue。工具登入的若不是這個帳號，開之前先告知使用者（開了會被標 `agent-skipped`）。
+### 沒有 Notion 工具時
 
-### 沒有 GitHub 工具時
-
-先依 `rules/tools.md` 說明哪個工具沒接上；再給使用者可直接貼上的**issue 草稿**（repo、標題、內文、標籤 `agent-ready`），請使用者用自己的帳號開，不假裝已開。
+先依 `rules/tools.md` 說明哪個工具沒接上、哪步沒做；計畫仍照常寫進 repo（能操作 Git 時）。再給使用者可直接貼進排程任務 DB 的**任務列草稿**（上表各欄的值，計畫寫在頁內文時一併附上），請使用者自己建，不假裝已建。
 
 ## 之後全自動（排程做的事）
 
-Claude 雲端排程 routine「GitHub Issues 待辦自動消化」每小時 :46 執行，對話中不用、也不要再手動處理：
+兩支 Claude 雲端排程 routine，對話中不用、也不要再手動處理：
 
-| 標籤 | 意思 |
+| routine | 時間 | 做什麼 |
+|---------|------|--------|
+| 派工 | 每小時 :46 | 撿 `待執行` 的列，依對照表開雲端 session 照計畫實作，開 Draft PR，改 `待審查` |
+| 審查 | 每小時 :16 | 審查 `待審查` 的 PR；對照表「自動合併」有勾且通過就合併並改 `已完成`，否則改 `待回覆`，推播並在固定審查 session 問擁有者 |
+
+| 狀態 | 意思 |
 |------|------|
-| `agent-ready` | 待接手（開單時加） |
-| `agent-working` | 排程已接手，雲端 session 執行中 |
-| `agent-review` | 完成，已開 Draft PR（內文 `Closes #N`），等使用者審 |
-| `agent-blocked` | 卡住，原因寫在 issue 留言，等使用者補資訊 |
-| `agent-skipped` | 非擁有者帳號開的，不處理 |
+| `待執行` | 待接手（建列時填） |
+| `執行中` | 派工已開雲端 session 實作中 |
+| `待審查` | 已開 Draft PR，等審查 routine |
+| `審查中` | 審查 routine 處理中 |
+| `待回覆` | 需要擁有者決定，已推播；到固定審查 session 回覆 |
+| `卡住` | 執行失敗或缺資訊，原因寫在 `結果` |
+| `已完成`／`略過` | 結束 |
 
-- 進度與結果以 **issue 標籤與留言**回報；使用者問進度時去讀該 issue。
-- 被標 `agent-blocked`：使用者補完資訊後，拿掉 `agent-blocked`、加回 `agent-ready`，下一輪應會重新接手（**未驗證**，依排程只查 `agent-ready` 推定）。
-- 不改 routine 本身；要加掛 repo 或調整排程，使用者另外說明再處理。
+- 使用者問進度：讀該任務列的 `狀態`、`PR`、`結果`。
+- **暫停全部排程**：取消 repo 對照表「全部」列的「啟用」；只停某 repo 就取消該列的「啟用」。
+- 不改 routine 本身；要調整排程流程，使用者另外說明再處理。
